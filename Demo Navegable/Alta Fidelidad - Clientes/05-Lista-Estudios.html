@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kosmos - Estudios</title>
+    <link rel="stylesheet" href="../styles-kosmos.css">
+    <style>
+        body {
+            background: var(--bg-white);
+        }
+        .main-content {
+            padding: 32px 48px;
+        }
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+        }
+        .page-header .page-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0;
+        }
+        .search-actions {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+        .search-box {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 16px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            background: var(--bg-white);
+        }
+        .search-box input {
+            border: none;
+            outline: none;
+            font-size: 14px;
+            width: 200px;
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+        }
+        .search-box input::placeholder {
+            color: var(--text-muted);
+        }
+        .search-box svg {
+            flex-shrink: 0;
+            color: var(--text-muted);
+        }
+
+        /* Table styles */
+        .table-wrapper {
+            border-top: 1px solid var(--border-light);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--bg-white);
+        }
+        thead th {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-muted);
+            text-transform: none;
+            letter-spacing: 0;
+            padding: 16px 20px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-light);
+            white-space: nowrap;
+        }
+        thead th.sortable {
+            cursor: pointer;
+            user-select: none;
+        }
+        thead th .sort-icon {
+            display: inline-block;
+            margin-left: 4px;
+            opacity: 0.4;
+            font-size: 12px;
+        }
+        tbody td {
+            padding: 20px;
+            border-bottom: 1px solid var(--border-light);
+            font-size: 14px;
+            color: var(--text-primary);
+            vertical-align: middle;
+        }
+        tbody tr:hover {
+            background: var(--bg-gray);
+        }
+        .code-cell {
+            font-weight: 600;
+            color: var(--text-primary);
+            width: 80px;
+        }
+        .title-cell {
+            color: var(--text-primary);
+            max-width: 340px;
+        }
+        .type-tag {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 13px;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+        .type-tag.salud {
+            background: #fef2f2;
+            color: #FF4136;
+        }
+        .type-tag.concepto {
+            background: #fff7ed;
+            color: #ea580c;
+        }
+        .etiquetas-cell {
+            color: var(--text-secondary);
+            font-size: 13px;
+            max-width: 280px;
+        }
+        .respuestas-cell {
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+        .status {
+            display: inline-block;
+            font-size: 13px;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+        .status-iniciado {
+            color: #22c55e;
+        }
+        .status-pausado {
+            color: #f59e0b;
+        }
+        .status-finalizado {
+            color: #ef4444;
+        }
+        .status-programado {
+            color: #8b5cf6;
+        }
+        .actions-cell {
+            text-align: right;
+            width: 40px;
+        }
+        .menu-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            color: var(--text-muted);
+            font-size: 20px;
+            line-height: 1;
+            letter-spacing: 1px;
+        }
+        .menu-btn:hover {
+            color: var(--text-primary);
+        }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 28px 24px;
+        }
+        .pagination-btn {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: var(--radius);
+            border: 1px solid transparent;
+            background: transparent;
+            cursor: pointer;
+            font-size: 14px;
+            color: var(--text-secondary);
+            font-family: 'Inter', sans-serif;
+            transition: all 0.15s;
+        }
+        .pagination-btn.active {
+            border: 1px solid var(--border);
+            background: var(--bg-white);
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        .pagination-btn:hover:not(.active) {
+            background: var(--bg-gray);
+        }
+        .pagination-btn.nav-arrow {
+            color: var(--text-muted);
+            font-size: 18px;
+        }
+
+        /* Clickable row */
+        tr.clickable-row {
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <a href="01-Landing.html" class="logo">kosmos<span class="dot">.</span></a>
+        <div class="avatar">CK</div>
+    </header>
+
+    <main class="main-content">
+        <div class="page-header">
+            <h1 class="page-title">Estudios</h1>
+            <div class="search-actions">
+                <div class="search-box">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                    <input type="text" placeholder="Buscar">
+                </div>
+                <a href="07-Wizard-Paso1.html" class="btn btn-primary">+ Nuevo estudio</a>
+            </div>
+        </div>
+
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Codigo</th>
+                        <th>Titulo</th>
+                        <th class="sortable">Tipo <span class="sort-icon">&#x21C5;</span></th>
+                        <th>Etiquetas</th>
+                        <th>Respuestas</th>
+                        <th class="sortable">Estado <span class="sort-icon">&#x21C5;</span></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Row 1 - Clickable to Dashboard -->
+                    <tr class="clickable-row" onclick="window.location='06-Dashboard.html'">
+                        <td class="code-cell">A1</td>
+                        <td class="title-cell">Estudio Evaluacion de producto</td>
+                        <td><span class="type-tag salud">Salud de marca</span></td>
+                        <td class="etiquetas-cell">Mujeres, Hombres, Mayor de 18, Salud y Bienestar, Politica, Arge...</td>
+                        <td class="respuestas-cell">300</td>
+                        <td><span class="status status-iniciado">Iniciado</span></td>
+                        <td class="actions-cell"><button class="menu-btn">&#8942;</button></td>
+                    </tr>
+                    <!-- Row 2 -->
+                    <tr>
+                        <td class="code-cell">C2</td>
+                        <td class="title-cell">Tendencias de Moda 2026: &#191;Que Estilos Prefieres?</td>
+                        <td><span class="type-tag salud">Salud de marca</span></td>
+                        <td class="etiquetas-cell">Mujeres, Hombres, Mayor de 18</td>
+                        <td class="respuestas-cell">500</td>
+                        <td><span class="status status-pausado">Pausado</span></td>
+                        <td class="actions-cell"><button class="menu-btn">&#8942;</button></td>
+                    </tr>
+                    <!-- Row 3 -->
+                    <tr>
+                        <td class="code-cell">B3</td>
+                        <td class="title-cell">Habitos de Actividad Fisica: &#191;Cuanto Ejercicio Haces a la Semana?</td>
+                        <td><span class="type-tag salud">Salud de marca</span></td>
+                        <td class="etiquetas-cell">Mujeres, Hombres, Mayor de 18</td>
+                        <td class="respuestas-cell">900</td>
+                        <td><span class="status status-finalizado">Finalizado</span></td>
+                        <td class="actions-cell"><button class="menu-btn">&#8942;</button></td>
+                    </tr>
+                    <!-- Row 4 -->
+                    <tr>
+                        <td class="code-cell">A1</td>
+                        <td class="title-cell">Percepcion Ciudadana sobre las Politicas de Gobierno 2026</td>
+                        <td><span class="type-tag salud">Salud de marca</span></td>
+                        <td class="etiquetas-cell">Mujeres, Hombres, Mayor de 18</td>
+                        <td class="respuestas-cell">120</td>
+                        <td><span class="status status-iniciado">Iniciado</span></td>
+                        <td class="actions-cell"><button class="menu-btn">&#8942;</button></td>
+                    </tr>
+                    <!-- Row 5 -->
+                    <tr>
+                        <td class="code-cell">C2</td>
+                        <td class="title-cell">Comportamiento Financiero: &#191;Como Manejas tu Dinero?</td>
+                        <td><span class="type-tag salud">Salud de marca</span></td>
+                        <td class="etiquetas-cell">Mujeres, Hombres, Mayor de 18</td>
+                        <td class="respuestas-cell">400</td>
+                        <td><span class="status status-pausado">Pausado</span></td>
+                        <td class="actions-cell"><button class="menu-btn">&#8942;</button></td>
+                    </tr>
+                    <!-- Row 6 -->
+                    <tr>
+                        <td class="code-cell">A1</td>
+                        <td class="title-cell">Destinos de Vacaciones Favoritos para el 2026</td>
+                        <td><span class="type-tag salud">Salud de marca</span></td>
+                        <td class="etiquetas-cell">Mujeres, Hombres, Mayor de 18</td>
+                        <td class="respuestas-cell">1000</td>
+                        <td><span class="status status-finalizado">Finalizado</span></td>
+                        <td class="actions-cell"><button class="menu-btn">&#8942;</button></td>
+                    </tr>
+                    <!-- Row 7 -->
+                    <tr>
+                        <td class="code-cell">A1</td>
+                        <td class="title-cell">Destinos de Vacaciones Favoritos para el 2026</td>
+                        <td><span class="type-tag concepto">Prueba de concepto</span></td>
+                        <td class="etiquetas-cell">Mujeres, Hombres, Mayor de 18</td>
+                        <td class="respuestas-cell">1000</td>
+                        <td><span class="status status-programado">Programado</span></td>
+                        <td class="actions-cell"><button class="menu-btn">&#8942;</button></td>
+                    </tr>
+                    <!-- Row 8 -->
+                    <tr>
+                        <td class="code-cell">A1</td>
+                        <td class="title-cell">Destinos de Vacaciones Favoritos para el 2026</td>
+                        <td><span class="type-tag concepto">Prueba de concepto</span></td>
+                        <td class="etiquetas-cell">Mujeres, Hombres, Mayor de 18</td>
+                        <td class="respuestas-cell">1000</td>
+                        <td><span class="status status-finalizado">Finalizado</span></td>
+                        <td class="actions-cell"><button class="menu-btn">&#8942;</button></td>
+                    </tr>
+                    <!-- Row 9 -->
+                    <tr>
+                        <td class="code-cell">A1</td>
+                        <td class="title-cell">Destinos de Vacaciones Favoritos para el 2026</td>
+                        <td><span class="type-tag concepto">Prueba de concepto</span></td>
+                        <td class="etiquetas-cell">Mujeres, Hombres, Mayor de 18</td>
+                        <td class="respuestas-cell">1000</td>
+                        <td><span class="status status-finalizado">Finalizado</span></td>
+                        <td class="actions-cell"><button class="menu-btn">&#8942;</button></td>
+                    </tr>
+                    <!-- Row 10 -->
+                    <tr>
+                        <td class="code-cell">A1</td>
+                        <td class="title-cell">Destinos de Vacaciones Favoritos para el 2026</td>
+                        <td><span class="type-tag concepto">Prueba de concepto</span></td>
+                        <td class="etiquetas-cell">Mujeres, Hombres, Mayor de 18</td>
+                        <td class="respuestas-cell">1000</td>
+                        <td><span class="status status-finalizado">Finalizado</span></td>
+                        <td class="actions-cell"><button class="menu-btn">&#8942;</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="pagination">
+            <button class="pagination-btn nav-arrow">&#8249;</button>
+            <button class="pagination-btn">1</button>
+            <button class="pagination-btn active">2</button>
+            <button class="pagination-btn">3</button>
+            <button class="pagination-btn">...</button>
+            <button class="pagination-btn nav-arrow">&#8250;</button>
+        </div>
+    </main>
+</body>
+</html>

@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kosmos Admin - Configuraci&oacute;n General</title>
+    <link rel="stylesheet" href="../styles-kosmos.css">
+    <style>
+        html, body {
+            height: 100%;
+        }
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            background: var(--bg-white);
+        }
+
+        /* ---- Top Bar ---- */
+        .editor-topbar {
+            display: flex;
+            align-items: center;
+            padding: 20px 32px 16px 32px;
+            border-bottom: 1px solid var(--border-light);
+            background: var(--bg-white);
+        }
+        .editor-topbar-title {
+            flex: 1;
+            font-size: 22px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        .editor-topbar-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .btn-icon {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            border-radius: var(--radius);
+            color: var(--text-secondary);
+            font-size: 22px;
+            transition: background 0.15s;
+        }
+        .btn-icon:hover {
+            background: var(--bg-gray);
+            color: var(--text-primary);
+        }
+        .btn-icon-close {
+            font-size: 26px;
+            color: var(--text-secondary);
+        }
+
+        /* ---- Tab Bar ---- */
+        .editor-tabs {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 32px;
+            background: var(--bg-white);
+            border-bottom: 1px solid var(--border-light);
+        }
+        .editor-tab {
+            padding: 8px 18px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            text-decoration: none;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.15s;
+            border: none;
+            background: transparent;
+        }
+        .editor-tab:hover {
+            color: var(--text-primary);
+            background: var(--bg-gray);
+        }
+        .editor-tab.active {
+            background: var(--primary);
+            color: #fff;
+        }
+
+        /* ---- Main Content Area ---- */
+        .editor-body {
+            flex: 1;
+            display: flex;
+            flex-direction: row;
+            background: var(--bg-gray);
+            padding: 24px 32px;
+            gap: 24px;
+            overflow-y: auto;
+        }
+
+        /* ---- Left Sidebar ---- */
+        .config-sidebar {
+            width: 280px;
+            min-width: 280px;
+            background: var(--bg-white);
+            border-radius: var(--radius-lg);
+            padding: 24px 0 24px 0;
+            align-self: flex-start;
+            box-shadow: var(--shadow-sm);
+        }
+        .config-sidebar-header {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            padding: 0 24px 16px 24px;
+        }
+        .config-sidebar-nav {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        .config-sidebar-nav li {
+            position: relative;
+        }
+        .config-nav-item {
+            display: block;
+            width: 100%;
+            padding: 12px 24px;
+            font-size: 14px;
+            font-weight: 400;
+            color: var(--text-primary);
+            background: transparent;
+            border: none;
+            text-align: left;
+            cursor: pointer;
+            transition: background 0.12s;
+            border-left: 3px solid transparent;
+        }
+        .config-nav-item:hover {
+            background: var(--bg-gray);
+        }
+        .config-nav-item.active {
+            border-left-color: var(--primary);
+            font-weight: 500;
+            background: var(--bg-gray);
+        }
+
+        /* ---- Right Panel ---- */
+        .config-panel {
+            flex: 1;
+            min-width: 0;
+        }
+        .config-section {
+            display: none;
+            background: var(--bg-white);
+            border-radius: var(--radius-lg);
+            padding: 28px 32px;
+            box-shadow: var(--shadow-sm);
+        }
+        .config-section.active {
+            display: block;
+        }
+        .config-section + .config-section-extra {
+            margin-top: 20px;
+        }
+        .config-section-extra {
+            display: none;
+            background: var(--bg-white);
+            border-radius: var(--radius-lg);
+            padding: 28px 32px;
+            box-shadow: var(--shadow-sm);
+        }
+        .config-section-extra.active {
+            display: block;
+        }
+
+        /* Section header (fieldset-like) */
+        .section-legend {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            margin-bottom: 20px;
+        }
+
+        /* Form elements scoped to config */
+        .cfg-description {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+        .cfg-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+        .cfg-input {
+            width: 100%;
+            padding: 11px 16px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            font-size: 14px;
+            font-family: inherit;
+            color: var(--text-primary);
+            background: var(--bg-white);
+            transition: border-color 0.2s;
+        }
+        .cfg-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(255,65,54,0.08);
+        }
+        .cfg-input::placeholder {
+            color: var(--text-muted);
+        }
+        .cfg-select {
+            width: 100%;
+            padding: 11px 16px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            font-size: 14px;
+            font-family: inherit;
+            color: var(--text-primary);
+            background: var(--bg-white);
+            cursor: pointer;
+            appearance: auto;
+        }
+        .cfg-select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        .cfg-textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            font-size: 14px;
+            font-family: inherit;
+            color: var(--text-primary);
+            background: var(--bg-white);
+            min-height: 100px;
+            resize: vertical;
+            transition: border-color 0.2s;
+        }
+        .cfg-textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(255,65,54,0.08);
+        }
+
+        /* File input */
+        .cfg-file-row {
+            display: flex;
+            align-items: center;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            overflow: hidden;
+        }
+        .cfg-file-btn {
+            padding: 11px 20px;
+            font-size: 14px;
+            font-weight: 500;
+            font-family: inherit;
+            color: var(--text-primary);
+            background: var(--bg-gray);
+            border: none;
+            border-right: 1px solid var(--border);
+            cursor: pointer;
+            white-space: nowrap;
+            transition: background 0.15s;
+        }
+        .cfg-file-btn:hover {
+            background: var(--border);
+        }
+        .cfg-file-name {
+            flex: 1;
+            padding: 11px 16px;
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        /* Inline form rows */
+        .cfg-row {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+        .cfg-row-label {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-primary);
+            min-width: 60px;
+        }
+        .cfg-group {
+            margin-bottom: 20px;
+        }
+        .cfg-group:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Schedule row */
+        .schedule-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .schedule-label {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-primary);
+            min-width: 42px;
+        }
+        .schedule-input {
+            padding: 11px 14px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            font-size: 14px;
+            font-family: inherit;
+            color: var(--text-primary);
+            background: var(--bg-white);
+            width: 160px;
+        }
+        .schedule-input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        /* Radio group */
+        .radio-group {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+        .radio-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: var(--text-primary);
+            cursor: pointer;
+        }
+        .radio-option input[type="radio"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--primary);
+            cursor: pointer;
+        }
+
+        /* Small inline number input */
+        .inline-number {
+            width: 60px;
+            padding: 8px 10px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            font-size: 14px;
+            font-family: inherit;
+            color: var(--text-primary);
+            text-align: center;
+        }
+        .inline-number:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        /* Edad row */
+        .edad-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            font-size: 14px;
+            color: var(--text-primary);
+        }
+
+        /* Pais row */
+        .pais-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        .pais-col label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        /* Tag chips */
+        .chip-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .chip {
+            display: inline-flex;
+            align-items: center;
+            padding: 8px 18px;
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            font-size: 14px;
+            color: var(--text-primary);
+            background: var(--bg-white);
+            cursor: pointer;
+            transition: all 0.15s;
+            user-select: none;
+        }
+        .chip:hover {
+            border-color: var(--text-secondary);
+            background: var(--bg-gray);
+        }
+        .chip.selected {
+            border-color: var(--primary);
+            background: #FFF0EF;
+            color: var(--primary);
+        }
+
+        /* ---- Footer Bar ---- */
+        .editor-footer {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding: 16px 32px;
+            background: var(--bg-white);
+            border-top: 1px solid var(--border-light);
+        }
+        .btn-save {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 28px;
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            border-radius: var(--radius);
+            font-size: 14px;
+            font-weight: 500;
+            font-family: inherit;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+        .btn-save:hover {
+            background: var(--primary-dark);
+        }
+        .btn-save svg {
+            width: 18px;
+            height: 18px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== TOP BAR ===== -->
+    <div class="editor-topbar">
+        <div class="editor-topbar-title">Este es el t&iacute;tulo del estudio</div>
+        <div class="editor-topbar-actions">
+            <button class="btn-icon" title="M&aacute;s opciones">&#8942;</button>
+            <a href="01-Lista-Plantillas.html" class="btn-icon btn-icon-close" title="Cerrar">&times;</a>
+        </div>
+    </div>
+
+    <!-- ===== TAB BAR ===== -->
+    <div class="editor-tabs">
+        <a href="02-Editor-Preguntas.html" class="editor-tab">Agregar preguntas</a>
+        <a href="03-Editor-Reglas.html" class="editor-tab">Reglas</a>
+        <span class="editor-tab active">Configuraci&oacute;n general</span>
+    </div>
+
+    <!-- ===== BODY (sidebar + panel) ===== -->
+    <div class="editor-body">
+
+        <!-- Left Sidebar -->
+        <aside class="config-sidebar">
+            <div class="config-sidebar-header">Configuraci&oacute;n general</div>
+            <ul class="config-sidebar-nav">
+                <li><button class="config-nav-item active" data-section="sec-imagen">Imagen de encuesta</button></li>
+                <li><button class="config-nav-item" data-section="sec-premio">Premio</button></li>
+                <li><button class="config-nav-item" data-section="sec-programar">Programar estudio</button></li>
+                <li><button class="config-nav-item" data-section="sec-mensaje">Mensaje de confirmaci&oacute;n</button></li>
+                <li><button class="config-nav-item" data-section="sec-segmento">Segmento del estudio</button></li>
+            </ul>
+        </aside>
+
+        <!-- Right Panel -->
+        <div class="config-panel">
+
+            <!-- 1. Imagen de encuesta -->
+            <div id="sec-imagen" class="config-section active">
+                <div class="section-legend">Imagen de encuesta</div>
+                <p class="cfg-description">Esta imagen es para identificar la encuesta, debe ser en formato cuadrado 1:1</p>
+                <div class="cfg-file-row">
+                    <button class="cfg-file-btn" onclick="document.getElementById('fileInput').click()">Seleccionar imagen</button>
+                    <span class="cfg-file-name" id="fileName">Ninguna imagen seleccionada</span>
+                    <input type="file" id="fileInput" accept="image/*" style="display:none" onchange="document.getElementById('fileName').textContent = this.files[0] ? this.files[0].name : 'Ninguna imagen seleccionada'">
+                </div>
+            </div>
+
+            <!-- 2. Premio -->
+            <div id="sec-premio" class="config-section">
+                <div class="section-legend">Premio</div>
+                <div class="cfg-row">
+                    <span class="cfg-row-label">Tipo</span>
+                    <div style="flex:1; max-width:320px;">
+                        <select class="cfg-select">
+                            <option selected>Puntaje</option>
+                            <option>Sorteo</option>
+                            <option>Efectivo</option>
+                        </select>
+                    </div>
+                    <span class="cfg-row-label">Cantidad</span>
+                    <div style="flex:1;">
+                        <input type="text" class="cfg-input" placeholder="Ej. 100 puntos">
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. Programar estudio -->
+            <div id="sec-programar" class="config-section">
+                <div class="section-legend">Programar estudio</div>
+                <div class="schedule-row">
+                    <span class="schedule-label">Inicio</span>
+                    <input type="text" class="schedule-input" value="26/06/2024" placeholder="dd/mm/aaaa">
+                    <input type="text" class="schedule-input" value="10:00" placeholder="HH:mm">
+                    <span class="schedule-label" style="margin-left:16px;">Fin</span>
+                    <input type="text" class="schedule-input" value="26/07/2024" placeholder="dd/mm/aaaa">
+                    <input type="text" class="schedule-input" value="12:00" placeholder="HH:mm">
+                </div>
+            </div>
+
+            <!-- 4. Mensaje de confirmacion -->
+            <div id="sec-mensaje" class="config-section">
+                <div class="section-legend">Mensaje de confirmaci&oacute;n</div>
+                <div class="cfg-group">
+                    <label class="cfg-label">T&iacute;tulo</label>
+                    <input type="text" class="cfg-input" value="&iexcl;Gracias por participar!">
+                </div>
+                <div class="cfg-group">
+                    <label class="cfg-label">Mensaje</label>
+                    <textarea class="cfg-textarea">Al realizar este estudio obtuviste 40 puntos.</textarea>
+                </div>
+            </div>
+
+            <!-- 5. Segmento del estudio -->
+            <div id="sec-segmento" class="config-section">
+                <div class="section-legend">Segmento del estudio</div>
+
+                <!-- Genero -->
+                <div class="cfg-group">
+                    <div class="cfg-row">
+                        <span class="cfg-row-label">G&eacute;nero</span>
+                        <div class="radio-group">
+                            <label class="radio-option"><input type="radio" name="genero" value="hombres"> Hombres</label>
+                            <label class="radio-option"><input type="radio" name="genero" value="mujeres"> Mujeres</label>
+                            <label class="radio-option"><input type="radio" name="genero" value="ambos"> Ambos g&eacute;neros</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Edad -->
+                <div class="cfg-group">
+                    <div class="edad-row">
+                        <span class="cfg-row-label">Edad</span>
+                        <span>Mayor de</span>
+                        <input type="number" class="inline-number" value="18">
+                        <span style="margin-left:12px;">Fijar rango:</span>
+                        <span>de</span>
+                        <input type="number" class="inline-number" value="0">
+                        <span>a</span>
+                        <input type="number" class="inline-number" value="100">
+                        <span>a&ntilde;os</span>
+                    </div>
+                </div>
+
+                <!-- Pais -->
+                <div class="cfg-group">
+                    <div class="cfg-row" style="margin-bottom:8px;">
+                        <span class="cfg-row-label">Pa&iacute;s</span>
+                    </div>
+                    <div class="pais-grid">
+                        <div class="pais-col">
+                            <label>Incluir pa&iacute;ses</label>
+                            <select class="cfg-select">
+                                <option selected disabled>Seleccionar</option>
+                                <option>Argentina</option>
+                                <option>M&eacute;xico</option>
+                                <option>Colombia</option>
+                                <option>Chile</option>
+                                <option>Per&uacute;</option>
+                                <option>Brasil</option>
+                                <option>Espa&ntilde;a</option>
+                            </select>
+                        </div>
+                        <div class="pais-col">
+                            <label>Excluir pa&iacute;ses</label>
+                            <select class="cfg-select">
+                                <option selected disabled>Seleccionar</option>
+                                <option>Argentina</option>
+                                <option>M&eacute;xico</option>
+                                <option>Colombia</option>
+                                <option>Chile</option>
+                                <option>Per&uacute;</option>
+                                <option>Brasil</option>
+                                <option>Espa&ntilde;a</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 5b. Etiquetas (extra card, only visible with segmento) -->
+            <div id="sec-segmento-tags" class="config-section-extra">
+                <div class="section-legend">Etiquetas - Intereses de los encuestados</div>
+                <p class="cfg-description">Selecciona los intereses que deben tener los usuarios para que se les muestre este estudio.</p>
+                <div class="chip-grid">
+                    <button class="chip" type="button">Alimentos</button>
+                    <button class="chip" type="button">Bebidas</button>
+                    <button class="chip" type="button">H&aacute;bitos cotidianos</button>
+                    <button class="chip" type="button">Medio ambiente</button>
+                    <button class="chip" type="button">Moda</button>
+                    <button class="chip" type="button">Pol&iacute;tica</button>
+                    <button class="chip" type="button">Salud y bienestar</button>
+                    <button class="chip" type="button">Servicios b&aacute;sicos</button>
+                    <button class="chip" type="button">Supermercados</button>
+                    <button class="chip" type="button">Telecomunicaciones</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== FOOTER BAR ===== -->
+    <div class="editor-footer">
+        <button class="btn-save">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9 11l3 3L22 4"/>
+                <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
+            </svg>
+            Guardar y crear estudio
+        </button>
+    </div>
+
+    <!-- ===== JAVASCRIPT ===== -->
+    <script>
+        (function() {
+            var navItems = document.querySelectorAll('.config-nav-item');
+            var sections = document.querySelectorAll('.config-section');
+            var tagsExtra = document.getElementById('sec-segmento-tags');
+
+            navItems.forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    // Update active nav item
+                    navItems.forEach(function(b) { b.classList.remove('active'); });
+                    btn.classList.add('active');
+
+                    var targetId = btn.getAttribute('data-section');
+
+                    // Show/hide sections
+                    sections.forEach(function(sec) {
+                        if (sec.id === targetId) {
+                            sec.classList.add('active');
+                        } else {
+                            sec.classList.remove('active');
+                        }
+                    });
+
+                    // Show tags card only when segmento is selected
+                    if (targetId === 'sec-segmento') {
+                        tagsExtra.classList.add('active');
+                    } else {
+                        tagsExtra.classList.remove('active');
+                    }
+                });
+            });
+
+            // Chip toggle behavior
+            var chips = document.querySelectorAll('.chip');
+            chips.forEach(function(chip) {
+                chip.addEventListener('click', function() {
+                    chip.classList.toggle('selected');
+                });
+            });
+        })();
+    </script>
+</body>
+</html>

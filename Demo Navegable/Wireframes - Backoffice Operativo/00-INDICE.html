@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kosmos MVP - Wireframes Backoffice Operativo</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            color: #333;
+            padding: 40px;
+        }
+        .container { max-width: 1000px; margin: 0 auto; }
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+            color: white;
+        }
+        .header h1 {
+            font-size: 42px;
+            margin-bottom: 10px;
+        }
+        .header .subtitle {
+            font-size: 20px;
+            color: #a0a0a0;
+        }
+        .badge {
+            display: inline-block;
+            background: #ff6b6b;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+            margin-top: 20px;
+        }
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+        }
+        .card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            transition: transform 0.3s, box-shadow 0.3s;
+            text-decoration: none;
+            color: inherit;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+        }
+        .card-header {
+            padding: 25px;
+            color: white;
+            position: relative;
+        }
+        .card-header.blue { background: linear-gradient(135deg, #3498db, #2980b9); }
+        .card-header.green { background: linear-gradient(135deg, #27ae60, #1e8449); }
+        .card-header.purple { background: linear-gradient(135deg, #9b59b6, #8e44ad); }
+        .card-header.red { background: linear-gradient(135deg, #e74c3c, #c0392b); }
+        .card-header.orange { background: linear-gradient(135deg, #f39c12, #d68910); }
+        .card-header.teal { background: linear-gradient(135deg, #1abc9c, #16a085); }
+        .card-number {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 48px;
+            font-weight: bold;
+            opacity: 0.3;
+        }
+        .card-icon {
+            font-size: 36px;
+            margin-bottom: 15px;
+        }
+        .card-title {
+            font-size: 22px;
+            font-weight: bold;
+        }
+        .card-body {
+            padding: 20px 25px 25px;
+        }
+        .card-description {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+        .card-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .feature-tag {
+            background: #f0f0f0;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            color: #555;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 50px;
+            color: #a0a0a0;
+            font-size: 14px;
+        }
+        .footer a {
+            color: #3498db;
+            text-decoration: none;
+        }
+        .note-box {
+            background: rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 40px;
+            color: white;
+        }
+        .note-box h3 {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .note-box p {
+            color: #ccc;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>KOSMOS MVP</h1>
+            <div class="subtitle">Wireframes - Backoffice Operativo</div>
+            <div class="badge">⚠️ BOCETOS DE DISEÑO - Fase Prototipo</div>
+        </div>
+
+        <div class="note-box">
+            <h3>📋 Sobre estos wireframes</h3>
+            <p>
+                Estos son bocetos de las pantallas del backoffice operativo que se completarán durante la fase de prototipo (Semanas 5-6).
+                Representan la estructura y funcionalidad planificada, pendientes de aplicar el diseño visual final.
+                El objetivo es validar flujos y funcionalidad antes de invertir en diseño de alta fidelidad.
+            </p>
+        </div>
+
+        <div class="cards-grid">
+            <a href="01-Cola-Redenciones.html" class="card">
+                <div class="card-header blue">
+                    <div class="card-number">01</div>
+                    <div class="card-icon">💰</div>
+                    <div class="card-title">Cola de Redenciones</div>
+                </div>
+                <div class="card-body">
+                    <p class="card-description">
+                        Gestión de solicitudes de canje de puntos. Flujo de aprobación manual de pagos SINPE y tarjetas de regalo.
+                    </p>
+                    <div class="card-features">
+                        <span class="feature-tag">Pendientes</span>
+                        <span class="feature-tag">Aprobación</span>
+                        <span class="feature-tag">Verificación</span>
+                        <span class="feature-tag">Historial</span>
+                    </div>
+                </div>
+            </a>
+
+            <a href="02-Gestion-Participantes.html" class="card">
+                <div class="card-header green">
+                    <div class="card-number">02</div>
+                    <div class="card-icon">👥</div>
+                    <div class="card-title">Gestión de Participantes</div>
+                </div>
+                <div class="card-body">
+                    <p class="card-description">
+                        Búsqueda y perfil completo de panelistas. Indicadores NSE, balance de puntos y actividad reciente.
+                    </p>
+                    <div class="card-features">
+                        <span class="feature-tag">Búsqueda</span>
+                        <span class="feature-tag">Perfil 360°</span>
+                        <span class="feature-tag">NSE Score</span>
+                        <span class="feature-tag">Forzar Update</span>
+                    </div>
+                </div>
+            </a>
+
+            <a href="03-Gestion-Clientes-Empresas.html" class="card">
+                <div class="card-header purple">
+                    <div class="card-number">03</div>
+                    <div class="card-icon">🏢</div>
+                    <div class="card-title">Gestión de Clientes</div>
+                </div>
+                <div class="card-body">
+                    <p class="card-description">
+                        CRM de empresas clientes. Listado con planes, estado de pago y funcionalidad de impersonación para soporte.
+                    </p>
+                    <div class="card-features">
+                        <span class="feature-tag">Listado</span>
+                        <span class="feature-tag">Filtros</span>
+                        <span class="feature-tag">MRR</span>
+                        <span class="feature-tag">Impersonar</span>
+                    </div>
+                </div>
+            </a>
+
+            <a href="04-Cola-Fraude.html" class="card">
+                <div class="card-header red">
+                    <div class="card-number">04</div>
+                    <div class="card-icon">🛡️</div>
+                    <div class="card-title">Control de Fraude</div>
+                </div>
+                <div class="card-body">
+                    <p class="card-description">
+                        Safety net del panel. Cola de alertas por nivel de riesgo, configuración de límites y acciones de bloqueo.
+                    </p>
+                    <div class="card-features">
+                        <span class="feature-tag">Alertas</span>
+                        <span class="feature-tag">Niveles Riesgo</span>
+                        <span class="feature-tag">Bloqueo</span>
+                        <span class="feature-tag">Referidos</span>
+                    </div>
+                </div>
+            </a>
+
+            <a href="05-Dashboard-Monitoreo.html" class="card">
+                <div class="card-header orange">
+                    <div class="card-number">05</div>
+                    <div class="card-icon">📊</div>
+                    <div class="card-title">Dashboard de Monitoreo</div>
+                </div>
+                <div class="card-body">
+                    <p class="card-description">
+                        KPIs de negocio en tiempo real. MRR, clientes activos, próximos vencimientos y desempeño por país.
+                    </p>
+                    <div class="card-features">
+                        <span class="feature-tag">MRR</span>
+                        <span class="feature-tag">Vencimientos</span>
+                        <span class="feature-tag">Gráficos</span>
+                        <span class="feature-tag">Exportar</span>
+                    </div>
+                </div>
+            </a>
+
+            <a href="06-Catalogo-Premios.html" class="card">
+                <div class="card-header teal">
+                    <div class="card-number">06</div>
+                    <div class="card-icon">🎁</div>
+                    <div class="card-title">Catálogo de Premios</div>
+                </div>
+                <div class="card-body">
+                    <p class="card-description">
+                        Gestión del catálogo de recompensas. CRUD de premios con disponibilidad geográfica y preview móvil.
+                    </p>
+                    <div class="card-features">
+                        <span class="feature-tag">Listado</span>
+                        <span class="feature-tag">Crear Premio</span>
+                        <span class="feature-tag">Por País</span>
+                        <span class="feature-tag">Preview</span>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="footer">
+            <p>Kosmos MVP - Wireframes generados para fase de prototipo</p>
+            <p>Febrero 2026 | Semana 4</p>
+        </div>
+    </div>
+</body>
+</html>

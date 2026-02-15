@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kosmos - Nuevo Estudio</title>
+    <link rel="stylesheet" href="../styles-kosmos.css">
+    <style>
+        /* ── Background: faded studies list ── */
+        body {
+            overflow: hidden;
+        }
+
+        .bg-page {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .bg-page .header {
+            pointer-events: none;
+        }
+
+        .bg-main {
+            padding: 32px 48px;
+        }
+
+        .bg-page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+        }
+
+        .bg-search-actions {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .bg-search-box {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 16px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            background: var(--bg-white);
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        .bg-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .bg-table th {
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-muted);
+            padding: 16px 20px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .bg-table td {
+            padding: 20px;
+            border-bottom: 1px solid var(--border-light);
+            font-size: 14px;
+        }
+
+        .bg-code { font-weight: 600; }
+
+        .bg-type-tag {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 13px;
+            font-weight: 500;
+            background: #fef2f2;
+            color: var(--primary);
+        }
+
+        .bg-status-iniciado { color: #16a34a; }
+        .bg-status-pausado  { color: #d97706; }
+        .bg-status-finalizado { color: #16a34a; }
+        .bg-status-programado { color: #d97706; }
+
+        .bg-etiquetas { color: var(--text-secondary); font-size: 13px; }
+        .bg-respuestas { font-weight: 500; }
+
+        /* ── Overlay dimmer ── */
+        .overlay-dim {
+            position: fixed;
+            inset: 0;
+            background: rgba(255, 255, 255, 0.72);
+            z-index: 10;
+        }
+
+        /* ── Modal card ── */
+        .wizard-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 20;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+        }
+
+        .wizard-card {
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.12), 0 2px 12px rgba(0, 0, 0, 0.06);
+            width: 100%;
+            max-width: 680px;
+            padding: 40px 48px 32px;
+            position: relative;
+        }
+
+        /* ── Stepper ── */
+        .stepper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0;
+            margin-bottom: 32px;
+        }
+
+        .step {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .step-number {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 13px;
+            background: #e5e7eb;
+            color: #9ca3af;
+            flex-shrink: 0;
+        }
+
+        .step.active .step-number {
+            background: var(--primary);
+            color: #fff;
+        }
+
+        .step.completed .step-number {
+            background: var(--primary);
+            color: #fff;
+        }
+
+        .step-label {
+            font-size: 14px;
+            font-weight: 500;
+            color: #9ca3af;
+        }
+
+        .step.active .step-label {
+            color: var(--text-primary);
+        }
+
+        .step.completed .step-label {
+            color: var(--text-primary);
+        }
+
+        .step-connector {
+            width: 48px;
+            height: 2px;
+            background: #e5e7eb;
+            margin: 0 16px;
+            flex-shrink: 0;
+        }
+
+        /* ── Title area ── */
+        .wizard-heading {
+            margin-bottom: 28px;
+        }
+
+        .wizard-heading h1 {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .wizard-heading p {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        /* ── Option cards grid ── */
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .option-card {
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            cursor: pointer;
+            transition: border-color 0.2s, background 0.2s;
+            position: relative;
+        }
+
+        .option-card:hover {
+            border-color: #c5c8cc;
+        }
+
+        .option-card.selected {
+            border-color: var(--primary);
+            background: #fff;
+        }
+
+        .option-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--bg-gray);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 14px;
+        }
+
+        .option-icon svg {
+            width: 20px;
+            height: 20px;
+            color: var(--text-secondary);
+        }
+
+        .option-card.selected .option-icon {
+            background: #fef2f2;
+        }
+
+        .option-card.selected .option-icon svg {
+            color: var(--primary);
+        }
+
+        .option-card h3 {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+        }
+
+        .option-card p {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        /* ── Bottom actions ── */
+        .wizard-actions {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            padding-top: 24px;
+            border-top: 1px solid var(--border-light);
+        }
+
+        .btn-next {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 28px;
+            background: var(--primary);
+            color: #fff;
+            font-size: 14px;
+            font-weight: 500;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background 0.2s;
+        }
+
+        .btn-next:hover {
+            background: var(--primary-dark);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ═══ Background: Faded studies list ═══ -->
+    <div class="bg-page">
+        <header class="header">
+            <span class="logo">kosmos<span class="dot">.</span></span>
+            <div class="avatar">CK</div>
+        </header>
+
+        <div class="bg-main">
+            <div class="bg-page-header">
+                <h1 class="page-title">Estudios</h1>
+                <div class="bg-search-actions">
+                    <div class="bg-search-box">
+                        <span>&#128269;</span> Buscar
+                    </div>
+                    <span class="btn btn-primary" style="pointer-events:none;">+ Nuevo estudio</span>
+                </div>
+            </div>
+
+            <table class="bg-table">
+                <thead>
+                    <tr>
+                        <th>Codigo</th>
+                        <th>Titulo</th>
+                        <th>Tipo</th>
+                        <th>Etiquetas</th>
+                        <th>Respuestas</th>
+                        <th>Estado</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="bg-code">A1</td>
+                        <td>Estudio Evaluacion de producto</td>
+                        <td><span class="bg-type-tag">Salud de marca</span></td>
+                        <td class="bg-etiquetas">Mujeres, Hombres, Mayor de 18, Salud y Bienestar, Politica, Arge...</td>
+                        <td class="bg-respuestas">300</td>
+                        <td><span class="bg-status-iniciado">Iniciado</span></td>
+                        <td style="text-align:right;color:var(--text-muted);">&#8942;</td>
+                    </tr>
+                    <tr>
+                        <td class="bg-code">C2</td>
+                        <td>Tendencias de Moda 2026</td>
+                        <td><span class="bg-type-tag">Salud de marca</span></td>
+                        <td class="bg-etiquetas">Mujeres, Hombres, Mayor de 18</td>
+                        <td class="bg-respuestas">500</td>
+                        <td><span class="bg-status-pausado">Pausado</span></td>
+                        <td style="text-align:right;color:var(--text-muted);">&#8942;</td>
+                    </tr>
+                    <tr>
+                        <td class="bg-code">B3</td>
+                        <td>Habitos de Actividad Fisica</td>
+                        <td><span class="bg-type-tag">Salud de marca</span></td>
+                        <td class="bg-etiquetas">Mujeres, Hombres, Mayor de 18</td>
+                        <td class="bg-respuestas">900</td>
+                        <td><span class="bg-status-finalizado">Finalizado</span></td>
+                        <td style="text-align:right;color:var(--text-muted);">&#8942;</td>
+                    </tr>
+                    <tr>
+                        <td class="bg-code">A1</td>
+                        <td>Percepcion Ciudadana sobre Politicas de Gobierno 2026</td>
+                        <td><span class="bg-type-tag">Salud de marca</span></td>
+                        <td class="bg-etiquetas">Mujeres, Hombres, Mayor de 18</td>
+                        <td class="bg-respuestas">120</td>
+                        <td><span class="bg-status-iniciado">Iniciado</span></td>
+                        <td style="text-align:right;color:var(--text-muted);">&#8942;</td>
+                    </tr>
+                    <tr>
+                        <td class="bg-code">C2</td>
+                        <td>Comportamiento Financiero</td>
+                        <td><span class="bg-type-tag">Salud de marca</span></td>
+                        <td class="bg-etiquetas">Mujeres, Hombres, Mayor de 18</td>
+                        <td class="bg-respuestas">400</td>
+                        <td><span class="bg-status-pausado">Pausado</span></td>
+                        <td style="text-align:right;color:var(--text-muted);">&#8942;</td>
+                    </tr>
+                    <tr>
+                        <td class="bg-code">A1</td>
+                        <td>Destinos de Vacaciones Favoritos para el 2026</td>
+                        <td><span class="bg-type-tag">Salud de marca</span></td>
+                        <td class="bg-etiquetas">Mujeres, Hombres, Mayor de 18</td>
+                        <td class="bg-respuestas">1000</td>
+                        <td><span class="bg-status-finalizado">Finalizado</span></td>
+                        <td style="text-align:right;color:var(--text-muted);">&#8942;</td>
+                    </tr>
+                    <tr>
+                        <td class="bg-code">A1</td>
+                        <td>Destinos de Vacaciones Favoritos para el 2026</td>
+                        <td><span class="bg-type-tag">Prueba de concepto</span></td>
+                        <td class="bg-etiquetas">Mujeres, Hombres, Mayor de 18</td>
+                        <td class="bg-respuestas">1000</td>
+                        <td><span class="bg-status-programado">Programado</span></td>
+                        <td style="text-align:right;color:var(--text-muted);">&#8942;</td>
+                    </tr>
+                    <tr>
+                        <td class="bg-code">A1</td>
+                        <td>Destinos de Vacaciones Favoritos para el 2026</td>
+                        <td><span class="bg-type-tag">Prueba de concepto</span></td>
+                        <td class="bg-etiquetas">Mujeres, Hombres, Mayor de 18</td>
+                        <td class="bg-respuestas">1000</td>
+                        <td><span class="bg-status-finalizado">Finalizado</span></td>
+                        <td style="text-align:right;color:var(--text-muted);">&#8942;</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- ═══ Semi-transparent overlay ═══ -->
+    <div class="overlay-dim"></div>
+
+    <!-- ═══ Wizard modal ═══ -->
+    <div class="wizard-modal">
+        <div class="wizard-card">
+
+            <!-- Step indicator -->
+            <div class="stepper">
+                <div class="step active">
+                    <div class="step-number">1</div>
+                    <span class="step-label">Plantilla</span>
+                </div>
+                <div class="step-connector"></div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <span class="step-label">Segmento</span>
+                </div>
+                <div class="step-connector"></div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <span class="step-label">Volumen</span>
+                </div>
+            </div>
+
+            <!-- Title -->
+            <div class="wizard-heading">
+                <h1>Nuevo estudio</h1>
+                <p>Selecciona una plantilla</p>
+            </div>
+
+            <!-- Template cards -->
+            <div class="options-grid">
+                <!-- Card 1: Salud de marca -->
+                <div class="option-card" onclick="selectCard(this)">
+                    <div class="option-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                            <polyline points="17 8 12 3 7 8"/>
+                            <line x1="12" y1="3" x2="12" y2="15"/>
+                        </svg>
+                    </div>
+                    <h3>Salud de marca</h3>
+                    <p>Se recomienda una muestra de LRA 800 de creditos</p>
+                </div>
+
+                <!-- Card 2: Prueba de concepto (selected) -->
+                <div class="option-card selected" onclick="selectCard(this)">
+                    <div class="option-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                            <polyline points="17 8 12 3 7 8"/>
+                            <line x1="12" y1="3" x2="12" y2="15"/>
+                        </svg>
+                    </div>
+                    <h3>Prueba de concepto</h3>
+                    <p>Se recomienda una muestra de LRA 800 de creditos</p>
+                </div>
+            </div>
+
+            <!-- Bottom actions -->
+            <div class="wizard-actions">
+                <a href="08-Wizard-Paso2.html" class="btn-next">Siguiente</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function selectCard(card) {
+            document.querySelectorAll('.option-card').forEach(function(c) {
+                c.classList.remove('selected');
+            });
+            card.classList.add('selected');
+        }
+    </script>
+</body>
+</html>

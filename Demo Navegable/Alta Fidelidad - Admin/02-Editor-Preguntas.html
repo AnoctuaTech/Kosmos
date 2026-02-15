@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kosmos Admin - Editor de Preguntas</title>
+    <link rel="stylesheet" href="../styles-kosmos.css">
+    <style>
+        /* ── Page shell ─────────────────────────────── */
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            background: var(--bg-gray);
+        }
+
+        /* ── Top bar (title + menu + close) ────────── */
+        .topbar {
+            display: flex;
+            align-items: center;
+            padding: 18px 32px;
+            background: var(--bg-white);
+            border-bottom: 1px solid var(--border);
+            gap: 16px;
+        }
+        .topbar-title {
+            flex: 1;
+            font-size: 22px;
+            font-weight: 400;
+            color: var(--text-primary);
+            border: none;
+            outline: none;
+            background: transparent;
+            font-family: inherit;
+            line-height: 1.4;
+        }
+        .topbar-title::placeholder { color: var(--text-muted); }
+
+        .topbar-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .icon-btn {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            background: none;
+            cursor: pointer;
+            border-radius: var(--radius);
+            color: var(--text-secondary);
+            font-size: 20px;
+            transition: background 0.15s;
+            text-decoration: none;
+        }
+        .icon-btn:hover {
+            background: var(--bg-gray);
+            color: var(--text-primary);
+        }
+
+        /* 3-dot menu */
+        .menu-anchor { position: relative; }
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 42px;
+            right: 0;
+            background: var(--bg-white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-lg);
+            min-width: 200px;
+            z-index: 100;
+            padding: 6px 0;
+        }
+        .dropdown-menu.open { display: block; }
+        .dropdown-item {
+            display: block;
+            width: 100%;
+            padding: 10px 20px;
+            font-size: 14px;
+            color: var(--text-primary);
+            background: none;
+            border: none;
+            text-align: left;
+            cursor: pointer;
+            font-family: inherit;
+        }
+        .dropdown-item:hover { background: var(--bg-gray); }
+
+        /* ── Tab bar ────────────────────────────────── */
+        .tabs-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--bg-white);
+            border-bottom: 1px solid var(--border);
+            padding: 12px 32px;
+        }
+        .tab-link {
+            padding: 8px 18px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            text-decoration: none;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.15s;
+            border: none;
+            background: transparent;
+            font-family: inherit;
+        }
+        .tab-link:hover { color: var(--text-primary); }
+        .tab-link.active {
+            background: var(--primary);
+            color: #fff;
+        }
+
+        /* ── Main layout: sidebar + editor ─────────── */
+        .editor-layout {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        /* ── Left sidebar ───────────────────────────── */
+        .sidebar {
+            width: 320px;
+            min-width: 320px;
+            background: var(--bg-white);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+        .sidebar-label {
+            padding: 20px 20px 12px;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+        }
+        .sidebar-list {
+            list-style: none;
+            padding: 0 0 20px;
+            margin: 0;
+        }
+
+        /* Sidebar question item */
+        .sq-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            cursor: pointer;
+            border-left: 3px solid transparent;
+            transition: background 0.15s;
+            gap: 10px;
+            position: relative;
+        }
+        .sq-item:hover {
+            background: #fef2f2;
+        }
+        .sq-item.active {
+            background: #fef2f2;
+            border-left-color: var(--primary);
+        }
+        .sq-icon {
+            width: 22px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            color: var(--text-secondary);
+        }
+        .sq-name {
+            flex: 1;
+            font-size: 14px;
+            color: var(--text-primary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .sq-actions {
+            display: flex;
+            gap: 2px;
+            opacity: 0;
+            transition: opacity 0.15s;
+        }
+        .sq-item:hover .sq-actions,
+        .sq-item.active .sq-actions {
+            opacity: 1;
+        }
+        .sq-action-btn {
+            width: 26px;
+            height: 26px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            background: none;
+            cursor: pointer;
+            color: var(--text-muted);
+            border-radius: 4px;
+            font-size: 14px;
+            transition: color 0.15s, background 0.15s;
+        }
+        .sq-action-btn:hover {
+            color: var(--text-primary);
+            background: rgba(0,0,0,0.05);
+        }
+
+        /* ── Right editor panel ─────────────────────── */
+        .editor-panel {
+            flex: 1;
+            background: var(--bg-gray);
+            padding: 28px 40px;
+            overflow-y: auto;
+        }
+        .editor-card {
+            background: var(--bg-white);
+            border-radius: var(--radius-lg);
+            padding: 32px 36px;
+            max-width: 920px;
+            border: 1px solid var(--border-light);
+        }
+        .editor-section-title {
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 24px;
+        }
+
+        /* Form rows (label left, input right) */
+        .form-row {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 20px;
+            gap: 16px;
+        }
+        .form-row .field-label {
+            width: 160px;
+            min-width: 160px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-primary);
+            padding-top: 10px;
+        }
+        .form-row .field-control {
+            flex: 1;
+        }
+        .field-select {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            font-size: 14px;
+            font-family: inherit;
+            background: var(--bg-white);
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='7' fill='none'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236c757d' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+            padding-right: 36px;
+        }
+        .field-select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        .field-textarea {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            font-size: 14px;
+            font-family: inherit;
+            min-height: 80px;
+            resize: vertical;
+            line-height: 1.5;
+        }
+        .field-textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        .field-textarea::placeholder { color: var(--text-muted); }
+
+        /* Options list (radio / checkbox) */
+        .option-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .option-row input[type="radio"],
+        .option-row input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--primary);
+            flex-shrink: 0;
+            cursor: default;
+        }
+        .option-row .option-input {
+            flex: 1;
+            padding: 8px 0;
+            border: none;
+            border-bottom: 1px solid var(--border);
+            font-size: 14px;
+            font-family: inherit;
+            outline: none;
+        }
+        .option-row .option-input:focus {
+            border-bottom-color: var(--primary);
+        }
+        .option-row .option-input::placeholder { color: var(--text-muted); }
+        .option-delete {
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            background: none;
+            cursor: pointer;
+            color: var(--text-muted);
+            font-size: 18px;
+            border-radius: 4px;
+        }
+        .option-delete:hover { color: var(--text-primary); }
+
+        .add-links {
+            display: flex;
+            gap: 20px;
+            margin-top: 6px;
+            margin-bottom: 10px;
+        }
+        .add-link {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--primary);
+            cursor: pointer;
+            border: none;
+            background: none;
+            font-family: inherit;
+            text-decoration: underline;
+            padding: 0;
+        }
+        .add-link:hover { color: var(--primary-dark); }
+
+        /* Separator */
+        .field-separator {
+            border: none;
+            border-top: 1px solid var(--border-light);
+            margin: 20px 0;
+        }
+
+        /* Toggle switch */
+        .toggle-row {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .toggle-row .field-label {
+            padding-top: 0;
+        }
+        .toggle-switch {
+            position: relative;
+            width: 44px;
+            height: 24px;
+            flex-shrink: 0;
+        }
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .toggle-slider {
+            position: absolute;
+            inset: 0;
+            border-radius: 12px;
+            background: var(--border);
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .toggle-slider::after {
+            content: '';
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #fff;
+            transition: transform 0.2s;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+        }
+        .toggle-switch input:checked + .toggle-slider {
+            background: var(--primary);
+        }
+        .toggle-switch input:checked + .toggle-slider::after {
+            transform: translateX(20px);
+        }
+
+        /* Likert emoji scale */
+        .likert-emojis {
+            display: flex;
+            gap: 20px;
+            justify-content: flex-start;
+            padding: 12px 0 4px;
+        }
+        .emoji-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+        }
+        .emoji-face {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            border: 2px solid var(--border);
+            transition: border-color 0.15s;
+        }
+        .emoji-item.selected .emoji-face {
+            border-color: var(--primary);
+        }
+        .emoji-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        /* Static value text */
+        .static-value {
+            font-size: 14px;
+            color: var(--text-secondary);
+            padding-top: 10px;
+        }
+
+        /* ── Footer bar ─────────────────────────────── */
+        .editor-footer {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 20px;
+            padding: 14px 32px;
+            background: var(--bg-white);
+            border-top: 1px solid var(--border);
+        }
+        .footer-add-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-primary);
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-family: inherit;
+            padding: 10px 16px;
+            border-radius: var(--radius);
+            transition: background 0.15s;
+            margin-right: auto;
+        }
+        .footer-add-btn:hover { background: var(--bg-gray); }
+
+        .footer-save-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            border-radius: var(--radius);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            font-family: inherit;
+            transition: background 0.15s;
+            text-decoration: none;
+        }
+        .footer-save-btn:hover { background: var(--primary-dark); }
+        .footer-save-btn svg { flex-shrink: 0; }
+
+        /* ── Question panel visibility ──────────────── */
+        .question-panel { display: none; }
+        .question-panel.active { display: block; }
+
+        /* ── Hide all panels by default (JS toggles) ─ */
+    </style>
+</head>
+<body>
+
+<!-- ============================================================
+     TOP BAR
+     ============================================================ -->
+<div class="topbar">
+    <input type="text" class="topbar-title" value="Plantilla sin título" placeholder="Nombre del estudio...">
+
+    <div class="topbar-actions">
+        <!-- Three-dot menu -->
+        <div class="menu-anchor">
+            <button class="icon-btn" id="menuToggle" aria-label="Opciones">
+                <svg width="4" height="18" viewBox="0 0 4 18" fill="currentColor">
+                    <circle cx="2" cy="2" r="2"/>
+                    <circle cx="2" cy="9" r="2"/>
+                    <circle cx="2" cy="16" r="2"/>
+                </svg>
+            </button>
+            <div class="dropdown-menu" id="dropdownMenu">
+                <button class="dropdown-item">Hacer una copia</button>
+                <button class="dropdown-item">Pausar estudio</button>
+                <button class="dropdown-item">Finalizar estudio</button>
+            </div>
+        </div>
+
+        <!-- Close button -->
+        <a href="01-Lista-Plantillas.html" class="icon-btn" aria-label="Cerrar">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <line x1="2" y1="2" x2="16" y2="16"/>
+                <line x1="16" y1="2" x2="2" y2="16"/>
+            </svg>
+        </a>
+    </div>
+</div>
+
+<!-- ============================================================
+     TAB BAR
+     ============================================================ -->
+<div class="tabs-header">
+    <span class="tab-link active">Agregar preguntas</span>
+    <a href="03-Editor-Reglas.html" class="tab-link">Reglas</a>
+    <a href="04-Editor-Config.html" class="tab-link">Configuraci&oacute;n general</a>
+</div>
+
+<!-- ============================================================
+     MAIN LAYOUT
+     ============================================================ -->
+<div class="editor-layout">
+
+    <!-- ── LEFT SIDEBAR ─────────────────────────────── -->
+    <aside class="sidebar">
+        <div class="sidebar-label">Estudio aplicado</div>
+        <ul class="sidebar-list">
+            <!-- 0 - Texto introductorio -->
+            <li class="sq-item active" data-panel="panel-intro">
+                <span class="sq-icon">&para;</span>
+                <span class="sq-name">Texto introductorio</span>
+                <span class="sq-actions">
+                    <button class="sq-action-btn" title="Configuraci&oacute;n">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                    </button>
+                    <button class="sq-action-btn" title="Copiar">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                    </button>
+                    <button class="sq-action-btn" title="Eliminar">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+                    </button>
+                </span>
+            </li>
+
+            <!-- 1 - Seleccion simple -->
+            <li class="sq-item" data-panel="panel-simple">
+                <span class="sq-icon">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4" fill="currentColor"/></svg>
+                </span>
+                <span class="sq-name">P1 - Selecci&oacute;n simple</span>
+                <span class="sq-actions">
+                    <button class="sq-action-btn" title="Configuraci&oacute;n"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
+                    <button class="sq-action-btn" title="Copiar"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+                    <button class="sq-action-btn" title="Eliminar"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></button>
+                </span>
+            </li>
+
+            <!-- 2 - Seleccion multiple -->
+            <li class="sq-item" data-panel="panel-multiple">
+                <span class="sq-icon">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><polyline points="9 11 12 14 22 4" stroke-width="2"/></svg>
+                </span>
+                <span class="sq-name">P2 - Selecci&oacute;n m&uacute;ltiple</span>
+                <span class="sq-actions">
+                    <button class="sq-action-btn" title="Configuraci&oacute;n"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
+                    <button class="sq-action-btn" title="Copiar"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+                    <button class="sq-action-btn" title="Eliminar"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></button>
+                </span>
+            </li>
+
+            <!-- 3 - Escala Likert -->
+            <li class="sq-item" data-panel="panel-likert">
+                <span class="sq-icon">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+                </span>
+                <span class="sq-name">P3 - Escala Likert</span>
+                <span class="sq-actions">
+                    <button class="sq-action-btn" title="Configuraci&oacute;n"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
+                    <button class="sq-action-btn" title="Copiar"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+                    <button class="sq-action-btn" title="Eliminar"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></button>
+                </span>
+            </li>
+
+            <!-- 4 - Texto corto -->
+            <li class="sq-item" data-panel="panel-textocorto">
+                <span class="sq-icon" style="font-weight:700; font-size:15px;">T</span>
+                <span class="sq-name">P4 - Texto corto</span>
+                <span class="sq-actions">
+                    <button class="sq-action-btn" title="Configuraci&oacute;n"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
+                    <button class="sq-action-btn" title="Copiar"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+                    <button class="sq-action-btn" title="Eliminar"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></button>
+                </span>
+            </li>
+        </ul>
+    </aside>
+
+    <!-- ── RIGHT EDITOR PANEL ──────────────────────── -->
+    <main class="editor-panel">
+
+        <!-- ═══════════════════════════════════════════
+             PANEL 0: TEXTO INTRODUCTORIO
+             ═══════════════════════════════════════════ -->
+        <div class="editor-card question-panel active" id="panel-intro">
+            <div class="editor-section-title">Texto introductorio</div>
+
+            <div class="form-row">
+                <div class="field-label">Tipo</div>
+                <div class="field-control">
+                    <select class="field-select">
+                        <option selected>Texto introductorio - No requiere respuestas</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="field-label">T&iacute;tulo</div>
+                <div class="field-control">
+                    <textarea class="field-textarea" rows="3">Esto es un titulo</textarea>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="field-label">Descripci&oacute;n</div>
+                <div class="field-control">
+                    <textarea class="field-textarea" rows="3">Esto es una descripci&oacute;n</textarea>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════
+             PANEL 1: SELECCION SIMPLE
+             ═══════════════════════════════════════════ -->
+        <div class="editor-card question-panel" id="panel-simple">
+            <div class="editor-section-title">Pregunta 1</div>
+
+            <div class="form-row">
+                <div class="field-label">Tipo</div>
+                <div class="field-control">
+                    <select class="field-select">
+                        <option selected>Selecci&oacute;n simple</option>
+                        <option>Selecci&oacute;n m&uacute;ltiple</option>
+                        <option>Escala Likert</option>
+                        <option>Texto corto</option>
+                        <option>Texto largo</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="field-label">Texto pregunta</div>
+                <div class="field-control">
+                    <textarea class="field-textarea" rows="3" placeholder="Escribe la pregunta"></textarea>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="field-label">Opciones</div>
+                <div class="field-control">
+                    <div class="option-row">
+                        <input type="radio" name="simple-opt" disabled>
+                        <input type="text" class="option-input" placeholder="Opci&oacute;n">
+                        <button class="option-delete" title="Eliminar">&times;</button>
+                    </div>
+                    <div class="option-row">
+                        <input type="radio" name="simple-opt" disabled>
+                        <input type="text" class="option-input" placeholder="Opci&oacute;n">
+                        <button class="option-delete" title="Eliminar">&times;</button>
+                    </div>
+                    <div class="add-links">
+                        <button class="add-link">A&ntilde;adir opci&oacute;n</button>
+                        <button class="add-link">A&ntilde;adir respuesta &ldquo;Otro&rdquo;</button>
+                    </div>
+                </div>
+            </div>
+
+            <hr class="field-separator">
+
+            <div class="form-row toggle-row">
+                <div class="field-label">Respuesta obligatoria</div>
+                <div class="field-control">
+                    <label class="toggle-switch">
+                        <input type="checkbox" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="field-label">Orden de opciones</div>
+                <div class="field-control">
+                    <select class="field-select">
+                        <option>Fijado</option>
+                        <option selected>Aleatorio</option>
+                        <option>Voltear (de arriba hacia abajo y de abajo hacia arriba)</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════
+             PANEL 2: SELECCION MULTIPLE
+             ═══════════════════════════════════════════ -->
+        <div class="editor-card question-panel" id="panel-multiple">
+            <div class="editor-section-title">Pregunta 2</div>
+
+            <div class="form-row">
+                <div class="field-label">Tipo</div>
+                <div class="field-control">
+                    <select class="field-select">
+                        <option>Selecci&oacute;n simple</option>
+                        <option selected>Selecci&oacute;n m&uacute;ltiple</option>
+                        <option>Escala Likert</option>
+                        <option>Texto corto</option>
+                        <option>Texto largo</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="field-label">Texto pregunta</div>
+                <div class="field-control">
+                    <textarea class="field-textarea" rows="3" placeholder="Escribe la pregunta"></textarea>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="field-label">Opciones</div>
+                <div class="field-control">
+                    <div class="option-row">
+                        <input type="checkbox" disabled>
+                        <input type="text" class="option-input" placeholder="Opci&oacute;n">
+                        <button class="option-delete" title="Eliminar">&times;</button>
+                    </div>
+                    <div class="option-row">
+                        <input type="checkbox" disabled>
+                        <input type="text" class="option-input" placeholder="Opci&oacute;n">
+                        <button class="option-delete" title="Eliminar">&times;</button>
+                    </div>
+                    <div class="add-links">
+                        <button class="add-link">A&ntilde;adir opci&oacute;n</button>
+                        <button class="add-link">A&ntilde;adir respuesta &ldquo;Otro&rdquo;</button>
+                    </div>
+                </div>
+            </div>
+
+            <hr class="field-separator">
+
+            <div class="form-row toggle-row">
+                <div class="field-label">Respuesta obligatoria</div>
+                <div class="field-control">
+                    <label class="toggle-switch">
+                        <input type="checkbox" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="field-label">Orden de opciones</div>
+                <div class="field-control">
+                    <select class="field-select">
+                        <option>Fijado</option>
+                        <option selected>Aleatorio</option>
+                        <option>Voltear (de arriba hacia abajo y de abajo hacia arriba)</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════
+             PANEL 3: ESCALA LIKERT
+             ═══════════════════════════════════════════ -->
+        <div class="editor-card question-panel" id="panel-likert">
+            <div class="editor-section-title">Pregunta 3</div>
+
+            <div class="form-row">
+                <div class="field-label">Tipo</div>
+                <div class="field-control">
+                    <select class="field-select">
+                        <option>Selecci&oacute;n simple</option>
+                        <option>Selecci&oacute;n m&uacute;ltiple</option>
+                        <option selected>Escala Likert</option>
+                        <option>Texto corto</option>
+                        <option>Texto largo</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="field-label">Texto pregunta</div>
+                <div class="field-control">
+                    <textarea class="field-textarea" rows="3" placeholder="Escribe la pregunta"></textarea>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="field-label">Escala</div>
+                <div class="field-control">
+                    <select class="field-select">
+                        <option selected>Muy mala; Mala; Regular; Buena; Excelente</option>
+                        <option>Muy en desacuerdo; En desacuerdo; Neutral; De acuerdo; Muy de acuerdo</option>
+                    </select>
+
+                    <div class="likert-emojis">
+                        <div class="emoji-item">
+                            <div class="emoji-face">&#128545;</div>
+                            <div class="emoji-label">Muy mala</div>
+                        </div>
+                        <div class="emoji-item">
+                            <div class="emoji-face">&#128543;</div>
+                            <div class="emoji-label">Mala</div>
+                        </div>
+                        <div class="emoji-item">
+                            <div class="emoji-face">&#128528;</div>
+                            <div class="emoji-label">Regular</div>
+                        </div>
+                        <div class="emoji-item selected">
+                            <div class="emoji-face">&#128522;</div>
+                            <div class="emoji-label">Buena</div>
+                        </div>
+                        <div class="emoji-item">
+                            <div class="emoji-face">&#128513;</div>
+                            <div class="emoji-label">Excelente</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <hr class="field-separator">
+
+            <div class="form-row toggle-row">
+                <div class="field-label">Respuesta obligatoria</div>
+                <div class="field-control">
+                    <label class="toggle-switch">
+                        <input type="checkbox" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════
+             PANEL 4: TEXTO CORTO
+             ═══════════════════════════════════════════ -->
+        <div class="editor-card question-panel" id="panel-textocorto">
+            <div class="editor-section-title">Pregunta 4</div>
+
+            <div class="form-row">
+                <div class="field-label">Tipo</div>
+                <div class="field-control">
+                    <select class="field-select">
+                        <option>Selecci&oacute;n simple</option>
+                        <option>Selecci&oacute;n m&uacute;ltiple</option>
+                        <option>Escala Likert</option>
+                        <option selected>Texto corto</option>
+                        <option>Texto largo</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="field-label">Pregunta</div>
+                <div class="field-control">
+                    <textarea class="field-textarea" rows="3" placeholder="Escribe la pregunta"></textarea>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="field-label">L&iacute;mite de respuesta</div>
+                <div class="field-control">
+                    <span class="static-value">50 caracteres</span>
+                </div>
+            </div>
+
+            <hr class="field-separator">
+
+            <div class="form-row toggle-row">
+                <div class="field-label">Respuesta obligatoria</div>
+                <div class="field-control">
+                    <label class="toggle-switch">
+                        <input type="checkbox" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+    </main>
+</div>
+
+<!-- ============================================================
+     FOOTER BAR
+     ============================================================ -->
+<div class="editor-footer">
+    <button class="footer-add-btn">+ Agregar pregunta</button>
+    <a href="03-Editor-Reglas.html" class="footer-save-btn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        Guardar y continuar con reglas
+    </a>
+</div>
+
+<!-- ============================================================
+     JAVASCRIPT
+     ============================================================ -->
+<script>
+(function () {
+    /* ── Sidebar: switch active question ────────── */
+    var items = document.querySelectorAll('.sq-item');
+    var panels = document.querySelectorAll('.question-panel');
+
+    items.forEach(function (item) {
+        item.addEventListener('click', function (e) {
+            // Ignore clicks on action buttons
+            if (e.target.closest('.sq-action-btn')) return;
+
+            // Deactivate all
+            items.forEach(function (i) { i.classList.remove('active'); });
+            panels.forEach(function (p) { p.classList.remove('active'); });
+
+            // Activate clicked
+            item.classList.add('active');
+            var targetId = item.getAttribute('data-panel');
+            var target = document.getElementById(targetId);
+            if (target) target.classList.add('active');
+        });
+    });
+
+    /* ── Three-dot dropdown toggle ──────────────── */
+    var menuBtn = document.getElementById('menuToggle');
+    var dropdown = document.getElementById('dropdownMenu');
+
+    menuBtn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        dropdown.classList.toggle('open');
+    });
+
+    document.addEventListener('click', function () {
+        dropdown.classList.remove('open');
+    });
+
+    /* ── Likert emoji selection ─────────────────── */
+    var emojiItems = document.querySelectorAll('.emoji-item');
+    emojiItems.forEach(function (ei) {
+        ei.addEventListener('click', function () {
+            emojiItems.forEach(function (e) { e.classList.remove('selected'); });
+            ei.classList.add('selected');
+        });
+    });
+})();
+</script>
+
+</body>
+</html>

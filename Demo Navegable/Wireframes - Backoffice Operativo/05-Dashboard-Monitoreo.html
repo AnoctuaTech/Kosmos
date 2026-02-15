@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wireframe - Dashboard de Monitoreo</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: #f5f5f5; color: #333; }
+        .wireframe-badge { position: fixed; top: 10px; right: 10px; background: #ff6b6b; color: white; padding: 8px 16px; border-radius: 4px; font-size: 12px; font-weight: bold; z-index: 1000; }
+        .container { display: flex; min-height: 100vh; }
+        .sidebar { width: 240px; background: #2c3e50; color: white; padding: 20px 0; }
+        .logo { padding: 0 20px 30px; font-size: 24px; font-weight: bold; border-bottom: 1px solid #34495e; }
+        .nav-item { padding: 12px 20px; cursor: pointer; border-left: 3px solid transparent; }
+        .nav-item:hover { background: #34495e; }
+        .nav-item.active { background: #34495e; border-left-color: #3498db; }
+        .nav-section { padding: 15px 20px 8px; font-size: 11px; text-transform: uppercase; color: #7f8c8d; }
+        .main { flex: 1; padding: 30px; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .header h1 { font-size: 28px; color: #2c3e50; }
+        .breadcrumb { color: #7f8c8d; font-size: 14px; margin-bottom: 5px; }
+        .date-filter { display: flex; gap: 10px; align-items: center; }
+        .date-filter select { padding: 8px 16px; border: 1px solid #ddd; border-radius: 4px; }
+        .kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 30px; }
+        .kpi-card { background: white; border-radius: 12px; padding: 25px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+        .kpi-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+        .kpi-icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px; }
+        .kpi-icon.blue { background: #e3f2fd; }
+        .kpi-icon.green { background: #e8f5e9; }
+        .kpi-icon.orange { background: #fff3e0; }
+        .kpi-icon.purple { background: #f3e5f5; }
+        .kpi-trend { font-size: 12px; padding: 4px 8px; border-radius: 4px; }
+        .kpi-trend.up { background: #d4edda; color: #155724; }
+        .kpi-trend.down { background: #f8d7da; color: #721c24; }
+        .kpi-value { font-size: 36px; font-weight: bold; color: #2c3e50; }
+        .kpi-label { color: #7f8c8d; font-size: 14px; margin-top: 5px; }
+        .charts-row { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; margin-bottom: 30px; }
+        .card { background: white; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+        .card-header { padding: 20px; border-bottom: 1px solid #eee; }
+        .card-header h2 { font-size: 18px; color: #2c3e50; }
+        .card-body { padding: 20px; }
+        .chart-placeholder { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 8px; height: 250px; display: flex; align-items: center; justify-content: center; color: white; font-size: 14px; position: relative; overflow: hidden; }
+        .chart-bars { display: flex; align-items: flex-end; gap: 15px; height: 200px; padding: 20px; }
+        .chart-bar { flex: 1; background: linear-gradient(180deg, #3498db 0%, #2980b9 100%); border-radius: 4px 4px 0 0; position: relative; }
+        .chart-bar span { position: absolute; bottom: -25px; left: 50%; transform: translateX(-50%); font-size: 11px; color: #7f8c8d; }
+        .renewals-list { }
+        .renewal-item { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid #eee; }
+        .renewal-item:last-child { border-bottom: none; }
+        .renewal-company { font-weight: 500; }
+        .renewal-plan { font-size: 12px; color: #7f8c8d; }
+        .renewal-date { text-align: right; }
+        .renewal-date .date { font-weight: 500; color: #e74c3c; }
+        .renewal-date .days { font-size: 12px; color: #7f8c8d; }
+        .btn { padding: 8px 16px; border-radius: 4px; border: none; cursor: pointer; font-size: 14px; }
+        .btn-sm { padding: 6px 12px; font-size: 12px; }
+        .btn-primary { background: #3498db; color: white; }
+        .btn-outline { background: transparent; border: 1px solid #3498db; color: #3498db; }
+        .bottom-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #eee; }
+        th { font-weight: 600; color: #7f8c8d; font-size: 12px; text-transform: uppercase; }
+        .country-flag { font-size: 18px; margin-right: 8px; }
+        .progress-bar { height: 8px; background: #ecf0f1; border-radius: 4px; overflow: hidden; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, #27ae60, #2ecc71); border-radius: 4px; }
+        .metric-value { font-weight: 600; color: #2c3e50; }
+    </style>
+</head>
+<body>
+    <div class="wireframe-badge">WIREFRAME - Boceto de Diseño</div>
+
+    <div class="container">
+        <aside class="sidebar">
+            <div class="logo">KOSMOS</div>
+            <div class="nav-section">Principal</div>
+            <div class="nav-item active">Dashboard</div>
+            <div class="nav-section">Gestión</div>
+            <div class="nav-item">Participantes</div>
+            <div class="nav-item">Clientes/Empresas</div>
+            <div class="nav-item">Fábrica de Productos</div>
+            <div class="nav-section">Tesorería</div>
+            <div class="nav-item">Cola de Redenciones</div>
+            <div class="nav-item">Catálogo de Premios</div>
+            <div class="nav-section">Control</div>
+            <div class="nav-item">Alertas de Fraude</div>
+            <div class="nav-item">Config. NSE</div>
+        </aside>
+
+        <main class="main">
+            <div class="breadcrumb">Principal > Dashboard</div>
+            <div class="header">
+                <h1>📊 Dashboard de Monitoreo</h1>
+                <div class="date-filter">
+                    <select>
+                        <option>Febrero 2026</option>
+                        <option>Enero 2026</option>
+                        <option>Diciembre 2025</option>
+                    </select>
+                    <button class="btn btn-outline">Exportar Reporte</button>
+                </div>
+            </div>
+
+            <div class="kpi-row">
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <div class="kpi-icon blue">💰</div>
+                        <span class="kpi-trend up">↑ 12%</span>
+                    </div>
+                    <div class="kpi-value">$24,500</div>
+                    <div class="kpi-label">Ingresos Recurrentes (MRR)</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <div class="kpi-icon green">👥</div>
+                        <span class="kpi-trend up">↑ 8%</span>
+                    </div>
+                    <div class="kpi-value">47</div>
+                    <div class="kpi-label">Clientes Activos</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <div class="kpi-icon orange">📋</div>
+                        <span class="kpi-trend up">↑ 23%</span>
+                    </div>
+                    <div class="kpi-value">156</div>
+                    <div class="kpi-label">Estudios Completados (Mes)</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <div class="kpi-icon purple">🎯</div>
+                        <span class="kpi-trend down">↓ 2%</span>
+                    </div>
+                    <div class="kpi-value">3</div>
+                    <div class="kpi-label">Renovaciones Pendientes</div>
+                </div>
+            </div>
+
+            <div class="charts-row">
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Evolución de Ingresos (MRR)</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-bars">
+                            <div class="chart-bar" style="height: 60%;"><span>Sep</span></div>
+                            <div class="chart-bar" style="height: 65%;"><span>Oct</span></div>
+                            <div class="chart-bar" style="height: 70%;"><span>Nov</span></div>
+                            <div class="chart-bar" style="height: 75%;"><span>Dic</span></div>
+                            <div class="chart-bar" style="height: 85%;"><span>Ene</span></div>
+                            <div class="chart-bar" style="height: 100%; background: linear-gradient(180deg, #27ae60 0%, #2ecc71 100%);"><span>Feb</span></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Próximos Vencimientos</h2>
+                    </div>
+                    <div class="card-body renewals-list">
+                        <div class="renewal-item">
+                            <div>
+                                <div class="renewal-company">Empresa Alpha</div>
+                                <div class="renewal-plan">Plan Anual - $24,000</div>
+                            </div>
+                            <div class="renewal-date">
+                                <div class="date">15 Feb</div>
+                                <div class="days">En 10 días</div>
+                            </div>
+                            <button class="btn btn-primary btn-sm">Extender</button>
+                        </div>
+                        <div class="renewal-item">
+                            <div>
+                                <div class="renewal-company">Beta Corp</div>
+                                <div class="renewal-plan">Plan Mensual - $2,000</div>
+                            </div>
+                            <div class="renewal-date">
+                                <div class="date">18 Feb</div>
+                                <div class="days">En 13 días</div>
+                            </div>
+                            <button class="btn btn-primary btn-sm">Extender</button>
+                        </div>
+                        <div class="renewal-item">
+                            <div>
+                                <div class="renewal-company">Gamma Inc</div>
+                                <div class="renewal-plan">Plan Trimestral - $5,400</div>
+                            </div>
+                            <div class="renewal-date">
+                                <div class="date">28 Feb</div>
+                                <div class="days">En 23 días</div>
+                            </div>
+                            <button class="btn btn-primary btn-sm">Extender</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bottom-row">
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Desempeño por País</h2>
+                    </div>
+                    <div class="card-body">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>País</th>
+                                    <th>Clientes</th>
+                                    <th>MRR</th>
+                                    <th>Crecimiento</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><span class="country-flag">🇨🇷</span>Costa Rica</td>
+                                    <td class="metric-value">28</td>
+                                    <td class="metric-value">$14,500</td>
+                                    <td>
+                                        <div class="progress-bar" style="width: 100px;">
+                                            <div class="progress-fill" style="width: 85%;"></div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><span class="country-flag">🇵🇦</span>Panamá</td>
+                                    <td class="metric-value">12</td>
+                                    <td class="metric-value">$7,000</td>
+                                    <td>
+                                        <div class="progress-bar" style="width: 100px;">
+                                            <div class="progress-fill" style="width: 65%;"></div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><span class="country-flag">🇬🇹</span>Guatemala</td>
+                                    <td class="metric-value">7</td>
+                                    <td class="metric-value">$3,000</td>
+                                    <td>
+                                        <div class="progress-bar" style="width: 100px;">
+                                            <div class="progress-fill" style="width: 45%;"></div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Actividad del Panel</h2>
+                    </div>
+                    <div class="card-body">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Métrica</th>
+                                    <th>Valor</th>
+                                    <th>vs Mes Ant.</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Participantes Activos</td>
+                                    <td class="metric-value">12,450</td>
+                                    <td><span class="kpi-trend up">↑ 15%</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Encuestas Respondidas</td>
+                                    <td class="metric-value">45,230</td>
+                                    <td><span class="kpi-trend up">↑ 22%</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Tasa de Respuesta</td>
+                                    <td class="metric-value">78%</td>
+                                    <td><span class="kpi-trend up">↑ 3%</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Puntos Canjeados</td>
+                                    <td class="metric-value">$8,450</td>
+                                    <td><span class="kpi-trend down">↓ 5%</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

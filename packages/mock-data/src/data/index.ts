@@ -1,0 +1,12 @@
+export { paises } from "./paises";
+export { empresas } from "./empresas";
+export { clientes } from "./clientes";
+export { estudios } from "./estudios";
+export { plantillas } from "./plantillas";
+export { participantes } from "./participantes";
+export { premios } from "./premios";
+export { redenciones } from "./redenciones";
+export { alertasFraude } from "./alertas-fraude";
+export { adminUsuarios } from "./admin-usuarios";
+export { suscripciones } from "./suscripciones";
+export { ticketsSoporte } from "./tickets-soporte";

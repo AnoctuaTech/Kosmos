@@ -1,0 +1,16 @@
+{
+  "name": "kosmos",
+  "private": true,
+  "scripts": {
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "lint": "turbo lint",
+    "dev:clientes": "turbo dev --filter=@kosmos/clientes",
+    "dev:admin": "turbo dev --filter=@kosmos/admin",
+    "dev:participantes": "turbo dev --filter=@kosmos/participantes"
+  },
+  "devDependencies": {
+    "turbo": "^2.5.0"
+  },
+  "packageManager": "pnpm@10.28.1"
+}

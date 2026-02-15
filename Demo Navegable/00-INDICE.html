@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kosmos - Demo Navegable MVP</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            color: white;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 60px 40px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+        .logo {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+        .logo .dot {
+            color: #FF4136;
+        }
+        .subtitle {
+            font-size: 20px;
+            color: rgba(255,255,255,0.7);
+            margin-bottom: 8px;
+        }
+        .version {
+            display: inline-block;
+            padding: 6px 16px;
+            background: rgba(255,65,54,0.2);
+            border: 1px solid rgba(255,65,54,0.3);
+            border-radius: 20px;
+            font-size: 13px;
+            color: #FF6B5B;
+            margin-top: 16px;
+        }
+        .sections {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+        .section {
+            background: rgba(255,255,255,0.05);
+            border-radius: 16px;
+            padding: 32px;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s;
+        }
+        .section:hover {
+            background: rgba(255,255,255,0.08);
+            border-color: rgba(255,255,255,0.2);
+            transform: translateY(-4px);
+        }
+        .section-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 16px;
+        }
+        .badge-alta {
+            background: linear-gradient(135deg, #FF4136, #FF6B5B);
+            color: white;
+        }
+        .badge-wireframe {
+            background: rgba(255,255,255,0.15);
+            color: rgba(255,255,255,0.8);
+        }
+        .section h2 {
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        .section-desc {
+            font-size: 14px;
+            color: rgba(255,255,255,0.6);
+            margin-bottom: 24px;
+            line-height: 1.5;
+        }
+        .screen-list {
+            list-style: none;
+        }
+        .screen-list li {
+            margin-bottom: 8px;
+        }
+        .screen-list a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 16px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 8px;
+            color: white;
+            text-decoration: none;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+        .screen-list a:hover {
+            background: rgba(255,65,54,0.15);
+            padding-left: 20px;
+        }
+        .screen-icon {
+            font-size: 16px;
+        }
+        .screen-number {
+            font-size: 11px;
+            color: rgba(255,255,255,0.4);
+            margin-left: auto;
+        }
+        .divider {
+            height: 1px;
+            background: rgba(255,255,255,0.1);
+            margin: 16px 0;
+        }
+        .section-subtitle {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: rgba(255,255,255,0.4);
+            margin-bottom: 12px;
+            margin-top: 20px;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 60px;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        .footer p {
+            font-size: 13px;
+            color: rgba(255,255,255,0.4);
+        }
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-bottom: 20px;
+        }
+        .stat {
+            text-align: center;
+        }
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: #FF4136;
+        }
+        .stat-label {
+            font-size: 12px;
+            color: rgba(255,255,255,0.5);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="logo">kosmos<span class="dot">.</span></div>
+            <p class="subtitle">Demo Navegable - MVP Semana 4</p>
+            <span class="version">Entrega UX/UI • Febrero 2026</span>
+        </header>
+
+        <div class="stats">
+            <div class="stat">
+                <div class="stat-value">14</div>
+                <div class="stat-label">Pantallas Alta Fidelidad</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">6</div>
+                <div class="stat-label">Wireframes Backoffice</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">2</div>
+                <div class="stat-label">Módulos Completos</div>
+            </div>
+        </div>
+
+        <div class="sections">
+            <!-- Módulo Clientes -->
+            <div class="section">
+                <span class="section-badge badge-alta">Alta Fidelidad</span>
+                <h2>Módulo Clientes</h2>
+                <p class="section-desc">Portal donde las empresas crean y gestionan sus estudios de investigación.</p>
+
+                <p class="section-subtitle">Onboarding</p>
+                <ul class="screen-list">
+                    <li><a href="Alta Fidelidad - Clientes/01-Landing.html"><span class="screen-icon">🏠</span> Landing Page <span class="screen-number">01</span></a></li>
+                    <li><a href="Alta Fidelidad - Clientes/02-Registro.html"><span class="screen-icon">📝</span> Registro <span class="screen-number">02</span></a></li>
+                    <li><a href="Alta Fidelidad - Clientes/03-Verificacion.html"><span class="screen-icon">✉️</span> Verificación Email <span class="screen-number">03</span></a></li>
+                    <li><a href="Alta Fidelidad - Clientes/04-Login.html"><span class="screen-icon">🔐</span> Login <span class="screen-number">04</span></a></li>
+                </ul>
+
+                <p class="section-subtitle">Gestión de Estudios</p>
+                <ul class="screen-list">
+                    <li><a href="Alta Fidelidad - Clientes/05-Lista-Estudios.html"><span class="screen-icon">📋</span> Lista de Estudios <span class="screen-number">05</span></a></li>
+                    <li><a href="Alta Fidelidad - Clientes/06-Dashboard.html"><span class="screen-icon">📊</span> Dashboard Resultados <span class="screen-number">06</span></a></li>
+                </ul>
+
+                <p class="section-subtitle">Wizard Nuevo Estudio</p>
+                <ul class="screen-list">
+                    <li><a href="Alta Fidelidad - Clientes/07-Wizard-Paso1.html"><span class="screen-icon">1️⃣</span> Seleccionar Plantilla <span class="screen-number">07</span></a></li>
+                    <li><a href="Alta Fidelidad - Clientes/08-Wizard-Paso2.html"><span class="screen-icon">2️⃣</span> Definir Segmento <span class="screen-number">08</span></a></li>
+                    <li><a href="Alta Fidelidad - Clientes/09-Wizard-Paso3.html"><span class="screen-icon">3️⃣</span> Elegir Volumen <span class="screen-number">09</span></a></li>
+                </ul>
+
+                <p class="section-subtitle">Cuenta</p>
+                <ul class="screen-list">
+                    <li><a href="Alta Fidelidad - Clientes/10-Cuenta.html"><span class="screen-icon">👤</span> Configuración de Cuenta <span class="screen-number">10</span></a></li>
+                </ul>
+            </div>
+
+            <!-- Módulo Admin / Editor -->
+            <div class="section">
+                <span class="section-badge badge-alta">Alta Fidelidad</span>
+                <h2>Editor de Cuestionarios</h2>
+                <p class="section-desc">Herramienta para que el equipo Kosmos diseñe las plantillas de estudios.</p>
+
+                <p class="section-subtitle">Gestión</p>
+                <ul class="screen-list">
+                    <li><a href="Alta Fidelidad - Admin/01-Lista-Plantillas.html"><span class="screen-icon">📑</span> Lista de Plantillas <span class="screen-number">01</span></a></li>
+                </ul>
+
+                <p class="section-subtitle">Editor de Preguntas</p>
+                <ul class="screen-list">
+                    <li><a href="Alta Fidelidad - Admin/02-Editor-Preguntas.html"><span class="screen-icon">✏️</span> Agregar Preguntas <span class="screen-number">02</span></a></li>
+                    <li><a href="Alta Fidelidad - Admin/03-Editor-Reglas.html"><span class="screen-icon">🔀</span> Reglas de Lógica <span class="screen-number">03</span></a></li>
+                    <li><a href="Alta Fidelidad - Admin/04-Editor-Config.html"><span class="screen-icon">⚙️</span> Configuración General <span class="screen-number">04</span></a></li>
+                </ul>
+            </div>
+
+            <!-- Wireframes Backoffice -->
+            <div class="section">
+                <span class="section-badge badge-wireframe">Wireframes</span>
+                <h2>Backoffice Operativo</h2>
+                <p class="section-desc">Módulo interno para gestión operativa. En desarrollo durante fase de prototipo.</p>
+
+                <p class="section-subtitle">Dashboard</p>
+                <ul class="screen-list">
+                    <li><a href="Wireframes - Backoffice Operativo/05-Dashboard-Monitoreo.html"><span class="screen-icon">📈</span> Dashboard Monitoreo <span class="screen-number">01</span></a></li>
+                </ul>
+
+                <p class="section-subtitle">Gestión</p>
+                <ul class="screen-list">
+                    <li><a href="Wireframes - Backoffice Operativo/02-Gestion-Participantes.html"><span class="screen-icon">👥</span> Participantes <span class="screen-number">02</span></a></li>
+                    <li><a href="Wireframes - Backoffice Operativo/03-Gestion-Clientes-Empresas.html"><span class="screen-icon">🏢</span> Clientes/Empresas <span class="screen-number">03</span></a></li>
+                </ul>
+
+                <p class="section-subtitle">Tesorería</p>
+                <ul class="screen-list">
+                    <li><a href="Wireframes - Backoffice Operativo/01-Cola-Redenciones.html"><span class="screen-icon">💰</span> Cola Redenciones <span class="screen-number">04</span></a></li>
+                    <li><a href="Wireframes - Backoffice Operativo/06-Catalogo-Premios.html"><span class="screen-icon">🎁</span> Catálogo Premios <span class="screen-number">05</span></a></li>
+                </ul>
+
+                <p class="section-subtitle">Control</p>
+                <ul class="screen-list">
+                    <li><a href="Wireframes - Backoffice Operativo/04-Cola-Fraude.html"><span class="screen-icon">🚨</span> Alertas de Fraude <span class="screen-number">06</span></a></li>
+                </ul>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <p>Demo navegable para presentación cliente • Los wireframes del Backoffice representan trabajo en progreso</p>
+            <p style="margin-top: 8px;">Diseño final del Backoffice se entregará junto con el prototipo funcional</p>
+        </footer>
+    </div>
+</body>
+</html>

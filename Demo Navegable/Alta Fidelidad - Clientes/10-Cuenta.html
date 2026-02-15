@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kosmos - Configuración de la cuenta</title>
+    <link rel="stylesheet" href="../styles-kosmos.css">
+    <style>
+        /* Avatar & Dropdown */
+        .avatar-wrapper {
+            position: relative;
+        }
+        .avatar {
+            cursor: pointer;
+        }
+        .dropdown-menu {
+            position: absolute;
+            top: calc(100% + 8px);
+            right: 0;
+            background: var(--bg-white);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-md);
+            min-width: 170px;
+            z-index: 100;
+            padding: 6px 0;
+            display: none;
+        }
+        .dropdown-menu.show {
+            display: block;
+        }
+        .dropdown-menu a {
+            display: block;
+            padding: 10px 20px;
+            font-size: 14px;
+            color: var(--text-primary);
+            text-decoration: none;
+            transition: background 0.15s;
+        }
+        .dropdown-menu a:hover {
+            background: var(--bg-gray);
+        }
+
+        /* Main content */
+        .main-content {
+            padding: 32px 48px;
+        }
+        .page-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 32px;
+        }
+
+        /* Info cards row */
+        .info-cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+        .info-card {
+            background: var(--bg-white);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .info-card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .info-card-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--bg-gray);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .info-card-icon svg {
+            width: 20px;
+            height: 20px;
+            color: var(--text-secondary);
+        }
+        .info-card-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        .info-card-body {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            flex: 1;
+        }
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+        .info-row-left {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        .info-label {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+        .info-value {
+            font-size: 13px;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .info-value .checkmark {
+            color: var(--success);
+            font-size: 14px;
+            line-height: 1;
+        }
+        .info-action {
+            font-size: 14px;
+            color: var(--text-primary);
+            text-decoration: underline;
+            cursor: pointer;
+            background: none;
+            border: none;
+            font-family: inherit;
+            padding: 0;
+            white-space: nowrap;
+            align-self: flex-start;
+        }
+        .info-action:hover {
+            color: var(--text-secondary);
+        }
+        .info-row-right-value {
+            font-size: 13px;
+            color: var(--text-secondary);
+            text-align: right;
+            white-space: nowrap;
+        }
+
+        /* Credit history card */
+        .credit-card {
+            background: var(--bg-white);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+        }
+        .credit-card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 24px 24px 20px 24px;
+        }
+        .credit-card-header .info-card-icon {
+            width: 40px;
+            height: 40px;
+        }
+        .credit-card-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        .credit-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .credit-table th {
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-muted);
+            text-transform: none;
+            letter-spacing: 0;
+            padding: 12px 24px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-light);
+            border-top: 1px solid var(--border-light);
+        }
+        .credit-table th:last-child {
+            text-align: right;
+        }
+        .credit-table td {
+            padding: 20px 24px;
+            font-size: 14px;
+            color: var(--text-primary);
+            border-bottom: 1px solid var(--border-light);
+            vertical-align: top;
+        }
+        .credit-table tr:last-child td {
+            border-bottom: none;
+        }
+        .credit-table tr:hover {
+            background: var(--bg-gray);
+        }
+        .credit-date {
+            color: var(--text-secondary);
+            font-size: 14px;
+            white-space: nowrap;
+        }
+        .credit-detail-title {
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 14px;
+        }
+        .credit-detail-sub {
+            color: var(--text-secondary);
+            font-size: 13px;
+            margin-top: 2px;
+        }
+        .credit-saldo {
+            text-align: right;
+            white-space: nowrap;
+        }
+        .credit-saldo-add {
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 14px;
+        }
+        .credit-saldo-total {
+            color: var(--text-secondary);
+            font-size: 13px;
+            margin-top: 2px;
+        }
+        .credit-saldo-zero {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <a href="01-Landing.html" class="logo">kosmos<span class="dot">.</span></a>
+        <div class="avatar-wrapper">
+            <div class="avatar" onclick="toggleDropdown()">CK</div>
+            <div class="dropdown-menu show" id="avatarDropdown">
+                <a href="#">Tu cuenta</a>
+                <a href="04-Login.html">Cerrar sesi&oacute;n</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <h1 class="page-title">Configuraci&oacute;n de la cuenta</h1>
+
+        <!-- 3 Info Cards Row -->
+        <div class="info-cards">
+
+            <!-- Perfil Card -->
+            <div class="info-card">
+                <div class="info-card-header">
+                    <div class="info-card-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+                        </svg>
+                    </div>
+                    <span class="info-card-title">Perfil</span>
+                </div>
+                <div class="info-card-body">
+                    <div class="info-row">
+                        <div class="info-row-left">
+                            <span class="info-label">Usuario</span>
+                            <span class="info-value">Cliente Kosmos</span>
+                        </div>
+                        <a href="#" class="info-action">Editar</a>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-row-left">
+                            <span class="info-label">Email</span>
+                            <span class="info-value">m@ejemplo.com <span class="checkmark">&#10003;</span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Informacion de pago Card -->
+            <div class="info-card">
+                <div class="info-card-header">
+                    <div class="info-card-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                        </svg>
+                    </div>
+                    <span class="info-card-title">Informaci&oacute;n de pago</span>
+                </div>
+                <div class="info-card-body">
+                    <div class="info-row">
+                        <div class="info-row-left">
+                            <span class="info-label">Pr&oacute;ximo pago</span>
+                            <span class="info-value">06/01/2026</span>
+                        </div>
+                        <span class="info-row-right-value">USD $2,000</span>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-row-left">
+                            <span class="info-label">M&eacute;todo de pago</span>
+                            <span class="info-value">Enlace que termina en 1234</span>
+                        </div>
+                        <a href="#" class="info-action">Actualizar</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Suscripcion Card -->
+            <div class="info-card">
+                <div class="info-card-header">
+                    <div class="info-card-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.455 2.456L21.75 6l-1.036.259a3.375 3.375 0 0 0-2.455 2.456ZM16.894 20.567 16.5 21.75l-.394-1.183a2.25 2.25 0 0 0-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 0 0 1.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 0 0 1.423 1.423l1.183.394-1.183.394a2.25 2.25 0 0 0-1.423 1.423Z" />
+                        </svg>
+                    </div>
+                    <span class="info-card-title">Suscripci&oacute;n</span>
+                </div>
+                <div class="info-card-body">
+                    <div class="info-row">
+                        <div class="info-row-left">
+                            <span class="info-label">Detalle del plan</span>
+                            <span class="info-value">Plan Profesional</span>
+                        </div>
+                        <a href="#" class="info-action">Administrar suscripci&oacute;n</a>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-row-left">
+                            <span class="info-label">Renovaci&oacute;n</span>
+                            <span class="info-value">Autom&aacute;tica</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Credit History Card -->
+        <div class="credit-card">
+            <div class="credit-card-header">
+                <div class="info-card-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 0 0 2.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 0 0-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75 2.25 2.25 0 0 0-.1-.664m-5.8 0A2.251 2.251 0 0 1 13.5 2.25H15a2.25 2.25 0 0 1 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25ZM6.75 12h.008v.008H6.75V12Zm0 3h.008v.008H6.75V15Zm0 3h.008v.008H6.75V18Z" />
+                    </svg>
+                </div>
+                <span class="credit-card-title">Historial de cr&eacute;dito</span>
+            </div>
+            <table class="credit-table">
+                <thead>
+                    <tr>
+                        <th style="width: 80px;">Date</th>
+                        <th>Detalle</th>
+                        <th style="width: 120px;">Saldo</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="credit-date">07/Dic</td>
+                        <td>
+                            <div class="credit-detail-title">Suscripci&oacute;n Plan Profesional Mensual</div>
+                            <div class="credit-detail-sub">V&aacute;lida: 07 dic 2025 - 06 ene 2026</div>
+                        </td>
+                        <td class="credit-saldo">
+                            <div class="credit-saldo-add">+$2,000</div>
+                            <div class="credit-saldo-total">$2,000</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="credit-date">25/Nov</td>
+                        <td>
+                            <div class="credit-detail-title">Suscripci&oacute;n Plan Freemium</div>
+                            <div class="credit-detail-sub">V&aacute;lida: 25 nov 2025 - 24 dic 2025</div>
+                        </td>
+                        <td class="credit-saldo">
+                            <div class="credit-saldo-zero">$0</div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </main>
+
+    <script>
+        function toggleDropdown() {
+            const dropdown = document.getElementById('avatarDropdown');
+            dropdown.classList.toggle('show');
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            const wrapper = document.querySelector('.avatar-wrapper');
+            const dropdown = document.getElementById('avatarDropdown');
+            if (!wrapper.contains(e.target)) {
+                dropdown.classList.remove('show');
+            }
+        });
+    </script>
+</body>
+</html>

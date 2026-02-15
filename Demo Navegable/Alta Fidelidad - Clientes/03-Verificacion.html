@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kosmos - Verificar cuenta</title>
+    <link rel="stylesheet" href="../styles-kosmos.css">
+    <style>
+        body {
+            min-height: 100vh;
+            display: grid;
+            grid-template-columns: 480px 1fr;
+            margin: 0;
+        }
+        .form-side {
+            padding: 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .brand-side {
+            background: linear-gradient(135deg, #FF6B4A 0%, #FF4136 40%, #E8382D 70%, #D42F1A 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        .brand-side::before {
+            content: '';
+            position: absolute;
+            width: 700px;
+            height: 700px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,180,120,0.4) 0%, rgba(255,100,60,0.2) 40%, transparent 70%);
+            top: 10%;
+            left: 10%;
+            filter: blur(40px);
+        }
+        .brand-side::after {
+            content: '';
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,200,150,0.3) 0%, transparent 60%);
+            bottom: -10%;
+            right: -10%;
+            filter: blur(30px);
+        }
+        .form-header {
+            margin-bottom: 40px;
+        }
+        .form-header .logo {
+            margin-bottom: 48px;
+            display: block;
+        }
+        .form-header h1 {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+        .form-header p {
+            color: var(--text-secondary);
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        .form-header p strong {
+            color: var(--text-primary);
+        }
+        .code-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+        .code-label {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+        .resend-inline {
+            font-size: 13px;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .resend-inline:hover {
+            color: var(--primary);
+        }
+        .code-inputs {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 32px;
+        }
+        .code-input {
+            width: 56px;
+            height: 56px;
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            transition: all 0.2s;
+            outline: none;
+        }
+        .code-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(255,65,54,0.1);
+        }
+        .btn-submit {
+            width: 100%;
+            padding: 14px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: var(--radius);
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+            display: block;
+            text-align: center;
+            text-decoration: none;
+        }
+        .btn-submit:hover {
+            background: var(--primary-dark);
+        }
+    </style>
+</head>
+<body>
+    <div class="form-side">
+        <div class="form-header">
+            <a href="01-Landing.html" class="logo">kosmos<span class="dot">.</span></a>
+            <h1>Verifica tu cuenta</h1>
+            <p>Ingresa el código de verificación que enviamos<br>a tu email <strong>m@ejemplo.com</strong></p>
+        </div>
+        <form>
+            <div class="code-row">
+                <span class="code-label">Código de verificación</span>
+                <a href="#" class="resend-inline">↻ Reenviar código</a>
+            </div>
+            <div class="code-inputs">
+                <input type="text" class="code-input" maxlength="1" value="">
+                <input type="text" class="code-input" maxlength="1" value="">
+                <input type="text" class="code-input" maxlength="1" value="">
+                <input type="text" class="code-input" maxlength="1" value="">
+            </div>
+            <a href="05-Lista-Estudios.html" class="btn-submit">Verificar</a>
+        </form>
+    </div>
+    <div class="brand-side"></div>
+</body>
+</html>

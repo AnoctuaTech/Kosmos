@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kosmos - Crear cuenta</title>
+    <link rel="stylesheet" href="../styles-kosmos.css">
+    <style>
+        body {
+            min-height: 100vh;
+            display: grid;
+            grid-template-columns: 480px 1fr;
+            margin: 0;
+        }
+        .form-side {
+            padding: 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .brand-side {
+            background: linear-gradient(135deg, #FF6B4A 0%, #FF4136 40%, #E8382D 70%, #D42F1A 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        .brand-side::before {
+            content: '';
+            position: absolute;
+            width: 700px;
+            height: 700px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,180,120,0.4) 0%, rgba(255,100,60,0.2) 40%, transparent 70%);
+            top: 10%;
+            left: 10%;
+            filter: blur(40px);
+        }
+        .brand-side::after {
+            content: '';
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,200,150,0.3) 0%, transparent 60%);
+            bottom: -10%;
+            right: -10%;
+            filter: blur(30px);
+        }
+        .form-header {
+            margin-bottom: 40px;
+        }
+        .form-header .logo {
+            margin-bottom: 48px;
+            display: block;
+        }
+        .form-header h1 {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        .form-group {
+            margin-bottom: 28px;
+        }
+        .form-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+        .form-input {
+            width: 100%;
+            padding: 10px 0;
+            border: none;
+            border-bottom: 1px solid var(--border);
+            font-size: 15px;
+            background: transparent;
+            transition: border-color 0.2s;
+            outline: none;
+            border-radius: 0;
+        }
+        .form-input:focus {
+            border-bottom-color: var(--primary);
+        }
+        .form-input::placeholder {
+            color: var(--text-muted);
+        }
+        .btn-submit {
+            width: 100%;
+            padding: 14px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: var(--radius);
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-top: 16px;
+            display: block;
+            text-align: center;
+            text-decoration: none;
+        }
+        .btn-submit:hover {
+            background: var(--primary-dark);
+        }
+        .form-footer {
+            text-align: center;
+            margin-top: 24px;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+        .form-footer a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-side">
+        <div class="form-header">
+            <a href="01-Landing.html" class="logo">kosmos<span class="dot">.</span></a>
+            <h1>Iniciar sesión</h1>
+        </div>
+        <form>
+            <div class="form-group">
+                <label class="form-label">Email</label>
+                <input type="email" class="form-input" placeholder="m@ejemplo.com">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Contraseña</label>
+                <input type="password" class="form-input" placeholder="••••••••">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Repetir contraseña</label>
+                <input type="password" class="form-input" placeholder="••••••••">
+            </div>
+            <a href="03-Verificacion.html" class="btn-submit">Crear cuenta</a>
+        </form>
+        <div class="form-footer">
+            ¿Ya tienes cuenta? <a href="04-Login.html">Inicia sesión</a>
+        </div>
+    </div>
+    <div class="brand-side"></div>
+</body>
+</html>

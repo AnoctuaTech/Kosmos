@@ -1,0 +1,5 @@
+{
+  "extends": "@kosmos/config/tsconfig/library",
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
+}
