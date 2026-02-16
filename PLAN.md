@@ -132,17 +132,17 @@
 
 ## Semana 2: Admin Completo
 
-### Dia 6 - Admin: Gestion Participantes + Clientes
-- [ ] Implementar Gestion de Participantes:
+### Dia 6 - Admin: Gestion Participantes + Clientes ✅
+- [x] Implementar Gestion de Participantes:
   - Busqueda por cedula/email/telefono
   - Tarjeta perfil (info + indicadores NSE + balance puntos)
   - Boton "Forzar Actualizacion NSE"
   - Actividad reciente
-- [ ] Implementar Gestion de Clientes/Empresas:
+- [x] Implementar Gestion de Clientes/Empresas:
   - Stat cards (activos, trial, mora, MRR)
   - Tabla con filtros (pais, plan, estado)
   - Boton impersonacion
-- [ ] Completar mock: mockPlantillaService, mockPremioService
+- [x] Completar mock: mockPlantillaService, mockPremioService
 
 ### Dia 7 - Admin: Cola Redenciones + Catalogo Premios
 - [ ] Implementar Cola de Redenciones:
