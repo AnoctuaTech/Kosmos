@@ -144,17 +144,17 @@
   - Boton impersonacion
 - [x] Completar mock: mockPlantillaService, mockPremioService
 
-### Dia 7 - Admin: Cola Redenciones + Catalogo Premios
-- [ ] Implementar Cola de Redenciones:
+### Dia 7 - Admin: Cola Redenciones + Catalogo Premios ✅
+- [x] Implementar Cola de Redenciones:
   - Stat cards con bordes de color
   - Tabs: Pendientes, En Proceso, Historial
   - Tabla con datos bancarios, prioridad, acciones (revisar/aprobar/rechazar)
-- [ ] Implementar Catalogo de Premios:
+- [x] Implementar Catalogo de Premios:
   - Grid de prize cards con gradientes
   - Formulario crear/editar premio
   - Preview mobile del premio
   - Checkboxes disponibilidad geografica
-- [ ] Completar mock: mockRedencionService
+- [x] Completar mock: mockRedencionService
 
 ### Dia 8 - Admin: Fraude + NSE Calibracion
 - [ ] Implementar Cola de Fraude y Alertas:

@@ -27,3 +27,4 @@ export { mockEstudioService } from "./mock/estudio.mock";
 export { mockParticipanteService } from "./mock/participante.mock";
 export { mockPlantillaService } from "./mock/plantilla.mock";
 export { mockPremioService } from "./mock/premio.mock";
+export { mockRedencionService } from "./mock/redencion.mock";
