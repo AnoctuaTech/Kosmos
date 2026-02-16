@@ -52,3 +52,7 @@ export {
 } from "./components/select"
 
 export { Switch } from "./components/switch"
+
+export { ChipSelector } from "./components/chip-selector"
+
+export { KPICard } from "./components/kpi-card"

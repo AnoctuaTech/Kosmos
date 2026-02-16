@@ -110,22 +110,23 @@
 - [x] Implementar Reglas de Logica (vista) y Configuracion General (vista)
 - [x] Ampliar mock data: 6 plantillas con 24 preguntas y 5 reglas
 
-### Dia 4 - Admin: Editor Reglas + Config General
-- [ ] Implementar Editor de Reglas (accordion preguntas + rule cards CRUD)
-- [ ] Tipos de regla: mostrar/ocultar, agrupar, redireccionar, referencia
-- [ ] Implementar Editor Config General (sidebar nav + secciones)
-- [ ] Secciones: imagen, premio, programar, mensaje confirmacion, segmento
-- [ ] ChipSelector para tags de segmento
+### Dia 4 - Admin: Editor Reglas + Config General ✅
+- [x] Implementar Editor de Reglas (CRUD completo: agregar, editar, eliminar reglas)
+- [x] Tipos de regla: saltar_a, terminar_encuesta, ocultar_pregunta con 5 condiciones
+- [x] Implementar Editor Config General (sidebar nav + 6 secciones interactivas)
+- [x] Secciones: general, imagen, incentivo, programacion, confirmacion, segmento
+- [x] ChipSelector para tags de segmento (NSE, edad, genero, pais)
+- [x] Vista previa del mensaje de confirmacion con puntos de incentivo
 
-### Dia 5 - Admin: Dashboard Monitoreo
-- [ ] Construir KPICard compartido
-- [ ] Implementar Dashboard de Monitoreo:
-  - KPIs: MRR, Clientes Activos, Estudios Completados, Renovaciones
-  - Chart MRR mensual (Recharts BarChart)
-  - Lista proximos vencimientos
-  - Tabla desempeno por pais
-  - Tabla actividad del panel
-- [ ] Construir chart wrappers reutilizables
+### Dia 5 - Admin: Dashboard Monitoreo ✅
+- [x] Construir KPICard compartido (titulo, valor, subtitulo, icono, trend)
+- [x] Implementar Dashboard de Monitoreo:
+  - KPIs: MRR ($7,800), Clientes Activos (3), Estudios Completados (1), Renovaciones
+  - Chart MRR mensual (Recharts BarChart, 6 meses)
+  - Chart Actividad del Panel (Recharts LineChart, respuestas + encuestas)
+  - Tabla desempeno por pais (empresas, MRR, estudios, panelistas)
+  - Lista proximas renovaciones (empresa, plan, fecha, uso %)
+- [x] Metricas calculadas desde mock data real (suscripciones, empresas, estudios)
 
 ---
 
