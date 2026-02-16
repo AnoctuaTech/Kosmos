@@ -8,6 +8,8 @@ export type { InputProps } from "./components/input"
 
 export { Label } from "./components/label"
 
+export { Textarea } from "./components/textarea"
+
 export {
   Card,
   CardHeader,
@@ -20,6 +22,33 @@ export {
 export { Badge, badgeVariants } from "./components/badge"
 export type { BadgeProps } from "./components/badge"
 
+export { StatusBadge } from "./components/status-badge"
+
 export { Avatar, AvatarImage, AvatarFallback } from "./components/avatar"
 
 export { Separator } from "./components/separator"
+
+export {
+  Table,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableHead,
+  TableCell,
+} from "./components/table"
+
+export { DataTable } from "./components/data-table"
+export type { DataTableColumn } from "./components/data-table"
+
+export { Tabs, TabsList, TabsTrigger, TabsContent } from "./components/tabs"
+
+export {
+  Select,
+  SelectGroup,
+  SelectValue,
+  SelectTrigger,
+  SelectContent,
+  SelectItem,
+} from "./components/select"
+
+export { Switch } from "./components/switch"

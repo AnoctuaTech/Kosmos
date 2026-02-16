@@ -98,13 +98,17 @@
 - [x] Construir routing structure completa para Admin (14 rutas con route groups)
 - [x] Implementar Login Admin (formulario email/password + 2FA simulado con código 6 dígitos)
 
-### Dia 3 - Admin: Lista Plantillas + Editor Preguntas
-- [ ] Construir DataTable compartido (sortable, pagination, search)
-- [ ] Construir StatusBadge, Tag components
-- [ ] Implementar Lista de Plantillas (tabla con filtros, busqueda, paginacion)
-- [ ] Implementar EditorLayout (topbar editable + pill tabs + close)
-- [ ] Implementar Editor de Preguntas: sidebar de preguntas + panel editor
-- [ ] Toolbox: 5 tipos de pregunta (seleccion unica/multiple, escala, ranking, texto)
+### Dia 3 - Admin: Lista Plantillas + Editor Preguntas ✅
+- [x] Construir DataTable compartido (sortable, pagination, search)
+- [x] Construir StatusBadge, Tag components
+- [x] Implementar Lista de Plantillas (tabla con filtros, busqueda, paginacion)
+- [x] Implementar EditorLayout (topbar editable + pill tabs + close)
+- [x] Implementar Editor de Preguntas: sidebar de preguntas + panel editor
+- [x] Toolbox: 5 tipos de pregunta (seleccion unica/multiple, escala, ranking, texto)
+- [x] Componentes UI adicionales: Table, Tabs, Select, Textarea, Switch
+- [x] Reestructurar rutas editor con route group (editor) para full-screen
+- [x] Implementar Reglas de Logica (vista) y Configuracion General (vista)
+- [x] Ampliar mock data: 6 plantillas con 24 preguntas y 5 reglas
 
 ### Dia 4 - Admin: Editor Reglas + Config General
 - [ ] Implementar Editor de Reglas (accordion preguntas + rule cards CRUD)
