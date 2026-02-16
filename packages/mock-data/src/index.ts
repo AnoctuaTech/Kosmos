@@ -25,3 +25,5 @@ export type { PremioService } from "./services/premio.service";
 export { mockAuthService } from "./mock/auth.mock";
 export { mockEstudioService } from "./mock/estudio.mock";
 export { mockParticipanteService } from "./mock/participante.mock";
+export { mockPlantillaService } from "./mock/plantilla.mock";
+export { mockPremioService } from "./mock/premio.mock";

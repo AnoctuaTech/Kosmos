@@ -14,6 +14,11 @@ const statusConfig: Record<string, { label: string; variant: NonNullable<BadgePr
   rechazada: { label: "Rechazada", variant: "error" },
   en_proceso: { label: "En Proceso", variant: "primary" },
   completada: { label: "Completada", variant: "success" },
+  mora: { label: "En Mora", variant: "error" },
+  suspendido: { label: "Suspendido", variant: "error" },
+  vencida: { label: "Vencida", variant: "default" },
+  bloqueado: { label: "Bloqueado", variant: "error" },
+  inactivo: { label: "Inactivo", variant: "default" },
 }
 
 export function StatusBadge({ status }: { status: string }) {
