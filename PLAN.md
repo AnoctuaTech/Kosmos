@@ -84,19 +84,19 @@
 
 ## Semana 1: Fundacion + Admin Core
 
-### Dia 1 - Setup Fundacional
-- [ ] Instalar y configurar shadcn/ui en packages/ui
-- [ ] Configurar next/font (Inter) en las 3 apps
-- [ ] Construir componentes core: Button, Input, Label, Card, Badge, Avatar
-- [ ] Corregir mock data: trial limit 5 (no 500), agregar transacciones.ts
-- [ ] Setup AWS Amplify (3 sites, auto-deploy desde main)
-- [ ] Conectar ESLint config compartida en las 3 apps
+### Dia 1 - Setup Fundacional ✅
+- [x] Instalar y configurar shadcn/ui en packages/ui
+- [x] Configurar next/font (Inter) en las 3 apps
+- [x] Construir componentes core: Button, Input, Label, Card, Badge, Avatar, Separator
+- [x] Corregir mock data: trial limit 5 (no 500), agregar transacciones.ts, tiers.ts
+- [x] Setup AWS Amplify (3 sites, amplify.yml por app)
+- [x] Conectar ESLint config compartida en las 3 apps
 
-### Dia 2 - Admin Layout + Auth
-- [ ] Construir AdminSidebar (navegacion con secciones: Principal, Gestion, Fabrica, Tesoreria, Control)
-- [ ] Construir AdminLayout (sidebar + content area)
-- [ ] Construir routing structure completa para Admin (todas las rutas)
-- [ ] Implementar Login Admin (formulario email/password + 2FA simulado)
+### Dia 2 - Admin Layout + Auth ✅
+- [x] Construir AdminSidebar (navegacion con secciones: Principal, Gestion, Fabrica, Tesoreria, Control)
+- [x] Construir AdminLayout (sidebar + content area + breadcrumb)
+- [x] Construir routing structure completa para Admin (14 rutas con route groups)
+- [x] Implementar Login Admin (formulario email/password + 2FA simulado con código 6 dígitos)
 
 ### Dia 3 - Admin: Lista Plantillas + Editor Preguntas
 - [ ] Construir DataTable compartido (sortable, pagination, search)
