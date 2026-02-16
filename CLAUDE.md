@@ -14,6 +14,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **Never** add co-authorship lines, AI attribution, or similar ("Co-Authored-By", "Generated with", etc.) in commits or anywhere in the codebase.
 - **Mensajes de commit en español.**
 - **Branches**: usar convenciones profesionales (e.g., `feat/`, `fix/`, `chore/`, `docs/`).
+- **Al finalizar cada día de implementación del PLAN.md**: marcar las tareas como completadas (`✅` y `[x]`) en `PLAN.md`, hacer commit y push de todo el trabajo del día incluyendo el `PLAN.md` actualizado.
 - `.gitignore` debe cubrir: node_modules, .next, .turbo, .env*, dist, OS files (.DS_Store).
 
 ## Project Context and Strategy
