@@ -10,3 +10,5 @@ export { alertasFraude } from "./alertas-fraude";
 export { adminUsuarios } from "./admin-usuarios";
 export { suscripciones } from "./suscripciones";
 export { ticketsSoporte } from "./tickets-soporte";
+export { transacciones } from "./transacciones";
+export { tiers } from "./tiers";

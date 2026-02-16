@@ -144,6 +144,33 @@ Located in `requerimientos_cliente/`:
 - `modulo-admin-mvp.pdf` — Admin backoffice flows, roles, governance, operations
 - `kosmos-participantes-mvp (1).pdf` — Participant flows, quality gates, rewards, anti-fraud, infrastructure
 
+## Architectural Decisions (Session 15/02/2026)
+
+### Implementation Order
+Admin → Clientes → Participantes. Admin first because it controls the entire system.
+
+### Layout Patterns
+- **Admin:** Sidebar navigation (secciones: Principal, Gestion, Fabrica, Tesoreria, Control). Editor de plantillas opens full-screen (no sidebar) with topbar + pill tabs.
+- **Clientes:** Minimal header (logo + avatar). No sidebar. Full-width content. Auth screens use split-screen (form left, brand gradient right).
+- **Participantes:** Mobile-first responsive. Design created during implementation based on requirements PDF. Bottom nav or sidebar for mobile.
+
+### Component Strategy
+- shadcn/ui installed in `packages/ui`, customized with Kosmos design tokens
+- Inter font loaded via `next/font` (not generic CSS)
+- Admin sidebar adapted to Kosmos design system (NOT the dark wireframe style)
+
+### Deploy
+- AWS Amplify from Week 1, one site per app, auto-deploy from Git
+- 3 public URLs for client review
+
+### Participantes Design
+- No existing high-fidelity designs. Designed during implementation.
+- Each screen shown to Enzo for approval before moving on.
+- Based on requirements in `requerimientos_cliente/kosmos-participantes-mvp (1).pdf`
+
+### Plan Reference
+Full implementation plan with day-by-day breakdown: `PLAN.md`
+
 ## Legacy Demo
 
 The original static HTML demo lives in `Demo Navegable/`. It serves as visual reference for implementing the new apps. Key files:

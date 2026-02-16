@@ -11,6 +11,8 @@ export {
   adminUsuarios,
   suscripciones,
   ticketsSoporte,
+  transacciones,
+  tiers,
 } from "./data";
 
 export type { AuthService } from "./services/auth.service";

@@ -14,9 +14,25 @@ export default [
       parserOptions: {
         ecmaVersion: "latest",
         sourceType: "module",
+        ecmaFeatures: {
+          jsx: true,
+        },
+      },
+      globals: {
+        React: "readonly",
+        JSX: "readonly",
+        console: "readonly",
+        process: "readonly",
+        fetch: "readonly",
+        URL: "readonly",
+        Response: "readonly",
+        Request: "readonly",
+        Headers: "readonly",
       },
     },
     rules: {
+      "no-undef": "off",
+      "no-unused-vars": "off",
       "@typescript-eslint/no-unused-vars": [
         "warn",
         { argsIgnorePattern: "^_" },

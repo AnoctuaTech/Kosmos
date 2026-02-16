@@ -1,0 +1,18 @@
+version: 1
+frontend:
+  phases:
+    preBuild:
+      commands:
+        - npm install -g pnpm@10.28.1
+        - cd ../.. && pnpm install --frozen-lockfile
+    build:
+      commands:
+        - cd ../.. && pnpm turbo build --filter=@kosmos/clientes
+  artifacts:
+    baseDirectory: .next
+    files:
+      - "**/*"
+  cache:
+    paths:
+      - ../../node_modules/**/*
+      - .next/cache/**/*
