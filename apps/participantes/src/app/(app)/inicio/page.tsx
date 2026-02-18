@@ -1,7 +1,9 @@
 "use client"
 
+import { useState } from "react"
+import Link from "next/link"
 import { Card, CardContent, Button } from "@kosmos/ui"
-import { Star, ArrowRight, ClipboardList } from "lucide-react"
+import { Star, ArrowRight, ClipboardList, ShieldAlert, X } from "lucide-react"
 
 const puntosActuales = 1200
 const puntosCanje = 2000
@@ -31,17 +33,40 @@ const estudiosDisponibles = [
 ]
 
 export default function InicioPage() {
+  const [avisoVisible, setAvisoVisible] = useState(true)
   const progreso = Math.round((puntosActuales / puntosCanje) * 100)
   const faltantes = puntosCanje - puntosActuales
 
   return (
     <div className="px-4 py-6 md:px-8">
       <h1 className="text-xl font-semibold text-foreground mb-1">
-        Hola, Maria
+        Hola, Carlos
       </h1>
       <p className="text-sm text-foreground-secondary mb-6">
         Tienes estudios disponibles
       </p>
+
+      {avisoVisible && (
+        <div className="mb-4 flex items-start gap-3 rounded-lg border border-warning/30 bg-warning/5 p-3">
+          <ShieldAlert className="h-5 w-5 text-warning shrink-0 mt-0.5" />
+          <div className="flex-1">
+            <p className="text-sm font-medium text-foreground">
+              Aviso legal antifraude
+            </p>
+            <p className="text-xs text-foreground-secondary mt-0.5">
+              Kosmos monitorea tiempos de respuesta y direcciones IP. Respuestas
+              fraudulentas o inconsistentes resultaran en la suspension de tu
+              cuenta y la perdida de puntos acumulados.
+            </p>
+          </div>
+          <button
+            onClick={() => setAvisoVisible(false)}
+            className="shrink-0 text-foreground-muted hover:text-foreground transition-colors"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        </div>
+      )}
 
       <Card className="border-border mb-6">
         <CardContent className="p-5">
@@ -53,8 +78,13 @@ export default function InicioPage() {
               </span>
               <span className="text-sm text-foreground-secondary">puntos</span>
             </div>
+            <Link
+              href="/billetera"
+              className="text-xs font-medium text-primary hover:text-primary-dark transition-colors"
+            >
+              Ver billetera
+            </Link>
           </div>
-
           <div className="mb-2 h-2 rounded-full bg-gray-100 overflow-hidden">
             <div
               className="h-full rounded-full bg-primary transition-all"
@@ -94,10 +124,12 @@ export default function InicioPage() {
                     <Star className="h-3 w-3 fill-primary" />
                     +{estudio.puntos}
                   </span>
-                  <Button size="sm">
-                    Iniciar
-                    <ArrowRight className="ml-1 h-3.5 w-3.5" />
-                  </Button>
+                  <Link href={`/encuesta?id=${estudio.id}`}>
+                    <Button size="sm">
+                      Iniciar
+                      <ArrowRight className="ml-1 h-3.5 w-3.5" />
+                    </Button>
+                  </Link>
                 </div>
               </div>
             </CardContent>

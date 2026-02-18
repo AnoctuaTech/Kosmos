@@ -253,68 +253,68 @@
 
 ## Semana 4: Participantes Completo + Deploy Final
 
-### Dia 16 - Participantes: Auth + NSE
-- [ ] Implementar Landing / Deteccion de dispositivo
-- [ ] Implementar Registro:
+### Dia 16 - Participantes: Auth + NSE ✅
+- [x] Implementar Landing / Deteccion de dispositivo
+- [x] Implementar Registro:
   - Pais dropdown, Nombre, Apellidos, Cedula, Email, Contrasena
   - Codigo referido opcional
   - Mobile-first form
-- [ ] Implementar Verificacion Email (adaptado mobile)
-- [ ] Implementar Cuestionario NSE:
+- [x] Implementar Verificacion Email (adaptado mobile)
+- [x] Implementar Cuestionario NSE:
   - Quality gate bloqueante
   - Preguntas con opciones
   - Resultado: clasificacion Alto/Medio/Bajo
   - Puntos de incentivo al completar
 
-### Dia 17 - Participantes: Dashboard + Encuesta
-- [ ] Implementar Dashboard:
+### Dia 17 - Participantes: Dashboard + Encuesta ✅
+- [x] Implementar Dashboard:
   - Metrica de incentivo (puntos + barra de progreso)
   - Lista de estudios disponibles con "Iniciar Encuesta"
   - Aviso legal antifraude (primera vez)
-- [ ] Implementar Ejecucion de Encuesta:
+- [x] Implementar Ejecucion de Encuesta:
   - Renderizado de preguntas por tipo (seleccion, escala, ranking, texto)
   - Navegacion entre preguntas
   - Progress bar
   - Pantalla de finalizacion con puntos otorgados
 
-### Dia 18 - Participantes: Rewards
-- [ ] Implementar Billetera:
+### Dia 18 - Participantes: Rewards ✅
+- [x] Implementar Billetera:
   - Saldo en puntos prominente
   - Historial de transacciones (inmutable)
   - Tipo + fecha + puntos (+/-)
-- [ ] Implementar Catalogo de Premios:
+- [x] Implementar Catalogo de Premios:
   - Cards de premios filtrados por pais
   - Valor en puntos + valor monetario
-- [ ] Implementar Solicitud de Canje:
+- [x] Implementar Solicitud de Canje:
   - Formulario datos SINPE/Banco
   - Confirmacion y debito provisional
   - Estado de solicitud
 
-### Dia 19 - Participantes: Perfil + Social
-- [ ] Implementar Perfil:
+### Dia 19 - Participantes: Perfil + Social ✅
+- [x] Implementar Perfil:
   - Edicion datos personales
   - Estado NSE con opcion reactivacion
   - Cerrar sesion
-- [ ] Implementar Referidos:
+- [x] Implementar Referidos:
   - Codigo personal copiable
   - Lista de referidos con estado
   - Puntos bloqueados vs liberados
   - Indicador de cap
-- [ ] Implementar Soporte:
+- [x] Implementar Soporte:
   - Formulario: asunto + mensaje
   - Lista de tickets enviados con estado
   - Sin chat en vivo
 
-### Dia 20 - Polish Final + Deploy
-- [ ] Verificar las 34 pantallas completas
-- [ ] Verificar navegacion end-to-end en cada modulo
-- [ ] Verificar responsive:
+### Dia 20 - Polish Final + Deploy ✅
+- [x] Verificar las 34 pantallas completas
+- [x] Verificar navegacion end-to-end en cada modulo
+- [x] Verificar responsive:
   - Admin y Clientes: desktop (min 1024px)
   - Participantes: mobile-first (320px-768px) + desktop
-- [ ] Verificar AWS Amplify deployment de los 3 apps
-- [ ] Verificar datos mock consistentes entre modulos
-- [ ] Limpiar codigo y verificar que no hay imports/componentes sin usar
-- [ ] Verificar performance basica (no heavy renders, lazy loading donde aplique)
+- [x] Verificar AWS Amplify deployment de los 3 apps
+- [x] Verificar datos mock consistentes entre modulos
+- [x] Limpiar codigo y verificar que no hay imports/componentes sin usar
+- [x] Verificar performance basica (no heavy renders, lazy loading donde aplique)
 
 ---
 
@@ -424,11 +424,11 @@ components/
 
 ## Metricas de Exito
 
-- [ ] 34 pantallas implementadas y navegables
-- [ ] 3 URLs publicas en AWS Amplify
-- [ ] Datos mock realistas en todas las pantallas
-- [ ] Navegacion completa sin dead ends
-- [ ] Consistencia visual con Demo Navegable (Clientes + Admin)
-- [ ] Mobile-first funcional en Participantes
-- [ ] Zero TypeScript errors
-- [ ] Performance aceptable (< 3s initial load)
+- [x] 34 pantallas implementadas y navegables
+- [x] 3 URLs publicas en AWS Amplify
+- [x] Datos mock realistas en todas las pantallas
+- [x] Navegacion completa sin dead ends
+- [x] Consistencia visual con Demo Navegable (Clientes + Admin)
+- [x] Mobile-first funcional en Participantes
+- [x] Zero TypeScript errors
+- [x] Performance aceptable (< 3s initial load)

@@ -3,7 +3,6 @@
 import { useMemo } from "react"
 import {
   clientes,
-  empresas,
   suscripciones,
   tiers,
   transacciones,
@@ -21,7 +20,6 @@ import {
 import { User, DollarSign, Sparkles, FileText, Check } from "lucide-react"
 
 const cliente = clientes.find((c) => c.empresaId === "emp-001" && c.rol === "propietario")!
-const empresa = empresas.find((e) => e.id === "emp-001")!
 const suscripcion = suscripciones.find(
   (s) => s.empresaId === "emp-001" && s.estado === "activa"
 )!
@@ -56,7 +54,6 @@ export default function CuentaPage() {
       .sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime())
   }, [])
 
-  let saldoAcumulado = 0
   const historialConSaldo = useMemo(() => {
     let acumulado = 0
     const ordenadoAsc = [...historial].reverse()
