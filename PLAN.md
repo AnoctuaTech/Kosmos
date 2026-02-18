@@ -230,24 +230,24 @@
   - Logica: validacion saldo -> modal upgrade si insuficiente
   - Boton "Crear estudio"
 
-### Dia 14 - Clientes: Cuenta + Polish
-- [ ] Implementar Configuracion de Cuenta:
+### Dia 14 - Clientes: Cuenta + Polish ✅
+- [x] Implementar Configuracion de Cuenta:
   - Avatar dropdown menu (Tu cuenta, Cerrar sesion)
   - 3 info cards (Perfil, Pago, Suscripcion)
   - Tabla historial de creditos
   - Links: actualizar metodo pago, cambiar plan
-- [ ] Polish completo del modulo Clientes:
+- [x] Polish completo del modulo Clientes:
   - Verificar navegacion completa
   - Verificar consistencia visual con Demo Navegable
   - Verificar estados vacios y edge cases
 
-### Dia 15 - Participantes: Fundacion + Diseno
-- [ ] Disenar layout mobile-first para Participantes:
+### Dia 15 - Participantes: Fundacion + Diseno ✅
+- [x] Disenar layout mobile-first para Participantes:
   - Sidebar/bottom nav con items: Inicio, Perfil, Premios, Soporte
   - Header mobile con puntos visibles
-- [ ] Construir ParticipantesLayout
-- [ ] Construir mobile-specific components si se necesitan
-- [ ] Definir paleta de colores/variaciones para mobile
+- [x] Construir ParticipantesLayout
+- [x] Construir mobile-specific components si se necesitan
+- [x] Definir paleta de colores/variaciones para mobile
 
 ---
 
