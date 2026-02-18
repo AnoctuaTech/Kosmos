@@ -56,3 +56,7 @@ export { Switch } from "./components/switch"
 export { ChipSelector } from "./components/chip-selector"
 
 export { KPICard } from "./components/kpi-card"
+
+export { Stepper } from "./components/stepper"
+
+export { OptionCard } from "./components/option-card"

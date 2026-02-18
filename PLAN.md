@@ -216,16 +216,16 @@
   - KPI grid 2x2 (respuestas, incidencia, tiempo, abandono)
   - 3 chart cards (representatividad barras, ritmo diario, meta gauge)
 
-### Dia 13 - Clientes: Wizard (3 pasos)
-- [ ] Construir Stepper component
-- [ ] Construir wizard modal overlay (sobre fondo difuminado)
-- [ ] Implementar Paso 1: Seleccionar Plantilla
+### Dia 13 - Clientes: Wizard (3 pasos) ✅
+- [x] Construir Stepper component
+- [x] Construir wizard modal overlay (sobre fondo difuminado)
+- [x] Implementar Paso 1: Seleccionar Plantilla
   - Grid 2 columnas de OptionCards
   - Seleccion unica
-- [ ] Implementar Paso 2: Definir Segmento/Target
+- [x] Implementar Paso 2: Definir Segmento/Target
   - OptionCards con descripcion demografica
   - Boton deseleccionar (X)
-- [ ] Implementar Paso 3: Volumen y Lanzamiento
+- [x] Implementar Paso 3: Volumen y Lanzamiento
   - OptionCards con volumenes
   - Logica: validacion saldo -> modal upgrade si insuficiente
   - Boton "Crear estudio"
