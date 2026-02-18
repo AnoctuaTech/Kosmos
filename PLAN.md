@@ -156,13 +156,13 @@
   - Checkboxes disponibilidad geografica
 - [x] Completar mock: mockRedencionService
 
-### Dia 8 - Admin: Fraude + NSE Calibracion
-- [ ] Implementar Cola de Fraude y Alertas:
+### Dia 8 - Admin: Fraude + NSE Calibracion ✅
+- [x] Implementar Cola de Fraude y Alertas:
   - Banner de alerta
   - Stat cards con bordes de riesgo
   - Config limite referidos (input configurable)
   - Tabla de alertas con niveles de riesgo y acciones
-- [ ] Implementar Calibracion NSE:
+- [x] Implementar Calibracion NSE:
   - Tabla variables con pesos editables
   - Definicion de niveles (alto/medio/bajo con thresholds)
   - Danger zone: forzar actualizacion masiva
