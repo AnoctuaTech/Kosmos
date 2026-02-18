@@ -205,12 +205,12 @@
   - Email + contrasena
   - Flujo OTP (pantalla codigo)
 
-### Dia 12 - Clientes: Lista Estudios + Dashboard
-- [ ] Implementar Lista de Estudios:
+### Dia 12 - Clientes: Lista Estudios + Dashboard ✅
+- [x] Implementar Lista de Estudios:
   - Reutilizar DataTable
   - Columnas: codigo, titulo, tipo (tags color), etiquetas, respuestas, estado, acciones
   - Boton "+ Nuevo estudio" -> Wizard
-- [ ] Implementar Dashboard de Resultados:
+- [x] Implementar Dashboard de Resultados:
   - Breadcrumb
   - Card con titulo estudio + filtros + "Descargar Excel"
   - KPI grid 2x2 (respuestas, incidencia, tiempo, abandono)
