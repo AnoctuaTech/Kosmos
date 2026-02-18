@@ -192,16 +192,16 @@
 
 ## Semana 3: Clientes Completo
 
-### Dia 11 - Clientes: Auth Flow
-- [ ] Construir AuthLayout (split-screen: form + gradiente)
-- [ ] Implementar Registro Corporativo:
+### Dia 11 - Clientes: Auth Flow ✅
+- [x] Construir AuthLayout (split-screen: form + gradiente)
+- [x] Implementar Registro Corporativo:
   - Datos personales (email, contrasena)
   - Datos empresa (nombre, industria dropdown, pais dropdown)
   - Bottom-border inputs
-- [ ] Implementar Verificacion Email:
+- [x] Implementar Verificacion Email:
   - 4 code inputs individuales
   - Reenviar codigo link
-- [ ] Implementar Login:
+- [x] Implementar Login:
   - Email + contrasena
   - Flujo OTP (pantalla codigo)
 
