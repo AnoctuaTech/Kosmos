@@ -13,6 +13,7 @@ export {
   ticketsSoporte,
   transacciones,
   tiers,
+  excepciones,
 } from "./data";
 
 export type { AuthService } from "./services/auth.service";

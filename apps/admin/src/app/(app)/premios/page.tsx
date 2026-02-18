@@ -18,7 +18,6 @@ import {
   SelectValue,
   SelectContent,
   SelectItem,
-  Separator,
 } from "@kosmos/ui"
 import {
   Gift,

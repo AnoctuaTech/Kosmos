@@ -17,15 +17,9 @@ import {
   Badge,
   Button,
   Input,
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
   Tabs,
   TabsList,
   TabsTrigger,
-  TabsContent,
   Table,
   TableHeader,
   TableBody,
@@ -44,7 +38,6 @@ import {
   Download,
   Search,
   Check,
-  X,
   Eye,
 } from "lucide-react"
 

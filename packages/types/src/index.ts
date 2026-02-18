@@ -34,3 +34,8 @@ export type {
   AdminUsuario,
   RolAdmin,
 } from "./admin";
+export type {
+  ExcepcionNeuroVAS,
+  EstadoExcepcion,
+  TipoExcepcion,
+} from "./excepcion";

@@ -167,12 +167,12 @@
   - Definicion de niveles (alto/medio/bajo con thresholds)
   - Danger zone: forzar actualizacion masiva
 
-### Dia 9 - Admin: Neuro/VAS + Polish
-- [ ] Implementar Gestion de Excepciones Neuro/VAS:
+### Dia 9 - Admin: Neuro/VAS + Polish ✅
+- [x] Implementar Gestion de Excepciones Neuro/VAS:
   - Kanban board 3 columnas (Recibido, En Analisis, Resultados Entregados)
   - Cards con cliente, solicitud, proveedor, estado
   - Drag conceptual (sin DnD real para prototype)
-- [ ] Polish completo del modulo Admin:
+- [x] Polish completo del modulo Admin:
   - Verificar navegacion entre todas las pantallas
   - Verificar responsive (desktop)
   - Verificar datos mock consistentes
