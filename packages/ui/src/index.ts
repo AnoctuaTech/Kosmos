@@ -60,3 +60,18 @@ export { KPICard } from "./components/kpi-card"
 export { Stepper } from "./components/stepper"
 
 export { OptionCard } from "./components/option-card"
+
+export {
+  Dialog,
+  DialogPortal,
+  DialogOverlay,
+  DialogClose,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogFooter,
+  DialogTitle,
+  DialogDescription,
+} from "./components/dialog"
+
+export { Toaster } from "./components/sonner"

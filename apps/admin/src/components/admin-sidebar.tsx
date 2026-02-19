@@ -2,6 +2,7 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
+import { useRouter } from "next/navigation"
 import {
   LayoutDashboard,
   Users,
@@ -13,6 +14,7 @@ import {
   SlidersHorizontal,
   ClipboardList,
   FolderOpen,
+  LogOut,
 } from "lucide-react"
 import { cn } from "@kosmos/ui"
 import { redenciones, alertasFraude } from "@kosmos/mock-data"
@@ -65,6 +67,7 @@ const navigation = [
 
 export function AdminSidebar() {
   const pathname = usePathname()
+  const router = useRouter()
 
   return (
     <aside className="flex h-screen w-[260px] shrink-0 flex-col border-r border-border bg-white">
@@ -122,6 +125,12 @@ export function AdminSidebar() {
             <p className="text-sm font-medium text-foreground truncate">Super Admin</p>
             <p className="text-xs text-foreground-muted truncate">admin@kosmos.com</p>
           </div>
+          <button
+            onClick={() => router.push("/auth/login")}
+            className="flex h-8 w-8 items-center justify-center rounded-md text-foreground-muted hover:text-error hover:bg-error/5 transition-colors"
+          >
+            <LogOut className="h-4 w-4" />
+          </button>
         </div>
       </div>
     </aside>

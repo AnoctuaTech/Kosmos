@@ -31,7 +31,9 @@ import {
   Avatar,
   AvatarFallback,
   StatusBadge,
+  Separator,
 } from "@kosmos/ui"
+import { toast } from "sonner"
 import {
   Building2,
   FlaskConical,
@@ -43,6 +45,11 @@ import {
   Download,
   ChevronLeft,
   ChevronRight,
+  X,
+  Calendar,
+  Mail,
+  User,
+  FileText,
 } from "lucide-react"
 
 const tierPrecios: Record<string, number> = {
@@ -93,6 +100,8 @@ function getEmpresaData() {
   })
 }
 
+type EmpresaEnriquecida = ReturnType<typeof getEmpresaData>[number]
+
 export default function ClientesPage() {
   const [filtroPais, setFiltroPais] = useState("todos")
   const [filtroPlan, setFiltroPlan] = useState("todos")
@@ -100,6 +109,7 @@ export default function ClientesPage() {
   const [busqueda, setBusqueda] = useState("")
   const [pageSize, setPageSize] = useState(10)
   const [page, setPage] = useState(0)
+  const [empresaSeleccionada, setEmpresaSeleccionada] = useState<EmpresaEnriquecida | null>(null)
 
   const empresasData = useMemo(() => getEmpresaData(), [])
 
@@ -300,7 +310,11 @@ export default function ClientesPage() {
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="flex items-center justify-end gap-2">
-                        <Button variant="outline" size="sm">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => setEmpresaSeleccionada(emp)}
+                        >
                           <Eye className="h-3.5 w-3.5 mr-1.5" />
                           Detalle
                         </Button>
@@ -308,6 +322,7 @@ export default function ClientesPage() {
                           variant="outline"
                           size="sm"
                           className="text-violet-600 border-violet-200 hover:bg-violet-50"
+                          onClick={() => toast.success("Sesión de impersonación iniciada")}
                         >
                           <LogIn className="h-3.5 w-3.5 mr-1.5" />
                           Impersonar
@@ -379,6 +394,158 @@ export default function ClientesPage() {
           </div>
         </CardContent>
       </Card>
+
+      {empresaSeleccionada && (
+        <div className="fixed inset-y-0 right-0 z-40 w-[420px] bg-white border-l border-border shadow-xl overflow-y-auto">
+          <div className="sticky top-0 z-10 flex items-center justify-between border-b border-border bg-white px-6 py-4">
+            <h2 className="text-lg font-semibold text-foreground">Detalle de Empresa</h2>
+            <button
+              onClick={() => setEmpresaSeleccionada(null)}
+              className="flex h-8 w-8 items-center justify-center rounded-md text-foreground-muted hover:text-foreground hover:bg-background-gray transition-colors"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          </div>
+
+          <div className="p-6 space-y-6">
+            <div className="flex flex-col items-center text-center">
+              <Avatar className="h-16 w-16 mb-3">
+                <AvatarFallback className="text-lg bg-primary/10 text-primary">
+                  {empresaSeleccionada.iniciales}
+                </AvatarFallback>
+              </Avatar>
+              <h3 className="text-lg font-semibold text-foreground">
+                {empresaSeleccionada.nombre}
+              </h3>
+              <p className="text-sm text-foreground-secondary">
+                {empresaSeleccionada.industria}
+              </p>
+              <div className="flex gap-2 mt-2">
+                <StatusBadge status={empresaSeleccionada.estado} />
+              </div>
+            </div>
+
+            <Separator />
+
+            <div>
+              <h4 className="text-xs font-semibold text-foreground-muted uppercase tracking-wide mb-3">
+                Información General
+              </h4>
+              <div className="space-y-3">
+                <div className="flex items-start gap-3">
+                  <Building2 className="h-4 w-4 text-foreground-muted mt-0.5" />
+                  <div>
+                    <p className="text-xs text-foreground-muted">Industria</p>
+                    <p className="text-sm font-medium">{empresaSeleccionada.industria}</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <Search className="h-4 w-4 text-foreground-muted mt-0.5" />
+                  <div>
+                    <p className="text-xs text-foreground-muted">País</p>
+                    <p className="text-sm font-medium">{empresaSeleccionada.pais?.nombre ?? "—"}</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <Calendar className="h-4 w-4 text-foreground-muted mt-0.5" />
+                  <div>
+                    <p className="text-xs text-foreground-muted">Fecha de registro</p>
+                    <p className="text-sm font-medium">
+                      {new Date(empresaSeleccionada.creadoEn).toLocaleDateString("es-CR", {
+                        day: "2-digit",
+                        month: "long",
+                        year: "numeric",
+                      })}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <Separator />
+
+            <div>
+              <h4 className="text-xs font-semibold text-foreground-muted uppercase tracking-wide mb-3">
+                Suscripción
+              </h4>
+              {empresaSeleccionada.suscripcion ? (
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-foreground-secondary">Tier</span>
+                    <Badge variant={tierVariants[empresaSeleccionada.suscripcion.tier]}>
+                      {tierLabels[empresaSeleccionada.suscripcion.tier]}
+                    </Badge>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-foreground-secondary">Estado</span>
+                    <StatusBadge status={empresaSeleccionada.suscripcion.estado} />
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-foreground-secondary">Respuestas</span>
+                    <span className="text-sm font-medium">
+                      {empresaSeleccionada.suscripcion.respuestasUsadas} / {empresaSeleccionada.suscripcion.respuestasLimite}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-foreground-secondary">Renovación</span>
+                    <span className="text-sm font-medium">
+                      {new Date(empresaSeleccionada.suscripcion.fechaRenovacion).toLocaleDateString("es-CR", {
+                        day: "2-digit",
+                        month: "short",
+                        year: "numeric",
+                      })}
+                    </span>
+                  </div>
+                </div>
+              ) : (
+                <p className="text-sm text-foreground-muted">Sin suscripción</p>
+              )}
+            </div>
+
+            <Separator />
+
+            <div>
+              <h4 className="text-xs font-semibold text-foreground-muted uppercase tracking-wide mb-3">
+                Contacto Principal
+              </h4>
+              {empresaSeleccionada.contacto ? (
+                <div className="space-y-3">
+                  <div className="flex items-start gap-3">
+                    <User className="h-4 w-4 text-foreground-muted mt-0.5" />
+                    <div>
+                      <p className="text-xs text-foreground-muted">Nombre</p>
+                      <p className="text-sm font-medium">
+                        {empresaSeleccionada.contacto.nombre} {empresaSeleccionada.contacto.apellidos}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <Mail className="h-4 w-4 text-foreground-muted mt-0.5" />
+                    <div>
+                      <p className="text-xs text-foreground-muted">Email</p>
+                      <p className="text-sm font-medium">{empresaSeleccionada.contacto.email}</p>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <p className="text-sm text-foreground-muted">Sin contacto registrado</p>
+              )}
+            </div>
+
+            <Separator />
+
+            <div className="flex items-center justify-between">
+              <div className="flex items-start gap-3">
+                <FileText className="h-4 w-4 text-foreground-muted mt-0.5" />
+                <div>
+                  <p className="text-xs text-foreground-muted">Estudios activos</p>
+                  <p className="text-sm font-medium">{empresaSeleccionada.estudiosActivos}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

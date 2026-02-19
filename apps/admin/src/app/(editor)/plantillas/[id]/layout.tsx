@@ -19,7 +19,20 @@ export default function EditorLayout({
 }) {
   const params = useParams()
   const pathname = usePathname()
-  const plantilla = plantillas.find((p) => p.id === params.id)
+
+  const plantilla = params.id === "nueva"
+    ? {
+        id: "nueva",
+        nombre: "Nueva Plantilla",
+        estado: "borrador" as const,
+        descripcion: "",
+        categoriaId: "",
+        preguntas: [],
+        reglas: [],
+        creadoEn: new Date().toISOString(),
+        ultimaEdicion: new Date().toISOString(),
+      }
+    : plantillas.find((p) => p.id === params.id)
 
   if (!plantilla) {
     return (

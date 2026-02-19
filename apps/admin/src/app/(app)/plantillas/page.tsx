@@ -104,10 +104,12 @@ export default function PlantillasPage() {
         pageSize={10}
         pageSizeOptions={[5, 10, 20, 30]}
         actions={
-          <Button>
-            <Plus className="mr-2 h-4 w-4" />
-            Nueva plantilla
-          </Button>
+          <Link href="/plantillas/nueva/preguntas">
+            <Button>
+              <Plus className="mr-2 h-4 w-4" />
+              Nueva plantilla
+            </Button>
+          </Link>
         }
       />
     </div>

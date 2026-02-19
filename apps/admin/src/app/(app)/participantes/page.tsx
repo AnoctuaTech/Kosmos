@@ -27,7 +27,16 @@ import {
   TableRow,
   TableHead,
   TableCell,
+  Textarea,
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+  Label,
 } from "@kosmos/ui"
+import { toast } from "sonner"
 import {
   Search,
   AlertTriangle,
@@ -46,6 +55,8 @@ import {
   History,
   X,
   CheckCircle2,
+  Ban,
+  Send,
 } from "lucide-react"
 
 const actividadMock = [
@@ -133,6 +144,10 @@ export default function ParticipantesPage() {
   const [forzandoNSE, setForzandoNSE] = useState(false)
   const [showModalContrasena, setShowModalContrasena] = useState(false)
   const [bannerContrasena, setBannerContrasena] = useState(false)
+  const [showModalHistorial, setShowModalHistorial] = useState(false)
+  const [showModalNotificacion, setShowModalNotificacion] = useState(false)
+  const [showModalSuspension, setShowModalSuspension] = useState(false)
+  const [estadoParticipante, setEstadoParticipante] = useState<string | null>(null)
 
   function buscar() {
     const q = busqueda.toLowerCase().trim()
@@ -257,6 +272,156 @@ export default function ParticipantesPage() {
         </div>
       )}
 
+      <Dialog open={showModalHistorial} onOpenChange={setShowModalHistorial}>
+        <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Historial Completo</DialogTitle>
+            <DialogDescription>
+              {seleccionado
+                ? `Actividad y auditoría de ${seleccionado.nombre} ${seleccionado.apellidos}`
+                : ""}
+            </DialogDescription>
+          </DialogHeader>
+          <Table>
+            <TableHeader>
+              <TableRow className="hover:bg-transparent">
+                <TableHead>Fecha</TableHead>
+                <TableHead>Tipo</TableHead>
+                <TableHead>Descripción</TableHead>
+                <TableHead className="text-right">Puntos</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {actividadMock.map((act, i) => (
+                <TableRow key={`act-${i}`}>
+                  <TableCell className="text-sm whitespace-nowrap">{act.fecha}</TableCell>
+                  <TableCell>
+                    <Badge variant="outline" className="capitalize">{act.tipo}</Badge>
+                  </TableCell>
+                  <TableCell className="text-sm">{act.descripcion}</TableCell>
+                  <TableCell className={`text-sm text-right font-semibold ${act.puntos > 0 ? "text-success" : "text-error"}`}>
+                    {act.puntos > 0 ? "+" : ""}{act.puntos}
+                  </TableCell>
+                </TableRow>
+              ))}
+              {auditEntries.map((entry) => (
+                <TableRow key={entry.id}>
+                  <TableCell className="text-sm whitespace-nowrap">
+                    {new Date(entry.fecha).toLocaleDateString("es-CR", {
+                      day: "2-digit",
+                      month: "short",
+                      year: "numeric",
+                    })}
+                  </TableCell>
+                  <TableCell>
+                    <Badge variant="outline">Auditoría</Badge>
+                  </TableCell>
+                  <TableCell className="text-sm">
+                    {entry.campo}: {entry.valorAnterior} → {entry.valorNuevo} (por {entry.adminNombre})
+                  </TableCell>
+                  <TableCell className="text-right text-sm text-foreground-muted">—</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={showModalNotificacion} onOpenChange={setShowModalNotificacion}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Enviar Notificación</DialogTitle>
+            <DialogDescription>
+              {seleccionado
+                ? `Enviar notificación a ${seleccionado.nombre} ${seleccionado.apellidos}`
+                : ""}
+            </DialogDescription>
+          </DialogHeader>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault()
+              setShowModalNotificacion(false)
+              toast.success("Notificación enviada exitosamente")
+            }}
+            className="space-y-4"
+          >
+            <div className="space-y-2">
+              <Label>Tipo</Label>
+              <Select defaultValue="email">
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="email">Email</SelectItem>
+                  <SelectItem value="push">Push</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label>Asunto</Label>
+              <Input placeholder="Asunto de la notificación" required />
+            </div>
+            <div className="space-y-2">
+              <Label>Mensaje</Label>
+              <Textarea placeholder="Escriba el contenido del mensaje..." rows={4} required />
+            </div>
+            <DialogFooter>
+              <Button type="button" variant="outline" onClick={() => setShowModalNotificacion(false)}>
+                Cancelar
+              </Button>
+              <Button type="submit">
+                <Send className="h-4 w-4 mr-2" />
+                Enviar
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={showModalSuspension} onOpenChange={setShowModalSuspension}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Suspender Cuenta</DialogTitle>
+            <DialogDescription>
+              {seleccionado
+                ? `¿Está seguro que desea suspender la cuenta de ${seleccionado.nombre} ${seleccionado.apellidos}?`
+                : ""}
+            </DialogDescription>
+          </DialogHeader>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault()
+              setEstadoParticipante("suspendido")
+              setShowModalSuspension(false)
+              toast.success("Cuenta suspendida")
+            }}
+            className="space-y-4"
+          >
+            <div className="space-y-2">
+              <Label>Motivo</Label>
+              <Select defaultValue="fraude">
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="fraude">Fraude</SelectItem>
+                  <SelectItem value="inactividad">Inactividad</SelectItem>
+                  <SelectItem value="solicitud">Solicitud del usuario</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <DialogFooter>
+              <Button type="button" variant="outline" onClick={() => setShowModalSuspension(false)}>
+                Cancelar
+              </Button>
+              <Button type="submit" className="bg-error hover:bg-error/90 text-white">
+                Confirmar Suspensión
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
+
       {seleccionado ? (
         <Card>
           <CardContent className="p-0">
@@ -277,14 +442,16 @@ export default function ParticipantesPage() {
                   <div className="flex gap-2 mt-3">
                     <Badge
                       variant={
-                        seleccionado.estado === "activo" ? "success" : "error"
+                        (estadoParticipante ?? seleccionado.estado) === "activo" ? "success" : "error"
                       }
                     >
-                      {seleccionado.estado === "activo"
+                      {(estadoParticipante ?? seleccionado.estado) === "activo"
                         ? "Activo"
-                        : seleccionado.estado === "bloqueado"
-                          ? "Bloqueado"
-                          : "Inactivo"}
+                        : (estadoParticipante ?? seleccionado.estado) === "suspendido"
+                          ? "Suspendido"
+                          : (estadoParticipante ?? seleccionado.estado) === "bloqueado"
+                            ? "Bloqueado"
+                            : "Inactivo"}
                     </Badge>
                     {seleccionado.emailVerificado && (
                       <Badge variant="success">Verificado</Badge>
@@ -304,11 +471,21 @@ export default function ParticipantesPage() {
                     <Lock className="h-4 w-4 mr-2" />
                     Forzar Cambio de Contraseña
                   </Button>
-                  <Button variant="outline" className="w-full justify-start" size="sm">
+                  <Button
+                    variant="outline"
+                    className="w-full justify-start"
+                    size="sm"
+                    onClick={() => setShowModalHistorial(true)}
+                  >
                     <User className="h-4 w-4 mr-2" />
                     Ver historial completo
                   </Button>
-                  <Button variant="outline" className="w-full justify-start" size="sm">
+                  <Button
+                    variant="outline"
+                    className="w-full justify-start"
+                    size="sm"
+                    onClick={() => setShowModalNotificacion(true)}
+                  >
                     <Mail className="h-4 w-4 mr-2" />
                     Enviar notificación
                   </Button>
@@ -316,7 +493,9 @@ export default function ParticipantesPage() {
                     variant="outline"
                     className="w-full justify-start text-error border-error/30 hover:bg-error/5"
                     size="sm"
+                    onClick={() => setShowModalSuspension(true)}
                   >
+                    <Ban className="h-4 w-4 mr-2" />
                     Suspender cuenta
                   </Button>
                 </div>
