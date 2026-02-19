@@ -40,7 +40,7 @@ export const redenciones: Redencion[] = [
       cuenta: "PA0401234567890123456789",
       banco: "Banco General Panama",
     },
-    solicitadoEn: "2026-01-15T16:00:00.000Z",
+    solicitadoEn: "2026-02-17T16:00:00.000Z",
   },
   {
     id: "red-004",
@@ -65,7 +65,32 @@ export const redenciones: Redencion[] = [
       tipo: "sinpe",
       cuenta: "70001234",
     },
-    solicitadoEn: "2026-02-01T10:00:00.000Z",
-    aprobadoEn: "2026-02-01T15:30:00.000Z",
+    solicitadoEn: "2026-02-15T10:00:00.000Z",
+    aprobadoEn: "2026-02-15T15:30:00.000Z",
+  },
+  {
+    id: "red-006",
+    participanteId: "par-004",
+    premioId: "pre-001",
+    puntosCosto: 1000,
+    estado: "pendiente",
+    datosBancarios: {
+      tipo: "sinpe",
+      cuenta: "60005678",
+    },
+    solicitadoEn: "2026-02-12T08:00:00.000Z",
+  },
+  {
+    id: "red-007",
+    participanteId: "par-005",
+    premioId: "pre-003",
+    puntosCosto: 2500,
+    estado: "pendiente",
+    datosBancarios: {
+      tipo: "transferencia",
+      cuenta: "CR45015201001025098765",
+      banco: "BAC San Jose",
+    },
+    solicitadoEn: "2026-02-05T14:30:00.000Z",
   },
 ];

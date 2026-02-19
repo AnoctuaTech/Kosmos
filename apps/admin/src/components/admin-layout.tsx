@@ -18,6 +18,7 @@ const breadcrumbMap: Record<string, string> = {
   fraude: "Alertas de Fraude",
   nse: "Calibración NSE",
   excepciones: "Excepciones",
+  categorias: "Categorías",
 }
 
 function Breadcrumb() {

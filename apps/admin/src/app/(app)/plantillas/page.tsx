@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { plantillas } from "@kosmos/mock-data"
+import { plantillas, categorias } from "@kosmos/mock-data"
 import type { Plantilla } from "@kosmos/types"
 import {
   Button,
@@ -10,6 +10,8 @@ import {
   type DataTableColumn,
 } from "@kosmos/ui"
 import { Plus, Pencil } from "lucide-react"
+
+const categoriasMap = Object.fromEntries(categorias.map((c) => [c.id, c.nombre]))
 
 const columns: DataTableColumn<Plantilla>[] = [
   {
@@ -37,28 +39,26 @@ const columns: DataTableColumn<Plantilla>[] = [
     className: "w-[120px]",
   },
   {
-    id: "preguntas",
-    header: "Preguntas",
-    cell: (row) => (
-      <span className="text-foreground-secondary">{row.preguntas.length}</span>
-    ),
-    sortFn: (a, b) => a.preguntas.length - b.preguntas.length,
-    className: "w-[100px]",
-  },
-  {
-    id: "reglas",
-    header: "Reglas",
-    cell: (row) => (
-      <span className="text-foreground-secondary">{row.reglas.length}</span>
-    ),
-    className: "w-[80px]",
-  },
-  {
-    id: "fecha",
-    header: "Creación",
+    id: "categoria",
+    header: "Categoría",
     cell: (row) => (
       <span className="text-foreground-secondary text-sm">
-        {new Date(row.creadoEn).toLocaleDateString("es-CR", {
+        {row.categoriaId ? categoriasMap[row.categoriaId] || "—" : "—"}
+      </span>
+    ),
+    sortFn: (a, b) => {
+      const catA = a.categoriaId ? categoriasMap[a.categoriaId] || "" : ""
+      const catB = b.categoriaId ? categoriasMap[b.categoriaId] || "" : ""
+      return catA.localeCompare(catB)
+    },
+    className: "w-[180px]",
+  },
+  {
+    id: "ultimaEdicion",
+    header: "Última edición",
+    cell: (row) => (
+      <span className="text-foreground-secondary text-sm">
+        {new Date(row.ultimaEdicion).toLocaleDateString("es-CR", {
           day: "2-digit",
           month: "short",
           year: "numeric",
@@ -66,8 +66,8 @@ const columns: DataTableColumn<Plantilla>[] = [
       </span>
     ),
     sortFn: (a, b) =>
-      new Date(a.creadoEn).getTime() - new Date(b.creadoEn).getTime(),
-    className: "w-[130px]",
+      new Date(a.ultimaEdicion).getTime() - new Date(b.ultimaEdicion).getTime(),
+    className: "w-[140px]",
   },
   {
     id: "acciones",
@@ -89,7 +89,7 @@ export default function PlantillasPage() {
       <div className="mb-6">
         <h1 className="text-2xl font-semibold text-foreground">Plantillas</h1>
         <p className="mt-1 text-sm text-foreground-secondary">
-          Gestión de cuestionarios y plantillas de estudio
+          Gestión de plantillas de evaluación
         </p>
       </div>
 
@@ -102,6 +102,7 @@ export default function PlantillasPage() {
           item.descripcion.toLowerCase().includes(query)
         }
         pageSize={10}
+        pageSizeOptions={[5, 10, 20, 30]}
         actions={
           <Button>
             <Plus className="mr-2 h-4 w-4" />

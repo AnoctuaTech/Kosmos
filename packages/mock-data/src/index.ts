@@ -14,6 +14,8 @@ export {
   transacciones,
   tiers,
   excepciones,
+  categorias,
+  auditParticipantes,
 } from "./data";
 
 export type { AuthService } from "./services/auth.service";

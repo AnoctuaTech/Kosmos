@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useMemo } from "react"
+import Link from "next/link"
 import {
   alertasFraude,
   participantes,
@@ -426,10 +427,12 @@ export default function FraudePage() {
                                 Aumentar Limite
                               </Button>
                             )}
-                            <Button variant="outline" size="sm" className="h-8">
-                              <Shield className="h-3.5 w-3.5 mr-1" />
-                              Investigar
-                            </Button>
+                            <Link href={`/fraude/${a.id}`}>
+                              <Button variant="outline" size="sm" className="h-8">
+                                <Shield className="h-3.5 w-3.5 mr-1" />
+                                Investigar
+                              </Button>
+                            </Link>
                           </div>
                         ) : (
                           <span className="text-sm text-foreground-muted">

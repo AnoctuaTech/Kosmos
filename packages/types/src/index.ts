@@ -19,7 +19,9 @@ export type {
   Participante,
   EstadoNSE,
   NivelNSE,
+  AuditEntry,
 } from "./participante";
+export type { Categoria } from "./categoria";
 export type { Premio } from "./premio";
 export type {
   Redencion,

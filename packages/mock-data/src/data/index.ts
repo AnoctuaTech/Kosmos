@@ -13,3 +13,5 @@ export { ticketsSoporte } from "./tickets-soporte";
 export { transacciones } from "./transacciones";
 export { tiers } from "./tiers";
 export { excepciones } from "./excepciones";
+export { categorias } from "./categorias";
+export { auditParticipantes } from "./audit-participantes";

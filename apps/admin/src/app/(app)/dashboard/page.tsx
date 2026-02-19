@@ -1,10 +1,14 @@
 "use client"
 
+import { useState, useMemo } from "react"
 import {
   empresas,
   suscripciones,
   estudios,
   paises,
+  clientes,
+  redenciones,
+  alertasFraude,
 } from "@kosmos/mock-data"
 import {
   KPICard,
@@ -13,6 +17,13 @@ import {
   CardTitle,
   CardContent,
   Badge,
+  Button,
+  Input,
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
   Table,
   TableHeader,
   TableBody,
@@ -25,6 +36,10 @@ import {
   Building2,
   BarChart3,
   RefreshCw,
+  UserPlus,
+  X,
+  AlertTriangle,
+  Clock,
 } from "lucide-react"
 import {
   BarChart,
@@ -48,12 +63,12 @@ const mrrData = [
 ]
 
 const actividadData = [
-  { mes: "Sep", encuestas: 120, respuestas: 890 },
-  { mes: "Oct", encuestas: 145, respuestas: 1240 },
-  { mes: "Nov", encuestas: 190, respuestas: 1580 },
-  { mes: "Dic", encuestas: 210, respuestas: 1720 },
-  { mes: "Ene", encuestas: 280, respuestas: 2100 },
-  { mes: "Feb", encuestas: 310, respuestas: 2450 },
+  { mes: "Sep", estudios: 120, respuestas: 890 },
+  { mes: "Oct", estudios: 145, respuestas: 1240 },
+  { mes: "Nov", estudios: 190, respuestas: 1580 },
+  { mes: "Dic", estudios: 210, respuestas: 1720 },
+  { mes: "Ene", estudios: 280, respuestas: 2100 },
+  { mes: "Feb", estudios: 310, respuestas: 2450 },
 ]
 
 const activasCount = suscripciones.filter((s) => s.estado === "activa").length
@@ -71,6 +86,21 @@ const mrr = suscripciones
 
 const estudiosCompletos = estudios.filter(
   (e) => e.estado === "finalizado"
+).length
+
+const clientesNuevos = clientes.filter((c) => {
+  const creado = new Date(c.creadoEn)
+  const hace30Dias = new Date()
+  hace30Dias.setDate(hace30Dias.getDate() - 30)
+  return creado >= hace30Dias
+}).length
+
+const redencionesPendientes = redenciones.filter(
+  (r) => r.estado === "pendiente" || r.estado === "procesando"
+).length
+
+const alertasAltoRiesgo = alertasFraude.filter(
+  (a) => a.nivelRiesgo === "alto" && !a.resuelta
 ).length
 
 const renovacionesProximas = suscripciones
@@ -122,6 +152,17 @@ const paisStats = paises.map((p) => {
 })
 
 export default function DashboardPage() {
+  const [filtroPais, setFiltroPais] = useState("todos")
+  const [fechaDesde, setFechaDesde] = useState("")
+  const [fechaHasta, setFechaHasta] = useState("")
+  const [showBannerFraude, setShowBannerFraude] = useState(true)
+  const [showBannerRedenciones, setShowBannerRedenciones] = useState(true)
+
+  const paisStatsFiltrados = useMemo(() => {
+    if (filtroPais === "todos") return paisStats
+    return paisStats.filter((p) => p.codigo.toLowerCase() === filtroPais)
+  }, [filtroPais])
+
   return (
     <div>
       <div className="mb-6">
@@ -133,7 +174,75 @@ export default function DashboardPage() {
         </p>
       </div>
 
-      <div className="grid grid-cols-4 gap-4 mb-6">
+      {showBannerFraude && alertasAltoRiesgo > 0 && (
+        <div className="mb-4 flex items-center justify-between rounded-lg border border-warning/30 bg-warning/5 px-4 py-3">
+          <div className="flex items-center gap-3">
+            <AlertTriangle className="h-5 w-5 text-warning" />
+            <span className="text-sm font-medium text-foreground">
+              {alertasAltoRiesgo} alerta{alertasAltoRiesgo > 1 ? "s" : ""} de fraude de alto riesgo pendiente{alertasAltoRiesgo > 1 ? "s" : ""}
+            </span>
+          </div>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-7 w-7"
+            onClick={() => setShowBannerFraude(false)}
+          >
+            <X className="h-4 w-4" />
+          </Button>
+        </div>
+      )}
+
+      {showBannerRedenciones && redencionesPendientes > 0 && (
+        <div className="mb-4 flex items-center justify-between rounded-lg border border-primary/30 bg-primary/5 px-4 py-3">
+          <div className="flex items-center gap-3">
+            <Clock className="h-5 w-5 text-primary" />
+            <span className="text-sm font-medium text-foreground">
+              {redencionesPendientes} redenci{redencionesPendientes > 1 ? "ones" : "ón"} pendiente{redencionesPendientes > 1 ? "s" : ""} de revisión
+            </span>
+          </div>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-7 w-7"
+            onClick={() => setShowBannerRedenciones(false)}
+          >
+            <X className="h-4 w-4" />
+          </Button>
+        </div>
+      )}
+
+      <div className="flex items-center gap-3 mb-6">
+        <Select value={filtroPais} onValueChange={setFiltroPais}>
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="País" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="todos">Todos los países</SelectItem>
+            {paises.map((p) => (
+              <SelectItem key={p.id} value={p.codigo.toLowerCase()}>
+                {p.nombre}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        <Input
+          type="date"
+          value={fechaDesde}
+          onChange={(e) => setFechaDesde(e.target.value)}
+          className="w-[160px]"
+          placeholder="Desde"
+        />
+        <Input
+          type="date"
+          value={fechaHasta}
+          onChange={(e) => setFechaHasta(e.target.value)}
+          className="w-[160px]"
+          placeholder="Hasta"
+        />
+      </div>
+
+      <div className="grid grid-cols-5 gap-4 mb-6">
         <KPICard
           title="MRR"
           value={`$${mrr.toLocaleString()}`}
@@ -167,6 +276,12 @@ export default function DashboardPage() {
                 }
               : undefined
           }
+        />
+        <KPICard
+          title="Clientes Nuevos"
+          value={clientesNuevos}
+          subtitle="Últimos 30 días"
+          icon={<UserPlus className="h-5 w-5 text-primary" />}
         />
       </div>
 
@@ -248,12 +363,12 @@ export default function DashboardPage() {
                   />
                   <Line
                     type="monotone"
-                    dataKey="encuestas"
+                    dataKey="estudios"
                     stroke="#6c757d"
                     strokeWidth={2}
                     strokeDasharray="5 5"
                     dot={{ fill: "#6c757d", r: 3 }}
-                    name="Encuestas"
+                    name="Estudios"
                   />
                 </LineChart>
               </ResponsiveContainer>
@@ -283,7 +398,7 @@ export default function DashboardPage() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {paisStats.map((p) => (
+                {paisStatsFiltrados.map((p) => (
                   <TableRow key={p.codigo}>
                     <TableCell className="font-medium">
                       {p.pais}

@@ -35,6 +35,7 @@ interface DataTableProps<T> {
   searchPlaceholder?: string
   searchFn?: (item: T, query: string) => boolean
   pageSize?: number
+  pageSizeOptions?: number[]
   actions?: React.ReactNode
 }
 
@@ -44,10 +45,12 @@ export function DataTable<T>({
   searchPlaceholder = "Buscar...",
   searchFn,
   pageSize = 10,
+  pageSizeOptions,
   actions,
 }: DataTableProps<T>) {
   const [search, setSearch] = useState("")
   const [page, setPage] = useState(0)
+  const [currentPageSize, setCurrentPageSize] = useState(pageSize)
   const [sortColumn, setSortColumn] = useState<string | null>(null)
   const [sortDir, setSortDir] = useState<"asc" | "desc">("asc")
 
@@ -66,8 +69,8 @@ export function DataTable<T>({
     })
   }, [filtered, sortColumn, sortDir, columns])
 
-  const totalPages = Math.ceil(sorted.length / pageSize)
-  const paginated = sorted.slice(page * pageSize, (page + 1) * pageSize)
+  const totalPages = Math.ceil(sorted.length / currentPageSize)
+  const paginated = sorted.slice(page * currentPageSize, (page + 1) * currentPageSize)
 
   function handleSort(columnId: string) {
     if (sortColumn === columnId) {
@@ -154,12 +157,33 @@ export function DataTable<T>({
         </Table>
       </div>
 
-      {totalPages > 1 && (
-        <div className="flex items-center justify-between text-sm text-foreground-muted">
+      <div className="flex items-center justify-between text-sm text-foreground-muted">
+        <div className="flex items-center gap-4">
           <span>
-            Mostrando {page * pageSize + 1}-
-            {Math.min((page + 1) * pageSize, sorted.length)} de {sorted.length}
+            Mostrando {sorted.length > 0 ? page * currentPageSize + 1 : 0}-
+            {Math.min((page + 1) * currentPageSize, sorted.length)} de {sorted.length}
           </span>
+          {pageSizeOptions && pageSizeOptions.length > 0 && (
+            <div className="flex items-center gap-2">
+              <span className="text-xs">Mostrar:</span>
+              <select
+                value={currentPageSize}
+                onChange={(e) => {
+                  setCurrentPageSize(Number(e.target.value))
+                  setPage(0)
+                }}
+                className="h-8 rounded border border-border bg-white px-2 text-xs text-foreground"
+              >
+                {pageSizeOptions.map((size) => (
+                  <option key={size} value={size}>
+                    {size} por página
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+        </div>
+        {totalPages > 1 && (
           <div className="flex items-center gap-1">
             <Button
               variant="outline"
@@ -191,8 +215,8 @@ export function DataTable<T>({
               <ChevronRight className="h-4 w-4" />
             </Button>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   )
 }

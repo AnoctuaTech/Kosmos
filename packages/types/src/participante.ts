@@ -19,3 +19,14 @@ export interface Participante {
   estado: "activo" | "bloqueado" | "inactivo";
   creadoEn: string;
 }
+
+export interface AuditEntry {
+  id: string;
+  participanteId: string;
+  adminId: string;
+  adminNombre: string;
+  campo: string;
+  valorAnterior: string;
+  valorNuevo: string;
+  fecha: string;
+}

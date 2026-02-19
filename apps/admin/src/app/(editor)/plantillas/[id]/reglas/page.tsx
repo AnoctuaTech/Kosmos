@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useMemo } from "react"
 import { useParams } from "next/navigation"
 import { plantillas } from "@kosmos/mock-data"
 import type { ReglaLogica, AccionRegla } from "@kosmos/types"
@@ -9,13 +9,24 @@ import {
   Badge,
   Label,
   Input,
+  Textarea,
   Select,
   SelectTrigger,
   SelectValue,
   SelectContent,
   SelectItem,
 } from "@kosmos/ui"
-import { Plus, Trash2, GitBranch, Pencil } from "lucide-react"
+import {
+  Plus,
+  Trash2,
+  GitBranch,
+  Pencil,
+  Filter,
+  ShieldX,
+  ArrowRight,
+} from "lucide-react"
+
+type TipoRegla = "salto" | "filtro" | "rechazo"
 
 const condiciones = [
   { value: "igual", label: "Es igual a" },
@@ -25,11 +36,42 @@ const condiciones = [
   { value: "no_igual", label: "No es igual a" },
 ]
 
-const acciones: { value: AccionRegla; label: string }[] = [
-  { value: "saltar_a", label: "Saltar a pregunta" },
-  { value: "terminar_encuesta", label: "Terminar encuesta" },
-  { value: "ocultar_pregunta", label: "Ocultar pregunta" },
-]
+const accionesPorTipo: Record<TipoRegla, { value: AccionRegla; label: string }[]> = {
+  salto: [
+    { value: "saltar_a", label: "Saltar a pregunta" },
+    { value: "terminar_encuesta", label: "Terminar evaluación" },
+  ],
+  filtro: [
+    { value: "ocultar_pregunta", label: "Ocultar pregunta" },
+  ],
+  rechazo: [
+    { value: "rechazar", label: "Rechazar participante" },
+  ],
+}
+
+const tipoReglaConfig: Record<TipoRegla, { label: string; description: string; icon: typeof GitBranch; color: string; badgeVariant: "primary" | "warning" | "error" }> = {
+  salto: {
+    label: "Reglas de Salto",
+    description: "Controlan el flujo de navegación entre preguntas según respuestas del participante",
+    icon: ArrowRight,
+    color: "text-primary",
+    badgeVariant: "primary",
+  },
+  filtro: {
+    label: "Reglas de Filtro",
+    description: "Ocultan preguntas que no aplican según el perfil o respuestas anteriores",
+    icon: Filter,
+    color: "text-warning",
+    badgeVariant: "warning",
+  },
+  rechazo: {
+    label: "Reglas de Rechazo (Screener)",
+    description: "Terminan la evaluación si el participante no cumple con el perfil objetivo",
+    icon: ShieldX,
+    color: "text-error",
+    badgeVariant: "error",
+  },
+}
 
 export default function ReglasPage() {
   const params = useParams()
@@ -39,45 +81,63 @@ export default function ReglasPage() {
     plantilla?.reglas || []
   )
   const [editingId, setEditingId] = useState<string | null>(null)
-  const [isAdding, setIsAdding] = useState(false)
+  const [addingTipo, setAddingTipo] = useState<TipoRegla | null>(null)
 
   const [formOrigen, setFormOrigen] = useState("")
   const [formCondicion, setFormCondicion] = useState("igual")
   const [formValor, setFormValor] = useState("")
   const [formAccion, setFormAccion] = useState<AccionRegla>("saltar_a")
   const [formDestino, setFormDestino] = useState("")
+  const [formMensajeRechazo, setFormMensajeRechazo] = useState("")
+  const [formPuntosConsuelo, setFormPuntosConsuelo] = useState("")
 
   if (!plantilla) return null
 
   const preguntas = plantilla.preguntas
 
-  function startAdd() {
-    setIsAdding(true)
+  const reglasPorTipo = useMemo(() => ({
+    salto: reglas.filter((r) => r.tipoRegla === "salto"),
+    filtro: reglas.filter((r) => r.tipoRegla === "filtro"),
+    rechazo: reglas.filter((r) => r.tipoRegla === "rechazo"),
+  }), [reglas])
+
+  function startAdd(tipo: TipoRegla) {
+    setAddingTipo(tipo)
     setEditingId(null)
     setFormOrigen(preguntas[0]?.id || "")
     setFormCondicion("igual")
     setFormValor("")
-    setFormAccion("saltar_a")
+    setFormAccion(accionesPorTipo[tipo][0].value)
     setFormDestino(preguntas[1]?.id || "")
+    setFormMensajeRechazo(
+      tipo === "rechazo"
+        ? "Lo sentimos, no cumplís con el perfil requerido para esta evaluación."
+        : ""
+    )
+    setFormPuntosConsuelo(tipo === "rechazo" ? "10" : "")
   }
 
   function startEdit(regla: ReglaLogica) {
     setEditingId(regla.id)
-    setIsAdding(false)
+    setAddingTipo(null)
     setFormOrigen(regla.preguntaOrigenId)
     setFormCondicion(regla.condicion)
     setFormValor(regla.valorCondicion)
     setFormAccion(regla.accion)
     setFormDestino(regla.preguntaDestinoId || "")
+    setFormMensajeRechazo(regla.mensajeRechazo || "")
+    setFormPuntosConsuelo(regla.puntosConsuelo?.toString() || "")
   }
 
   function cancelEdit() {
     setEditingId(null)
-    setIsAdding(false)
+    setAddingTipo(null)
   }
 
   function saveRule() {
-    if (isAdding) {
+    const tipoRegla: TipoRegla = addingTipo || reglas.find((r) => r.id === editingId)?.tipoRegla || "salto"
+
+    if (addingTipo) {
       const newRegla: ReglaLogica = {
         id: `reg-new-${Date.now()}`,
         preguntaOrigenId: formOrigen,
@@ -85,7 +145,14 @@ export default function ReglasPage() {
         valorCondicion: formValor,
         accion: formAccion,
         preguntaDestinoId:
-          formAccion === "terminar_encuesta" ? undefined : formDestino,
+          formAccion === "terminar_encuesta" || formAccion === "rechazar"
+            ? undefined
+            : formDestino,
+        tipoRegla,
+        mensajeRechazo: tipoRegla === "rechazo" ? formMensajeRechazo : undefined,
+        puntosConsuelo: tipoRegla === "rechazo" && formPuntosConsuelo
+          ? parseInt(formPuntosConsuelo)
+          : undefined,
       }
       setReglas((prev) => [...prev, newRegla])
     } else if (editingId) {
@@ -99,9 +166,13 @@ export default function ReglasPage() {
                 valorCondicion: formValor,
                 accion: formAccion,
                 preguntaDestinoId:
-                  formAccion === "terminar_encuesta"
+                  formAccion === "terminar_encuesta" || formAccion === "rechazar"
                     ? undefined
                     : formDestino,
+                mensajeRechazo: r.tipoRegla === "rechazo" ? formMensajeRechazo : undefined,
+                puntosConsuelo: r.tipoRegla === "rechazo" && formPuntosConsuelo
+                  ? parseInt(formPuntosConsuelo)
+                  : undefined,
               }
             : r
         )
@@ -114,7 +185,9 @@ export default function ReglasPage() {
     setReglas((prev) => prev.filter((r) => r.id !== id))
   }
 
-  function renderRuleForm() {
+  function renderRuleForm(tipoRegla: TipoRegla) {
+    const acciones = accionesPorTipo[tipoRegla]
+
     return (
       <div className="rounded border border-primary/20 bg-primary/[0.02] p-4">
         <div className="grid grid-cols-2 gap-4">
@@ -178,7 +251,7 @@ export default function ReglasPage() {
             </Select>
           </div>
 
-          {formAccion !== "terminar_encuesta" && (
+          {formAccion === "saltar_a" && (
             <div className="flex flex-col gap-2 col-span-2">
               <Label>Pregunta destino</Label>
               <Select value={formDestino} onValueChange={setFormDestino}>
@@ -197,11 +270,58 @@ export default function ReglasPage() {
               </Select>
             </div>
           )}
+
+          {formAccion === "ocultar_pregunta" && (
+            <div className="flex flex-col gap-2 col-span-2">
+              <Label>Pregunta a ocultar</Label>
+              <Select value={formDestino} onValueChange={setFormDestino}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {preguntas
+                    .filter((p) => p.id !== formOrigen)
+                    .map((p) => (
+                      <SelectItem key={p.id} value={p.id}>
+                        P{p.orden}: {p.texto.slice(0, 35)}...
+                      </SelectItem>
+                    ))}
+                </SelectContent>
+              </Select>
+            </div>
+          )}
+
+          {tipoRegla === "rechazo" && (
+            <>
+              <div className="flex flex-col gap-2 col-span-2">
+                <Label>Mensaje de rechazo</Label>
+                <Textarea
+                  value={formMensajeRechazo}
+                  onChange={(e) => setFormMensajeRechazo(e.target.value)}
+                  placeholder="Mensaje que verá el participante al ser rechazado"
+                  rows={3}
+                />
+              </div>
+              <div className="flex flex-col gap-2">
+                <Label>Puntos de consuelo</Label>
+                <Input
+                  type="number"
+                  value={formPuntosConsuelo}
+                  onChange={(e) => setFormPuntosConsuelo(e.target.value)}
+                  placeholder="0"
+                  className="w-[120px]"
+                />
+                <p className="text-xs text-foreground-muted">
+                  Puntos otorgados al participante rechazado como compensación
+                </p>
+              </div>
+            </>
+          )}
         </div>
 
         <div className="flex items-center gap-2 mt-4">
           <Button size="sm" onClick={saveRule}>
-            {isAdding ? "Agregar regla" : "Guardar cambios"}
+            {addingTipo ? "Agregar regla" : "Guardar cambios"}
           </Button>
           <Button variant="ghost" size="sm" onClick={cancelEdit}>
             Cancelar
@@ -211,124 +331,209 @@ export default function ReglasPage() {
     )
   }
 
-  return (
-    <div className="p-6">
-      <div className="max-w-3xl">
-        <div className="flex items-center justify-between mb-6">
-          <div>
-            <h2 className="text-lg font-semibold text-foreground">
-              Reglas de Lógica
-            </h2>
-            <p className="text-sm text-foreground-secondary mt-1">
-              Configurá condiciones para controlar el flujo de la encuesta
-            </p>
+  function renderReglaCard(regla: ReglaLogica) {
+    const config = tipoReglaConfig[regla.tipoRegla]
+    const preguntaOrigen = preguntas.find(
+      (p) => p.id === regla.preguntaOrigenId
+    )
+    const preguntaDestino = regla.preguntaDestinoId
+      ? preguntas.find((p) => p.id === regla.preguntaDestinoId)
+      : null
+
+    const condLabel =
+      condiciones.find((c) => c.value === regla.condicion)?.label ||
+      regla.condicion
+
+    const accionLabel = Object.values(accionesPorTipo)
+      .flat()
+      .find((a) => a.value === regla.accion)?.label || regla.accion
+
+    return (
+      <div
+        key={regla.id}
+        className="rounded border border-border p-4 bg-white group"
+      >
+        <div className="flex items-start gap-3">
+          <div className={`flex h-8 w-8 shrink-0 items-center justify-center rounded ${
+            regla.tipoRegla === "rechazo" ? "bg-error/5" :
+            regla.tipoRegla === "filtro" ? "bg-warning/5" : "bg-primary/5"
+          }`}>
+            <config.icon className={`h-4 w-4 ${config.color}`} />
           </div>
-          {!isAdding && !editingId && (
-            <Button size="sm" onClick={startAdd}>
+          <div className="flex-1">
+            <p className="text-sm text-foreground">
+              <span className="font-medium">Si</span>{" "}
+              <span className="text-primary">
+                P{preguntaOrigen?.orden}
+              </span>{" "}
+              {condLabel.toLowerCase()}{" "}
+              <span className="font-medium">
+                &quot;{regla.valorCondicion}&quot;
+              </span>
+            </p>
+            <div className="flex items-center gap-2 mt-2">
+              <Badge variant={config.badgeVariant}>
+                {accionLabel}
+              </Badge>
+              {preguntaDestino && (
+                <span className="text-xs text-foreground-muted">
+                  → P{preguntaDestino.orden}:{" "}
+                  {preguntaDestino.texto.slice(0, 50)}...
+                </span>
+              )}
+            </div>
+            {regla.tipoRegla === "rechazo" && (
+              <div className="mt-2 rounded bg-error/5 p-2 text-xs">
+                {regla.mensajeRechazo && (
+                  <p className="text-foreground-secondary">{regla.mensajeRechazo}</p>
+                )}
+                {regla.puntosConsuelo !== undefined && regla.puntosConsuelo > 0 && (
+                  <p className="text-foreground-muted mt-1">
+                    Puntos de consuelo: {regla.puntosConsuelo}
+                  </p>
+                )}
+              </div>
+            )}
+          </div>
+          <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-7 w-7"
+              onClick={() => startEdit(regla)}
+            >
+              <Pencil className="h-3.5 w-3.5" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-7 w-7 text-error hover:text-error"
+              onClick={() => deleteRule(regla.id)}
+            >
+              <Trash2 className="h-3.5 w-3.5" />
+            </Button>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  function renderSection(tipo: TipoRegla) {
+    const config = tipoReglaConfig[tipo]
+    const Icon = config.icon
+    const reglasDelTipo = reglasPorTipo[tipo]
+    const isAddingThisType = addingTipo === tipo
+
+    return (
+      <div key={tipo} className="mb-8">
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center gap-2">
+            <Icon className={`h-5 w-5 ${config.color}`} />
+            <div>
+              <h3 className="text-sm font-semibold text-foreground">
+                {config.label}
+                {reglasDelTipo.length > 0 && (
+                  <span className="ml-2 text-xs font-normal text-foreground-muted">
+                    ({reglasDelTipo.length})
+                  </span>
+                )}
+              </h3>
+              <p className="text-xs text-foreground-muted">{config.description}</p>
+            </div>
+          </div>
+          {!isAddingThisType && !editingId && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => startAdd(tipo)}
+            >
               <Plus className="mr-1 h-3.5 w-3.5" />
-              Agregar regla
+              Agregar
             </Button>
           )}
         </div>
 
-        <div className="flex flex-col gap-3">
-          {isAdding && renderRuleForm()}
+        <div className="flex flex-col gap-2 ml-7">
+          {isAddingThisType && renderRuleForm(tipo)}
 
-          {reglas.length === 0 && !isAdding ? (
-            <div className="flex flex-col items-center justify-center py-16 text-center">
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-background-gray mb-4">
-                <GitBranch className="h-6 w-6 text-foreground-muted" />
-              </div>
-              <h3 className="text-sm font-medium text-foreground mb-1">
-                Sin reglas configuradas
-              </h3>
-              <p className="text-sm text-foreground-muted max-w-sm">
-                Las reglas permiten saltar preguntas, ocultar secciones o
-                terminar la encuesta según las respuestas del participante.
+          {reglasDelTipo.length === 0 && !isAddingThisType && (
+            <div className="rounded border border-dashed border-border p-6 text-center">
+              <p className="text-sm text-foreground-muted">
+                Sin reglas de {tipo} configuradas
               </p>
+            </div>
+          )}
+
+          {reglasDelTipo.map((regla) =>
+            editingId === regla.id ? (
+              <div key={regla.id}>{renderRuleForm(regla.tipoRegla)}</div>
+            ) : (
+              renderReglaCard(regla)
+            )
+          )}
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="p-6">
+      <div className="max-w-3xl">
+        <div className="mb-6">
+          <h2 className="text-lg font-semibold text-foreground">
+            Reglas de Lógica
+          </h2>
+          <p className="text-sm text-foreground-secondary mt-1">
+            Configurá condiciones para controlar el flujo de la evaluación
+          </p>
+        </div>
+
+        {reglas.length === 0 && !addingTipo ? (
+          <div className="flex flex-col items-center justify-center py-16 text-center">
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-background-gray mb-4">
+              <GitBranch className="h-6 w-6 text-foreground-muted" />
+            </div>
+            <h3 className="text-sm font-medium text-foreground mb-1">
+              Sin reglas configuradas
+            </h3>
+            <p className="text-sm text-foreground-muted max-w-sm mb-6">
+              Las reglas permiten saltar preguntas, filtrar secciones o
+              rechazar participantes según sus respuestas.
+            </p>
+            <div className="flex items-center gap-3">
               <Button
                 variant="outline"
                 size="sm"
-                className="mt-4"
-                onClick={startAdd}
+                onClick={() => startAdd("salto")}
               >
-                <Plus className="mr-1 h-3.5 w-3.5" />
-                Crear primera regla
+                <ArrowRight className="mr-1 h-3.5 w-3.5" />
+                Regla de salto
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => startAdd("filtro")}
+              >
+                <Filter className="mr-1 h-3.5 w-3.5" />
+                Regla de filtro
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => startAdd("rechazo")}
+              >
+                <ShieldX className="mr-1 h-3.5 w-3.5" />
+                Regla de rechazo
               </Button>
             </div>
-          ) : (
-            reglas.map((regla) => {
-              if (editingId === regla.id)
-                return <div key={regla.id}>{renderRuleForm()}</div>
-
-              const preguntaOrigen = preguntas.find(
-                (p) => p.id === regla.preguntaOrigenId
-              )
-              const preguntaDestino = regla.preguntaDestinoId
-                ? preguntas.find((p) => p.id === regla.preguntaDestinoId)
-                : null
-
-              const condLabel =
-                condiciones.find((c) => c.value === regla.condicion)?.label ||
-                regla.condicion
-
-              return (
-                <div
-                  key={regla.id}
-                  className="rounded border border-border p-4 bg-white group"
-                >
-                  <div className="flex items-start gap-3">
-                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded bg-primary/5">
-                      <GitBranch className="h-4 w-4 text-primary" />
-                    </div>
-                    <div className="flex-1">
-                      <p className="text-sm text-foreground">
-                        <span className="font-medium">Si</span>{" "}
-                        <span className="text-primary">
-                          P{preguntaOrigen?.orden}
-                        </span>{" "}
-                        {condLabel.toLowerCase()}{" "}
-                        <span className="font-medium">
-                          &quot;{regla.valorCondicion}&quot;
-                        </span>
-                      </p>
-                      <div className="flex items-center gap-2 mt-2">
-                        <Badge variant="primary">
-                          {acciones.find((a) => a.value === regla.accion)
-                            ?.label || regla.accion}
-                        </Badge>
-                        {preguntaDestino && (
-                          <span className="text-xs text-foreground-muted">
-                            → P{preguntaDestino.orden}:{" "}
-                            {preguntaDestino.texto.slice(0, 50)}...
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-7 w-7"
-                        onClick={() => startEdit(regla)}
-                      >
-                        <Pencil className="h-3.5 w-3.5" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-7 w-7 text-error hover:text-error"
-                        onClick={() => deleteRule(regla.id)}
-                      >
-                        <Trash2 className="h-3.5 w-3.5" />
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-              )
-            })
-          )}
-        </div>
+          </div>
+        ) : (
+          <>
+            {renderSection("salto")}
+            {renderSection("filtro")}
+            {renderSection("rechazo")}
+          </>
+        )}
       </div>
     </div>
   )

@@ -41,6 +41,8 @@ import {
   LogIn,
   Eye,
   Download,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react"
 
 const tierPrecios: Record<string, number> = {
@@ -96,6 +98,8 @@ export default function ClientesPage() {
   const [filtroPlan, setFiltroPlan] = useState("todos")
   const [filtroEstado, setFiltroEstado] = useState("todos")
   const [busqueda, setBusqueda] = useState("")
+  const [pageSize, setPageSize] = useState(10)
+  const [page, setPage] = useState(0)
 
   const empresasData = useMemo(() => getEmpresaData(), [])
 
@@ -115,6 +119,9 @@ export default function ClientesPage() {
       return true
     })
   }, [empresasData, filtroPais, filtroPlan, filtroEstado, busqueda])
+
+  const totalPages = Math.ceil(filtradas.length / pageSize)
+  const paginadas = filtradas.slice(page * pageSize, (page + 1) * pageSize)
 
   const activosCount = empresas.filter((e) => e.estado === "activo").length
   const trialCount = suscripciones.filter((s) => s.tier === "trial").length
@@ -174,7 +181,7 @@ export default function ClientesPage() {
         </CardHeader>
         <CardContent className="p-0 mt-4">
           <div className="flex items-center gap-3 px-6 pb-4">
-            <Select value={filtroPais} onValueChange={setFiltroPais}>
+            <Select value={filtroPais} onValueChange={(v) => { setFiltroPais(v); setPage(0) }}>
               <SelectTrigger className="w-[170px]">
                 <SelectValue placeholder="País" />
               </SelectTrigger>
@@ -188,7 +195,7 @@ export default function ClientesPage() {
               </SelectContent>
             </Select>
 
-            <Select value={filtroPlan} onValueChange={setFiltroPlan}>
+            <Select value={filtroPlan} onValueChange={(v) => { setFiltroPlan(v); setPage(0) }}>
               <SelectTrigger className="w-[170px]">
                 <SelectValue placeholder="Plan" />
               </SelectTrigger>
@@ -201,7 +208,7 @@ export default function ClientesPage() {
               </SelectContent>
             </Select>
 
-            <Select value={filtroEstado} onValueChange={setFiltroEstado}>
+            <Select value={filtroEstado} onValueChange={(v) => { setFiltroEstado(v); setPage(0) }}>
               <SelectTrigger className="w-[170px]">
                 <SelectValue placeholder="Estado" />
               </SelectTrigger>
@@ -218,7 +225,7 @@ export default function ClientesPage() {
               <Input
                 placeholder="Buscar empresa..."
                 value={busqueda}
-                onChange={(e) => setBusqueda(e.target.value)}
+                onChange={(e) => { setBusqueda(e.target.value); setPage(0) }}
                 className="pl-9"
               />
             </div>
@@ -237,7 +244,7 @@ export default function ClientesPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filtradas.length === 0 ? (
+              {paginadas.length === 0 ? (
                 <TableRow>
                   <TableCell
                     colSpan={7}
@@ -247,7 +254,7 @@ export default function ClientesPage() {
                   </TableCell>
                 </TableRow>
               ) : (
-                filtradas.map((emp) => (
+                paginadas.map((emp) => (
                   <TableRow key={emp.id}>
                     <TableCell>
                       <div className="flex items-center gap-3">
@@ -314,9 +321,61 @@ export default function ClientesPage() {
           </Table>
 
           <div className="flex items-center justify-between px-6 py-4 border-t border-border text-sm text-foreground-muted">
-            <span>
-              Mostrando {filtradas.length} de {empresas.length} empresas
-            </span>
+            <div className="flex items-center gap-4">
+              <span>
+                Mostrando {filtradas.length > 0 ? page * pageSize + 1 : 0}-{Math.min((page + 1) * pageSize, filtradas.length)} de {filtradas.length} empresas
+              </span>
+              <div className="flex items-center gap-2">
+                <span className="text-xs">Mostrar:</span>
+                <select
+                  value={pageSize}
+                  onChange={(e) => {
+                    setPageSize(Number(e.target.value))
+                    setPage(0)
+                  }}
+                  className="h-8 rounded border border-border bg-white px-2 text-xs text-foreground"
+                >
+                  {[5, 10, 20, 30].map((size) => (
+                    <option key={size} value={size}>
+                      {size} por página
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+            {totalPages > 1 && (
+              <div className="flex items-center gap-1">
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="h-8 w-8"
+                  disabled={page === 0}
+                  onClick={() => setPage(page - 1)}
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                </Button>
+                {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => (
+                  <Button
+                    key={i}
+                    variant={page === i ? "default" : "outline"}
+                    size="icon"
+                    className="h-8 w-8"
+                    onClick={() => setPage(i)}
+                  >
+                    {i + 1}
+                  </Button>
+                ))}
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="h-8 w-8"
+                  disabled={page === totalPages - 1}
+                  onClick={() => setPage(page + 1)}
+                >
+                  <ChevronRight className="h-4 w-4" />
+                </Button>
+              </div>
+            )}
           </div>
         </CardContent>
       </Card>

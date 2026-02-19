@@ -4,6 +4,7 @@ import { useState } from "react"
 import {
   participantes,
   paises,
+  auditParticipantes,
 } from "@kosmos/mock-data"
 import type { Participante } from "@kosmos/types"
 import {
@@ -20,6 +21,12 @@ import {
   SelectContent,
   SelectItem,
   Separator,
+  Table,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableHead,
+  TableCell,
 } from "@kosmos/ui"
 import {
   Search,
@@ -35,12 +42,16 @@ import {
   ClipboardList,
   Gift,
   UserPlus,
+  Lock,
+  History,
+  X,
+  CheckCircle2,
 } from "lucide-react"
 
 const actividadMock = [
   {
-    tipo: "encuesta",
-    descripcion: "Completó encuesta \"Salud de Marca\"",
+    tipo: "estudio",
+    descripcion: "Completó evaluación \"Salud de Marca\"",
     fecha: "16 Feb 2026, 10:30",
     puntos: 150,
   },
@@ -51,8 +62,8 @@ const actividadMock = [
     puntos: -1000,
   },
   {
-    tipo: "encuesta",
-    descripcion: "Completó encuesta \"Evaluación Producto\"",
+    tipo: "estudio",
+    descripcion: "Completó evaluación \"Evaluación Producto\"",
     fecha: "01 Feb 2026",
     puntos: 200,
   },
@@ -63,8 +74,8 @@ const actividadMock = [
     puntos: 100,
   },
   {
-    tipo: "encuesta",
-    descripcion: "Completó encuesta \"Hábitos de Consumo\"",
+    tipo: "estudio",
+    descripcion: "Completó evaluación \"Hábitos de Consumo\"",
     fecha: "20 Ene 2026",
     puntos: 175,
   },
@@ -102,7 +113,7 @@ function getEstadoNSEColor(estado: string) {
 
 function getActividadIcon(tipo: string) {
   switch (tipo) {
-    case "encuesta":
+    case "estudio":
       return <ClipboardList className="h-4 w-4 text-primary" />
     case "canje":
       return <Gift className="h-4 w-4 text-error" />
@@ -120,6 +131,8 @@ export default function ParticipantesPage() {
     participantes[0]
   )
   const [forzandoNSE, setForzandoNSE] = useState(false)
+  const [showModalContrasena, setShowModalContrasena] = useState(false)
+  const [bannerContrasena, setBannerContrasena] = useState(false)
 
   function buscar() {
     const q = busqueda.toLowerCase().trim()
@@ -147,12 +160,22 @@ export default function ParticipantesPage() {
     setTimeout(() => setForzandoNSE(false), 1500)
   }
 
+  function handleForzarContrasena() {
+    setShowModalContrasena(false)
+    setBannerContrasena(true)
+    setTimeout(() => setBannerContrasena(false), 5000)
+  }
+
   const pais = seleccionado
     ? paises.find((p) => p.id === seleccionado.paisId)
     : null
   const saldoDisponible = seleccionado
     ? seleccionado.puntosAcumulados - seleccionado.puntosCanjeados
     : 0
+
+  const auditEntries = seleccionado
+    ? auditParticipantes.filter((a) => a.participanteId === seleccionado.id)
+    : []
 
   return (
     <div>
@@ -188,6 +211,51 @@ export default function ParticipantesPage() {
         </div>
         <Button onClick={buscar}>Buscar</Button>
       </div>
+
+      {bannerContrasena && seleccionado && (
+        <div className="mb-4 flex items-center justify-between rounded-lg border border-success/30 bg-success/5 px-4 py-3">
+          <div className="flex items-center gap-3">
+            <CheckCircle2 className="h-5 w-5 text-success" />
+            <span className="text-sm font-medium text-foreground">
+              Contraseña temporal generada y enviada a {seleccionado.email}
+            </span>
+          </div>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-7 w-7"
+            onClick={() => setBannerContrasena(false)}
+          >
+            <X className="h-4 w-4" />
+          </Button>
+        </div>
+      )}
+
+      {showModalContrasena && seleccionado && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+          <div className="w-full max-w-md rounded-lg bg-white p-6 shadow-xl">
+            <h3 className="text-lg font-semibold text-foreground mb-2">
+              Forzar Cambio de Contraseña
+            </h3>
+            <p className="text-sm text-foreground-secondary mb-6">
+              Se generará una contraseña temporal y se enviará a{" "}
+              <span className="font-medium">{seleccionado.email}</span>. El
+              usuario deberá cambiarla en su próximo inicio de sesión.
+            </p>
+            <div className="flex justify-end gap-3">
+              <Button
+                variant="outline"
+                onClick={() => setShowModalContrasena(false)}
+              >
+                Cancelar
+              </Button>
+              <Button onClick={handleForzarContrasena}>
+                Confirmar y Enviar
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {seleccionado ? (
         <Card>
@@ -227,6 +295,15 @@ export default function ParticipantesPage() {
                 <Separator className="my-5" />
 
                 <div className="space-y-2">
+                  <Button
+                    variant="outline"
+                    className="w-full justify-start"
+                    size="sm"
+                    onClick={() => setShowModalContrasena(true)}
+                  >
+                    <Lock className="h-4 w-4 mr-2" />
+                    Forzar Cambio de Contraseña
+                  </Button>
                   <Button variant="outline" className="w-full justify-start" size="sm">
                     <User className="h-4 w-4 mr-2" />
                     Ver historial completo
@@ -448,6 +525,56 @@ export default function ParticipantesPage() {
                     ))}
                   </div>
                 </div>
+
+                {auditEntries.length > 0 && (
+                  <>
+                    <Separator />
+                    <div>
+                      <div className="flex items-center gap-2 mb-4">
+                        <History className="h-4 w-4 text-foreground-muted" />
+                        <h3 className="text-sm font-semibold text-foreground uppercase tracking-wide">
+                          Historial de Cambios
+                        </h3>
+                      </div>
+                      <div className="rounded-lg border border-border overflow-hidden">
+                        <Table>
+                          <TableHeader>
+                            <TableRow className="hover:bg-transparent">
+                              <TableHead>Fecha</TableHead>
+                              <TableHead>Admin</TableHead>
+                              <TableHead>Campo</TableHead>
+                              <TableHead>Anterior → Nuevo</TableHead>
+                            </TableRow>
+                          </TableHeader>
+                          <TableBody>
+                            {auditEntries.map((entry) => (
+                              <TableRow key={entry.id}>
+                                <TableCell className="text-sm">
+                                  {new Date(entry.fecha).toLocaleDateString("es-CR", {
+                                    day: "2-digit",
+                                    month: "short",
+                                    year: "numeric",
+                                  })}
+                                </TableCell>
+                                <TableCell className="text-sm font-medium">
+                                  {entry.adminNombre}
+                                </TableCell>
+                                <TableCell>
+                                  <Badge variant="outline">{entry.campo}</Badge>
+                                </TableCell>
+                                <TableCell className="text-sm">
+                                  <span className="text-foreground-muted">{entry.valorAnterior}</span>
+                                  <span className="mx-2 text-foreground-muted">→</span>
+                                  <span className="font-medium text-foreground">{entry.valorNuevo}</span>
+                                </TableCell>
+                              </TableRow>
+                            ))}
+                          </TableBody>
+                        </Table>
+                      </div>
+                    </div>
+                  </>
+                )}
               </div>
             </div>
           </CardContent>

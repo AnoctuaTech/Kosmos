@@ -20,7 +20,7 @@ const pasos = [
   { label: "Volumen" },
 ]
 
-const plantillasPublicadas = plantillas.filter((p) => p.estado === "publicada")
+const plantillasPublicadas = plantillas.filter((p) => p.estado === "activo")
 
 const iconosPorPlantilla: Record<string, React.ReactNode> = {
   "plt-001": <BarChart3 className="h-5 w-5" />,

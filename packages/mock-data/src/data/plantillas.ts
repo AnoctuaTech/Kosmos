@@ -6,8 +6,10 @@ export const plantillas: Plantilla[] = [
     nombre: "Salud de Marca",
     descripcion:
       "Plantilla estandar para medir reconocimiento, percepcion y lealtad de marca en mercados centroamericanos.",
-    estado: "publicada",
+    estado: "activo",
     creadoEn: "2024-05-01T10:00:00.000Z",
+    ultimaEdicion: "2026-02-10T09:30:00.000Z",
+    categoriaId: "cat-001",
     preguntas: [
       {
         id: "prg-001",
@@ -34,6 +36,7 @@ export const plantillas: Plantilla[] = [
         ],
         requerida: true,
         orden: 2,
+        incluyeOtro: true,
       },
       {
         id: "prg-003",
@@ -45,11 +48,13 @@ export const plantillas: Plantilla[] = [
         orden: 3,
         escalaMin: 1,
         escalaMax: 10,
+        escalaEtiquetaMin: "Nada probable",
+        escalaEtiquetaMax: "Muy probable",
       },
       {
         id: "prg-004",
         plantillaId: "plt-001",
-        tipo: "seleccion_unica",
+        tipo: "dropdown",
         texto: "Con que frecuencia compra productos de esta marca?",
         opciones: [
           "Diariamente",
@@ -65,11 +70,30 @@ export const plantillas: Plantilla[] = [
       {
         id: "prg-005",
         plantillaId: "plt-001",
-        tipo: "texto_abierto",
+        tipo: "texto_largo",
         texto:
           "Que es lo que mas valora de esta marca? Describa con sus propias palabras.",
         requerida: false,
         orden: 5,
+      },
+      {
+        id: "prg-025",
+        plantillaId: "plt-001",
+        tipo: "matriz",
+        texto: "Evalua los siguientes atributos para cada marca:",
+        requerida: true,
+        orden: 6,
+        matrizFilas: ["Marca A", "Marca B", "Marca C"],
+        matrizColumnas: ["Calidad", "Precio", "Diseno", "Servicio"],
+        matrizTipo: "escala",
+      },
+      {
+        id: "prg-026",
+        plantillaId: "plt-001",
+        tipo: "si_no",
+        texto: "Ha recomendado esta marca a alguien en los ultimos 6 meses?",
+        requerida: true,
+        orden: 7,
       },
     ],
     reglas: [
@@ -80,6 +104,7 @@ export const plantillas: Plantilla[] = [
         valorCondicion: "Ninguna de las anteriores",
         accion: "saltar_a",
         preguntaDestinoId: "prg-005",
+        tipoRegla: "salto",
       },
       {
         id: "reg-002",
@@ -87,6 +112,7 @@ export const plantillas: Plantilla[] = [
         condicion: "igual",
         valorCondicion: "Nunca",
         accion: "terminar_encuesta",
+        tipoRegla: "filtro",
       },
     ],
   },
@@ -95,8 +121,10 @@ export const plantillas: Plantilla[] = [
     nombre: "Prueba de Concepto",
     descripcion:
       "Plantilla para evaluar la viabilidad y aceptacion de un nuevo producto o concepto antes de su lanzamiento al mercado.",
-    estado: "publicada",
+    estado: "activo",
     creadoEn: "2024-07-15T14:00:00.000Z",
+    ultimaEdicion: "2026-01-20T16:00:00.000Z",
+    categoriaId: "cat-002",
     preguntas: [
       {
         id: "prg-006",
@@ -108,6 +136,8 @@ export const plantillas: Plantilla[] = [
         orden: 1,
         escalaMin: 1,
         escalaMax: 5,
+        escalaEtiquetaMin: "Nada interesado",
+        escalaEtiquetaMax: "Muy interesado",
       },
       {
         id: "prg-007",
@@ -153,11 +183,31 @@ export const plantillas: Plantilla[] = [
       {
         id: "prg-010",
         plantillaId: "plt-002",
-        tipo: "texto_abierto",
+        tipo: "texto_largo",
         texto:
           "Que mejoraria o cambiaria de este concepto de producto?",
         requerida: false,
         orden: 5,
+      },
+      {
+        id: "prg-027",
+        plantillaId: "plt-002",
+        tipo: "numero",
+        texto: "Cuanto estaria dispuesto a pagar por este producto? (en dolares)",
+        requerida: true,
+        orden: 6,
+        numeroMinimo: 0,
+        numeroMaximo: 1000,
+      },
+      {
+        id: "prg-028",
+        plantillaId: "plt-002",
+        tipo: "fecha",
+        texto: "Cuando fue la ultima vez que compro un producto similar?",
+        requerida: false,
+        orden: 7,
+        fechaMinima: "2020-01-01",
+        fechaMaxima: "2026-02-19",
       },
     ],
     reglas: [
@@ -168,6 +218,7 @@ export const plantillas: Plantilla[] = [
         valorCondicion: "2",
         accion: "saltar_a",
         preguntaDestinoId: "prg-010",
+        tipoRegla: "salto",
       },
       {
         id: "reg-004",
@@ -176,6 +227,7 @@ export const plantillas: Plantilla[] = [
         valorCondicion: "Definitivamente no",
         accion: "ocultar_pregunta",
         preguntaDestinoId: "prg-010",
+        tipoRegla: "filtro",
       },
     ],
   },
@@ -184,8 +236,10 @@ export const plantillas: Plantilla[] = [
     nombre: "Satisfaccion del Cliente",
     descripcion:
       "Medicion de satisfaccion general y NPS para empresas de servicio en la region.",
-    estado: "publicada",
+    estado: "activo",
     creadoEn: "2024-09-20T09:00:00.000Z",
+    ultimaEdicion: "2026-02-15T11:00:00.000Z",
+    categoriaId: "cat-003",
     preguntas: [
       {
         id: "prg-011",
@@ -197,6 +251,8 @@ export const plantillas: Plantilla[] = [
         orden: 1,
         escalaMin: 1,
         escalaMax: 10,
+        escalaEtiquetaMin: "Muy insatisfecho",
+        escalaEtiquetaMax: "Muy satisfecho",
       },
       {
         id: "prg-012",
@@ -213,6 +269,8 @@ export const plantillas: Plantilla[] = [
         ],
         requerida: true,
         orden: 2,
+        incluyeOtro: true,
+        minimoSeleccion: 1,
       },
       {
         id: "prg-013",
@@ -232,7 +290,7 @@ export const plantillas: Plantilla[] = [
       {
         id: "prg-014",
         plantillaId: "plt-003",
-        tipo: "texto_abierto",
+        tipo: "texto_corto",
         texto:
           "Tiene algun comentario adicional sobre su experiencia?",
         requerida: false,
@@ -248,11 +306,13 @@ export const plantillas: Plantilla[] = [
       "Investigacion de habitos de compra y consumo en categorias especificas del mercado centroamericano.",
     estado: "borrador",
     creadoEn: "2025-06-10T11:00:00.000Z",
+    ultimaEdicion: "2026-02-18T14:00:00.000Z",
+    categoriaId: "cat-004",
     preguntas: [
       {
         id: "prg-015",
         plantillaId: "plt-004",
-        tipo: "seleccion_unica",
+        tipo: "dropdown",
         texto: "Con que frecuencia realiza compras en esta categoria?",
         opciones: [
           "Diariamente",
@@ -279,6 +339,7 @@ export const plantillas: Plantilla[] = [
         ],
         requerida: true,
         orden: 2,
+        incluyeOtro: true,
       },
       {
         id: "prg-017",
@@ -304,8 +365,10 @@ export const plantillas: Plantilla[] = [
     nombre: "Evaluacion de Publicidad",
     descripcion:
       "Test de efectividad publicitaria, recall y asociacion de marca para campanas en medios digitales y tradicionales.",
-    estado: "archivada",
+    estado: "inactivo",
     creadoEn: "2024-03-15T08:00:00.000Z",
+    ultimaEdicion: "2025-12-01T10:00:00.000Z",
+    categoriaId: "cat-005",
     preguntas: [
       {
         id: "prg-018",
@@ -332,6 +395,8 @@ export const plantillas: Plantilla[] = [
         orden: 2,
         escalaMin: 1,
         escalaMax: 5,
+        escalaEtiquetaMin: "Nada atractivo",
+        escalaEtiquetaMax: "Muy atractivo",
       },
       {
         id: "prg-020",
@@ -352,7 +417,7 @@ export const plantillas: Plantilla[] = [
       {
         id: "prg-021",
         plantillaId: "plt-005",
-        tipo: "texto_abierto",
+        tipo: "texto_largo",
         texto:
           "Describa con sus propias palabras lo que comunicaba el anuncio.",
         requerida: false,
@@ -365,7 +430,10 @@ export const plantillas: Plantilla[] = [
         preguntaOrigenId: "prg-018",
         condicion: "igual",
         valorCondicion: "No recuerdo",
-        accion: "terminar_encuesta",
+        accion: "rechazar",
+        tipoRegla: "rechazo",
+        mensajeRechazo: "Gracias por su tiempo. Este estudio requiere haber visto la publicidad recientemente.",
+        puntosConsuelo: 5,
       },
     ],
   },
@@ -376,6 +444,8 @@ export const plantillas: Plantilla[] = [
       "Analisis de sensibilidad al precio y willingness-to-pay para productos y servicios en la region.",
     estado: "borrador",
     creadoEn: "2026-01-05T14:00:00.000Z",
+    ultimaEdicion: "2026-02-19T08:00:00.000Z",
+    categoriaId: "cat-006",
     preguntas: [
       {
         id: "prg-022",
@@ -403,19 +473,16 @@ export const plantillas: Plantilla[] = [
         orden: 2,
         escalaMin: 1,
         escalaMax: 10,
+        escalaEtiquetaMin: "Nada importante",
+        escalaEtiquetaMax: "Muy importante",
+        escalaEtiquetaCentro: "Moderadamente importante",
       },
       {
         id: "prg-024",
         plantillaId: "plt-006",
-        tipo: "seleccion_unica",
+        tipo: "si_no",
         texto:
           "Si el precio aumentara un 20%, seguiria comprando este producto?",
-        opciones: [
-          "Definitivamente si",
-          "Probablemente si",
-          "Buscaria alternativas",
-          "Definitivamente no",
-        ],
         requerida: true,
         orden: 3,
       },

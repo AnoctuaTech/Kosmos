@@ -17,6 +17,7 @@ import {
   Badge,
   Button,
   Input,
+  Textarea,
   Tabs,
   TabsList,
   TabsTrigger,
@@ -39,6 +40,9 @@ import {
   Search,
   Check,
   Eye,
+  X,
+  Paperclip,
+  FileText,
 } from "lucide-react"
 
 type TabKey = "pendientes" | "en_proceso" | "historial"
@@ -63,18 +67,26 @@ function getPrioridad(redencion: Redencion) {
     (Date.now() - new Date(redencion.solicitadoEn).getTime()) /
       (1000 * 60 * 60 * 24)
   )
-  if (diasPendiente > 5 || redencion.puntosCosto >= 2000) return "alta"
-  if (diasPendiente > 2 || redencion.puntosCosto >= 1000) return "media"
+  if (diasPendiente > 7) return "alta"
+  if (diasPendiente > 3) return "media"
   return "baja"
 }
+
+type RedencionEnriquecida = ReturnType<typeof getRedencionesEnriquecidas>[number]
 
 export default function RedencionesPage() {
   const [tab, setTab] = useState<TabKey>("pendientes")
   const [busqueda, setBusqueda] = useState("")
+  const [modalRedencion, setModalRedencion] = useState<RedencionEnriquecida | null>(null)
+  const [observaciones, setObservaciones] = useState("")
+  const [archivoAdjunto, setArchivoAdjunto] = useState(false)
+  const [bannerExito, setBannerExito] = useState(false)
 
   const data = useMemo(() => getRedencionesEnriquecidas(), [])
 
-  const pendientes = data.filter((r) => estadosPendientes.includes(r.estado))
+  const pendientes = data
+    .filter((r) => estadosPendientes.includes(r.estado))
+    .sort((a, b) => new Date(a.solicitadoEn).getTime() - new Date(b.solicitadoEn).getTime())
   const enProceso = data.filter((r) => estadosEnProceso.includes(r.estado))
   const historial = data.filter((r) => estadosHistorial.includes(r.estado))
 
@@ -100,6 +112,14 @@ export default function RedencionesPage() {
     )
   }, [tab, busqueda, data])
 
+  function handleAprobar() {
+    setModalRedencion(null)
+    setObservaciones("")
+    setArchivoAdjunto(false)
+    setBannerExito(true)
+    setTimeout(() => setBannerExito(false), 5000)
+  }
+
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
@@ -116,6 +136,25 @@ export default function RedencionesPage() {
           Exportar a Excel
         </Button>
       </div>
+
+      {bannerExito && (
+        <div className="mb-4 flex items-center justify-between rounded-lg border border-success/30 bg-success/5 px-4 py-3">
+          <div className="flex items-center gap-3">
+            <CheckCircle2 className="h-5 w-5 text-success" />
+            <span className="text-sm font-medium text-foreground">
+              Redención aprobada. Puntos deducidos. Notificación enviada.
+            </span>
+          </div>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-7 w-7"
+            onClick={() => setBannerExito(false)}
+          >
+            <X className="h-4 w-4" />
+          </Button>
+        </div>
+      )}
 
       <div className="grid grid-cols-4 gap-4 mb-6">
         <KPICard
@@ -147,6 +186,126 @@ export default function RedencionesPage() {
           className="border-l-4 border-l-error"
         />
       </div>
+
+      {modalRedencion && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+          <div className="w-full max-w-lg rounded-lg bg-white p-6 shadow-xl">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold text-foreground">
+                Revisión de Redención
+              </h3>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8"
+                onClick={() => setModalRedencion(null)}
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
+
+            <div className="space-y-4 mb-6">
+              <div className="rounded-lg border border-border p-4 bg-background-gray/50">
+                <div className="grid grid-cols-2 gap-3 text-sm">
+                  <div>
+                    <p className="text-foreground-muted">Participante</p>
+                    <p className="font-medium">
+                      {modalRedencion.participante
+                        ? `${modalRedencion.participante.nombre} ${modalRedencion.participante.apellidos}`
+                        : "—"}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-foreground-muted">Cédula</p>
+                    <p className="font-medium">
+                      {modalRedencion.participante?.cedula ?? "—"}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-foreground-muted">Premio</p>
+                    <p className="font-medium">
+                      {modalRedencion.premio?.titulo ?? "—"}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-foreground-muted">Monto</p>
+                    <p className="font-semibold">
+                      {modalRedencion.premio
+                        ? `${modalRedencion.premio.moneda === "CRC" ? "₡" : "$"}${modalRedencion.premio.valorMonetario.toLocaleString()}`
+                        : "—"}
+                      <span className="font-normal text-foreground-muted ml-1">
+                        ({modalRedencion.puntosCosto.toLocaleString()} pts)
+                      </span>
+                    </p>
+                  </div>
+                  <div className="col-span-2">
+                    <p className="text-foreground-muted">Datos Bancarios</p>
+                    <p className="font-medium">
+                      {modalRedencion.datosBancarios.tipo === "sinpe"
+                        ? `SINPE: ${modalRedencion.datosBancarios.cuenta}`
+                        : `${modalRedencion.datosBancarios.banco} — ${modalRedencion.datosBancarios.cuenta}`}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <label className="text-sm font-medium text-foreground mb-1.5 block">
+                  Observaciones al usuario
+                </label>
+                <Textarea
+                  placeholder="Notas internas o mensaje para el participante..."
+                  value={observaciones}
+                  onChange={(e) => setObservaciones(e.target.value)}
+                  rows={3}
+                />
+              </div>
+
+              <div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setArchivoAdjunto(!archivoAdjunto)}
+                >
+                  <Paperclip className="h-3.5 w-3.5 mr-1.5" />
+                  Adjuntar comprobante
+                </Button>
+                {archivoAdjunto && (
+                  <div className="mt-2 flex items-center gap-2 rounded border border-border px-3 py-2 bg-background-gray/50">
+                    <FileText className="h-4 w-4 text-foreground-muted" />
+                    <span className="text-sm text-foreground">comprobante_pago.pdf</span>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-6 w-6 ml-auto"
+                      onClick={() => setArchivoAdjunto(false)}
+                    >
+                      <X className="h-3 w-3" />
+                    </Button>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <div className="flex justify-end gap-3">
+              <Button
+                variant="outline"
+                className="text-error border-error/30 hover:bg-error/5"
+                onClick={() => setModalRedencion(null)}
+              >
+                Rechazar
+              </Button>
+              <Button
+                className="bg-success hover:bg-success/90 text-white"
+                onClick={handleAprobar}
+              >
+                <Check className="h-4 w-4 mr-1.5" />
+                Aprobar
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <Card>
         <CardHeader className="pb-0">
@@ -290,25 +449,25 @@ export default function RedencionesPage() {
                         <div className="flex items-center justify-end gap-2">
                           {(r.estado === "pendiente" ||
                             r.estado === "en_revision") && (
-                            <>
-                              <Button size="sm" className="h-8">
-                                <Eye className="h-3.5 w-3.5 mr-1" />
-                                Revisar
-                              </Button>
-                            </>
+                            <Button
+                              size="sm"
+                              className="h-8"
+                              onClick={() => setModalRedencion(r)}
+                            >
+                              <Eye className="h-3.5 w-3.5 mr-1" />
+                              Revisar
+                            </Button>
                           )}
                           {(r.estado === "aprobada" ||
                             r.estado === "procesando") && (
-                            <>
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                className="h-8 text-success border-success/30 hover:bg-success/5"
-                              >
-                                <Check className="h-3.5 w-3.5 mr-1" />
-                                Confirmar Pago
-                              </Button>
-                            </>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              className="h-8 text-success border-success/30 hover:bg-success/5"
+                            >
+                              <Check className="h-3.5 w-3.5 mr-1" />
+                              Confirmar Pago
+                            </Button>
                           )}
                           {r.estado === "pagada" && (
                             <Button variant="outline" size="sm" className="h-8">

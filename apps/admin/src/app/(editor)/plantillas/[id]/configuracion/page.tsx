@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { useParams } from "next/navigation"
-import { plantillas } from "@kosmos/mock-data"
+import { plantillas, categorias } from "@kosmos/mock-data"
 import {
   Input,
   Label,
@@ -10,6 +10,11 @@ import {
   Badge,
   Switch,
   ChipSelector,
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
 } from "@kosmos/ui"
 import {
   Settings,
@@ -35,22 +40,37 @@ export default function ConfiguracionPage() {
   const plantilla = plantillas.find((p) => p.id === params.id)
   const [activeSection, setActiveSection] = useState("general")
 
+  const [categoriaId, setCategoriaId] = useState(plantilla?.categoriaId || "")
   const [selectedNSE, setSelectedNSE] = useState<string[]>(["Medio"])
   const [selectedEdades, setSelectedEdades] = useState<string[]>([
     "25-34",
     "35-44",
   ])
   const [selectedGenero, setSelectedGenero] = useState<string[]>(["Todos"])
+  const [selectedVariablesNSE, setSelectedVariablesNSE] = useState<string[]>([
+    "Nivel educativo",
+    "Ingreso hogar",
+  ])
   const [puntosIncentivo, setPuntosIncentivo] = useState("50")
   const [tiempoEstimado, setTiempoEstimado] = useState("8")
   const [fechaLanzamiento, setFechaLanzamiento] = useState("2026-03-01")
   const [fechaCierre, setFechaCierre] = useState("2026-04-01")
   const [mensajeConfirmacion, setMensajeConfirmacion] = useState(
-    "¡Gracias por completar la encuesta! Tus respuestas han sido registradas exitosamente. Los puntos se acreditarán a tu billetera en los próximos minutos."
+    "¡Gracias por completar la evaluación! Tus respuestas han sido registradas exitosamente. Los puntos se acreditarán a tu billetera en los próximos minutos."
   )
   const [autoClose, setAutoClose] = useState(true)
 
   if (!plantilla) return null
+
+  const estadoVariant =
+    plantilla.estado === "activo"
+      ? "success"
+      : plantilla.estado === "inactivo"
+        ? "default"
+        : "warning"
+
+  const estadoLabel =
+    plantilla.estado.charAt(0).toUpperCase() + plantilla.estado.slice(1)
 
   return (
     <div className="flex h-full">
@@ -93,15 +113,26 @@ export default function ConfiguracionPage() {
                   <Textarea defaultValue={plantilla.descripcion} rows={3} />
                 </div>
                 <div className="flex flex-col gap-2">
+                  <Label>Categoría</Label>
+                  <Select value={categoriaId} onValueChange={setCategoriaId}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Seleccionar categoría" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {categorias.map((c) => (
+                        <SelectItem key={c.id} value={c.id}>
+                          {c.nombre}
+                        </SelectItem>
+                      ))}
+                      <SelectItem value="nueva">+ Crear nueva categoría</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="flex flex-col gap-2">
                   <Label>Estado</Label>
                   <div className="flex items-center gap-2">
-                    <Badge
-                      variant={
-                        plantilla.estado === "publicada" ? "success" : "warning"
-                      }
-                    >
-                      {plantilla.estado.charAt(0).toUpperCase() +
-                        plantilla.estado.slice(1)}
+                    <Badge variant={estadoVariant}>
+                      {estadoLabel}
                     </Badge>
                     <span className="text-xs text-foreground-muted">
                       Creada el{" "}
@@ -166,7 +197,7 @@ export default function ConfiguracionPage() {
                 <div className="flex flex-col gap-2">
                   <Label>Puntos por completar</Label>
                   <p className="text-xs text-foreground-muted">
-                    Puntos que recibe el participante al finalizar la encuesta
+                    Puntos que recibe el participante al finalizar la evaluación
                   </p>
                   <Input
                     type="number"
@@ -178,7 +209,7 @@ export default function ConfiguracionPage() {
                 <div className="flex flex-col gap-2">
                   <Label>Tiempo estimado (minutos)</Label>
                   <p className="text-xs text-foreground-muted">
-                    Tiempo aproximado para completar la encuesta
+                    Tiempo aproximado para completar la evaluación
                   </p>
                   <Input
                     type="number"
@@ -265,7 +296,7 @@ export default function ConfiguracionPage() {
                 <div className="flex flex-col gap-2">
                   <Label>Mensaje al finalizar</Label>
                   <p className="text-xs text-foreground-muted">
-                    Se muestra al participante cuando completa la encuesta
+                    Se muestra al participante cuando completa la evaluación
                     exitosamente
                   </p>
                   <Textarea
@@ -281,7 +312,7 @@ export default function ConfiguracionPage() {
                       <span className="text-2xl">✓</span>
                     </div>
                     <h3 className="text-lg font-semibold text-foreground">
-                      ¡Encuesta completada!
+                      ¡Evaluación completada!
                     </h3>
                     <p className="text-sm text-foreground-secondary mt-2 max-w-sm mx-auto">
                       {mensajeConfirmacion}
@@ -310,6 +341,23 @@ export default function ConfiguracionPage() {
                     options={["Alto", "Medio", "Bajo"]}
                     selected={selectedNSE}
                     onChange={setSelectedNSE}
+                  />
+                </div>
+
+                <div className="flex flex-col gap-2">
+                  <Label>Variables NSE</Label>
+                  <p className="text-xs text-foreground-muted">
+                    Variables socioeconómicas requeridas para la segmentación
+                  </p>
+                  <ChipSelector
+                    options={[
+                      "Nivel educativo",
+                      "Ingreso hogar",
+                      "Tipo vivienda",
+                      "Vehículo propio",
+                    ]}
+                    selected={selectedVariablesNSE}
+                    onChange={setSelectedVariablesNSE}
                   />
                 </div>
 
@@ -356,6 +404,7 @@ export default function ConfiguracionPage() {
                   </p>
                   <p className="text-sm text-foreground-secondary">
                     NSE: {selectedNSE.join(", ") || "Sin seleccionar"} ·
+                    Variables: {selectedVariablesNSE.join(", ") || "Sin seleccionar"} ·
                     Edades: {selectedEdades.join(", ") || "Sin seleccionar"} ·
                     Género: {selectedGenero.join(", ") || "Sin seleccionar"}
                   </p>

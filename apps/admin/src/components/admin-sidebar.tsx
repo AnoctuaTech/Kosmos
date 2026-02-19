@@ -12,8 +12,18 @@ import {
   ShieldAlert,
   SlidersHorizontal,
   ClipboardList,
+  FolderOpen,
 } from "lucide-react"
 import { cn } from "@kosmos/ui"
+import { redenciones, alertasFraude } from "@kosmos/mock-data"
+
+const redencionesPendientes = redenciones.filter(
+  (r) => r.estado === "pendiente" || r.estado === "procesando"
+).length
+
+const alertasAltoRiesgo = alertasFraude.filter(
+  (a) => a.nivelRiesgo === "alto" && !a.resuelta
+).length
 
 const navigation = [
   {
@@ -23,24 +33,30 @@ const navigation = [
     ],
   },
   {
+    section: "Fábrica",
+    items: [
+      { label: "Plantillas", href: "/plantillas", icon: FileText },
+      { label: "Categorías", href: "/categorias", icon: FolderOpen },
+    ],
+  },
+  {
     section: "Gestión",
     items: [
       { label: "Participantes", href: "/participantes", icon: Users },
       { label: "Clientes / Empresas", href: "/clientes", icon: Building2 },
-      { label: "Plantillas", href: "/plantillas", icon: FileText },
     ],
   },
   {
     section: "Tesorería",
     items: [
-      { label: "Cola de Redenciones", href: "/redenciones", icon: Wallet },
+      { label: "Cola de Redenciones", href: "/redenciones", icon: Wallet, badge: redencionesPendientes },
       { label: "Catálogo de Premios", href: "/premios", icon: Gift },
     ],
   },
   {
     section: "Control",
     items: [
-      { label: "Alertas de Fraude", href: "/fraude", icon: ShieldAlert },
+      { label: "Alertas de Fraude", href: "/fraude", icon: ShieldAlert, badge: alertasAltoRiesgo },
       { label: "Calibración NSE", href: "/nse", icon: SlidersHorizontal },
       { label: "Excepciones", href: "/excepciones", icon: ClipboardList },
     ],
@@ -84,7 +100,12 @@ export function AdminSidebar() {
                   )}
                 >
                   <item.icon className="h-[18px] w-[18px] shrink-0" />
-                  {item.label}
+                  <span className="flex-1">{item.label}</span>
+                  {"badge" in item && item.badge && item.badge > 0 && (
+                    <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-error px-1.5 text-[11px] font-semibold text-white">
+                      {item.badge}
+                    </span>
+                  )}
                 </Link>
               )
             })}
