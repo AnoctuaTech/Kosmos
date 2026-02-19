@@ -126,7 +126,7 @@ export function AdminSidebar() {
             <p className="text-xs text-foreground-muted truncate">admin@kosmos.com</p>
           </div>
           <button
-            onClick={() => router.push("/auth/login")}
+            onClick={() => router.push("/login")}
             className="flex h-8 w-8 items-center justify-center rounded-md text-foreground-muted hover:text-error hover:bg-error/5 transition-colors"
           >
             <LogOut className="h-4 w-4" />
