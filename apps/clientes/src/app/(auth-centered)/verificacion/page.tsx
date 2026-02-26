@@ -3,7 +3,7 @@
 import { useState, useRef } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@kosmos/ui"
-import { RotateCw } from "lucide-react"
+import { Mail, RotateCw } from "lucide-react"
 
 export default function VerificacionPage() {
   const router = useRouter()
@@ -53,32 +53,37 @@ export default function VerificacionPage() {
   }
 
   return (
-    <div>
-      <h1 className="text-2xl font-semibold text-primary mb-2">
-        Verifica tu cuenta
-      </h1>
-      <p className="text-sm text-foreground-secondary leading-relaxed mb-10">
-        Ingresa el codigo de verificacion que enviamos a tu email{" "}
-        <strong className="text-foreground">m@ejemplo.com</strong>
-      </p>
+    <div className="animate-in">
+      <div className="text-center mb-8">
+        <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-primary/[0.12] to-primary/[0.04] ring-1 ring-primary/[0.08]">
+          <Mail className="h-5 w-5 text-primary" />
+        </div>
+        <h1 className="text-xl font-semibold text-foreground tracking-tight">
+          Verificá tu cuenta
+        </h1>
+        <p className="text-sm text-foreground-secondary mt-1.5 leading-relaxed">
+          Ingresá el código de verificación que enviamos a{" "}
+          <span className="text-foreground font-medium">m@ejemplo.com</span>
+        </p>
+      </div>
 
       <form onSubmit={handleSubmit}>
         <div className="mb-8">
-          <div className="flex items-center justify-between mb-2">
+          <div className="flex items-center justify-between mb-3">
             <label className="text-[13px] font-medium text-foreground-secondary">
-              Codigo de verificacion
+              Código de verificación
             </label>
             <button
               type="button"
               onClick={handleReenviar}
-              className="flex items-center gap-1 text-[13px] text-foreground-secondary hover:text-primary transition-colors"
+              className="flex items-center gap-1.5 text-[13px] text-foreground-muted hover:text-primary transition-colors duration-200"
             >
               <RotateCw className="h-3 w-3" />
-              {reenviado ? "Codigo reenviado" : "Reenviar codigo"}
+              {reenviado ? "Código reenviado" : "Reenviar código"}
             </button>
           </div>
 
-          <div className="flex gap-3" onPaste={handlePaste}>
+          <div className="flex justify-center gap-3" onPaste={handlePaste}>
             {codigo.map((digito, i) => (
               <input
                 key={i}
@@ -91,7 +96,7 @@ export default function VerificacionPage() {
                 value={digito}
                 onChange={(e) => handleChange(i, e.target.value)}
                 onKeyDown={(e) => handleKeyDown(i, e)}
-                className="h-14 w-14 rounded border border-border text-center text-2xl font-semibold text-foreground focus:border-primary focus:outline-none focus:ring-[3px] focus:ring-primary/10 transition-all"
+                className="h-14 w-14 rounded-xl border-2 border-border/50 bg-background-gray/30 text-center text-xl font-semibold text-foreground focus:border-primary focus:bg-white focus:outline-none focus:ring-4 focus:ring-primary/[0.08] transition-all duration-200"
               />
             ))}
           </div>

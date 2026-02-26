@@ -18,13 +18,13 @@ export default function PremiosPage() {
   )
 
   return (
-    <div className="px-4 py-6 md:px-8">
+    <div className="px-4 py-6 md:px-8 animate-in">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-xl font-semibold text-foreground">Premios</h1>
         <select
           value={filtroPais}
           onChange={(e) => setFiltroPais(e.target.value)}
-          className="rounded-lg border border-border bg-white px-3 py-1.5 text-sm text-foreground focus:border-primary focus:outline-none"
+          className="rounded-xl border border-border/60 bg-white px-3.5 py-2 text-sm text-foreground focus:border-primary focus:outline-none focus:ring-4 focus:ring-primary/[0.08] transition-all duration-200"
         >
           {paises.map((p) => (
             <option key={p.id} value={p.id}>
@@ -35,19 +35,24 @@ export default function PremiosPage() {
       </div>
 
       {premiosFiltrados.length === 0 ? (
-        <div className="py-12 text-center">
-          <Gift className="mx-auto h-10 w-10 text-foreground-muted mb-3" />
-          <p className="text-sm text-foreground-secondary">
+        <div className="py-16 text-center animate-in">
+          <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-background-gray">
+            <Gift className="h-7 w-7 text-foreground-muted" />
+          </div>
+          <p className="text-sm font-medium text-foreground-secondary">
             No hay premios disponibles para {paisMap[filtroPais]}
+          </p>
+          <p className="text-xs text-foreground-muted mt-1">
+            Probá seleccionar otro país
           </p>
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           {premiosFiltrados.map((premio) => (
-            <Card key={premio.id} className="border-border">
+            <Card key={premio.id} className="border-border/50 shadow-sm hover:shadow-md transition-all duration-200 group">
               <CardContent className="p-4">
-                <div className="flex h-24 items-center justify-center rounded-lg bg-gradient-to-br from-primary/5 to-primary/10 mb-3">
-                  <Gift className="h-8 w-8 text-primary" />
+                <div className="flex h-28 items-center justify-center rounded-xl bg-gradient-to-br from-primary/[0.08] to-primary/[0.03] mb-3 transition-all duration-200 group-hover:from-primary/[0.12] group-hover:to-primary/[0.05]">
+                  <Gift className="h-10 w-10 text-primary/60 transition-transform duration-200 group-hover:scale-110" />
                 </div>
                 <h3 className="text-sm font-semibold text-foreground mb-1">
                   {premio.titulo}

@@ -20,12 +20,15 @@ export function KPICard({
 }: KPICardProps) {
   return (
     <div
-      className={cn("rounded border border-border bg-white p-5", className)}
+      className={cn(
+        "rounded-lg border border-border bg-white p-5 shadow-sm transition-all duration-200 hover:shadow-md hover:border-border-light",
+        className
+      )}
     >
       <div className="flex items-start justify-between">
-        <div>
+        <div className="min-w-0">
           <p className="text-sm font-medium text-foreground-muted">{title}</p>
-          <p className="text-2xl font-bold text-foreground mt-1">{value}</p>
+          <p className="text-2xl font-bold text-foreground mt-1 tracking-tight">{value}</p>
           {subtitle && (
             <p className="text-xs text-foreground-muted mt-1">{subtitle}</p>
           )}

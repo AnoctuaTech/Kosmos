@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kosmos — Prototipo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: #f8f8f8;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .container {
+      text-align: center;
+      max-width: 480px;
+      padding: 2rem;
+    }
+    .logo {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #111;
+      margin-bottom: 0.25rem;
+    }
+    .logo span { color: #FF4136; }
+    .subtitle {
+      font-size: 0.875rem;
+      color: #6b7280;
+      margin-bottom: 2.5rem;
+    }
+    .cards {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    a {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.25rem 1.5rem;
+      background: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    a:hover {
+      border-color: #FF4136;
+      box-shadow: 0 4px 12px rgba(255,65,54,0.08);
+      transform: translateY(-1px);
+    }
+    .link-content { text-align: left; }
+    .link-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #111;
+    }
+    .link-desc {
+      font-size: 0.8rem;
+      color: #6b7280;
+      margin-top: 0.25rem;
+    }
+    .arrow {
+      color: #9ca3af;
+      font-size: 1.25rem;
+      transition: color 0.2s;
+    }
+    a:hover .arrow { color: #FF4136; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="logo">kosmos<span>.</span></div>
+    <p class="subtitle">Prototipo navegable</p>
+    <div class="cards">
+      <a href="./admin/">
+        <div class="link-content">
+          <div class="link-title">Admin / Backoffice</div>
+          <div class="link-desc">Panel de administración interno</div>
+        </div>
+        <span class="arrow">&rarr;</span>
+      </a>
+      <a href="./clientes/">
+        <div class="link-content">
+          <div class="link-title">Clientes</div>
+          <div class="link-desc">Portal B2B para empresas</div>
+        </div>
+        <span class="arrow">&rarr;</span>
+      </a>
+      <a href="./participantes/">
+        <div class="link-content">
+          <div class="link-title">Participantes</div>
+          <div class="link-desc">App mobile-first para panelistas</div>
+        </div>
+        <span class="arrow">&rarr;</span>
+      </a>
+    </div>
+  </div>
+</body>
+</html>

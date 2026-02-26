@@ -74,7 +74,7 @@ function getTipoConfig(tipo: AlertaFraude["tipo"]) {
   const configs: Record<AlertaFraude["tipo"], { label: string; icon: typeof Wifi }> = {
     ip_duplicada: { label: "IP Duplicada", icon: Wifi },
     tiempo_respuesta: { label: "Tiempo Sospechoso", icon: Clock },
-    limite_referidos: { label: "Limite Referidos", icon: Users },
+    limite_referidos: { label: "Límite Referidos", icon: Users },
   }
   return configs[tipo]
 }
@@ -129,28 +129,30 @@ export default function FraudePage() {
     <div>
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-semibold text-foreground">
+          <h1 className="text-2xl font-semibold text-foreground tracking-tight">
             Control de Fraude
           </h1>
           <p className="mt-1 text-sm text-foreground-secondary">
-            Deteccion de IP duplicada, tiempos anomalos y limite de referidos
+            Detección de IP duplicada, tiempos anómalos y límite de referidos
           </p>
         </div>
         <Button variant="outline" size="sm">
           <Settings className="h-4 w-4 mr-2" />
-          Configuracion Avanzada
+          Configuración Avanzada
         </Button>
       </div>
 
       {altoRiesgo.length > 0 && (
-        <div className="flex items-center gap-4 p-4 mb-6 rounded-lg border border-warning/40 bg-warning/5">
-          <AlertTriangle className="h-6 w-6 text-warning flex-shrink-0" />
+        <div className="flex items-center gap-4 p-4 mb-6 rounded-lg border border-warning/40 bg-warning/5 animate-slide-in-up">
+          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-warning/10 flex-shrink-0">
+            <AlertTriangle className="h-5 w-5 text-warning" />
+          </div>
           <div className="flex-1">
             <p className="font-semibold text-foreground">
               {altoRiesgo.length} alerta{altoRiesgo.length > 1 ? "s" : ""} de alto riesgo
             </p>
             <p className="text-sm text-foreground-secondary">
-              Requieren atencion inmediata. Se detectaron patrones sospechosos.
+              Requieren atención inmediata. Se detectaron patrones sospechosos.
             </p>
           </div>
           <Button
@@ -162,7 +164,7 @@ export default function FraudePage() {
               setFiltroEstado("pendientes")
             }}
           >
-            Ver Alertas Criticas
+            Ver Alertas Críticas
           </Button>
         </div>
       )}
@@ -171,14 +173,14 @@ export default function FraudePage() {
         <KPICard
           title="Alto Riesgo"
           value={altoRiesgo.length}
-          subtitle="Requieren accion inmediata"
+          subtitle="Requieren acción inmediata"
           icon={<ShieldAlert className="h-5 w-5 text-error" />}
           className="border-t-4 border-t-error"
         />
         <KPICard
           title="Riesgo Medio"
           value={medioRiesgo.length}
-          subtitle="En observacion"
+          subtitle="En observación"
           icon={<AlertTriangle className="h-5 w-5 text-warning" />}
           className="border-t-4 border-t-warning"
         />
@@ -203,15 +205,15 @@ export default function FraudePage() {
           <div className="flex items-center gap-3 mb-1">
             <Settings className="h-4 w-4 text-foreground-muted" />
             <h3 className="font-semibold text-foreground">
-              Configuracion Global de Referidos
+              Configuración Global de Referidos
             </h3>
           </div>
           <p className="text-sm text-foreground-secondary mb-4 ml-7">
-            Al alcanzar este limite, el usuario recibe bloqueo automatico para nuevos referidos
+            Al alcanzar este límite, el usuario recibe bloqueo automático para nuevos referidos
           </p>
           <div className="flex items-center gap-4 ml-7">
             <label className="text-sm text-foreground-secondary whitespace-nowrap">
-              Limite maximo de referidos por usuario:
+              Límite máximo de referidos por usuario:
             </label>
             <Input
               type="number"
@@ -244,7 +246,7 @@ export default function FraudePage() {
             <div className="relative flex-1 min-w-[200px] max-w-sm">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-foreground-muted" />
               <Input
-                placeholder="Buscar por nombre, cedula o descripcion..."
+                placeholder="Buscar por nombre, cédula o descripción..."
                 value={busqueda}
                 onChange={(e) => setBusqueda(e.target.value)}
                 className="pl-9"
@@ -288,7 +290,7 @@ export default function FraudePage() {
                 <SelectItem value="todos">Todos los tipos</SelectItem>
                 <SelectItem value="ip_duplicada">IP Duplicada</SelectItem>
                 <SelectItem value="tiempo_respuesta">Tiempo Sospechoso</SelectItem>
-                <SelectItem value="limite_referidos">Limite Referidos</SelectItem>
+                <SelectItem value="limite_referidos">Límite Referidos</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -424,7 +426,7 @@ export default function FraudePage() {
                                 className="h-8 border-success/40 text-success hover:bg-success/5"
                               >
                                 <Users className="h-3.5 w-3.5 mr-1" />
-                                Aumentar Limite
+                                Aumentar Límite
                               </Button>
                             )}
                             <Link href={`/fraude/${a.id}`}>

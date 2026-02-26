@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { Button, Card, CardContent, Badge } from "@kosmos/ui"
-import { Send, MessageSquare } from "lucide-react"
+import { Send, MessageSquare, CheckCircle2 } from "lucide-react"
 
 const ticketsExistentes = [
   {
@@ -19,7 +19,7 @@ const ticketsExistentes = [
   },
   {
     id: "tkt-003",
-    asunto: "Pago de redencion no recibido",
+    asunto: "Pago de redención no recibido",
     estado: "cerrado" as const,
     fecha: "28 ene 2026",
   },
@@ -51,10 +51,10 @@ export default function SoportePage() {
   }
 
   return (
-    <div className="px-4 py-6 md:px-8">
+    <div className="px-4 py-6 md:px-8 animate-in">
       <h1 className="text-xl font-semibold text-foreground mb-6">Soporte</h1>
 
-      <Card className="border-border mb-6">
+      <Card className="border-border/50 mb-6 shadow-sm">
         <CardContent className="p-5">
           <h2 className="text-base font-semibold text-foreground mb-4">
             Nuevo ticket
@@ -62,7 +62,7 @@ export default function SoportePage() {
 
           <form onSubmit={handleEnviar} className="space-y-3">
             <div>
-              <label className="block text-[13px] font-medium text-foreground-secondary mb-1">
+              <label className="block text-[13px] font-medium text-foreground-secondary mb-1.5">
                 Asunto
               </label>
               <input
@@ -70,19 +70,19 @@ export default function SoportePage() {
                 value={asunto}
                 onChange={(e) => setAsunto(e.target.value)}
                 placeholder="Describe brevemente tu problema"
-                className="w-full rounded-lg border border-border bg-white px-3 py-2.5 text-sm text-foreground placeholder:text-foreground-muted focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/10"
+                className="w-full rounded-xl border border-border/60 bg-white px-3.5 py-2.5 text-sm text-foreground placeholder:text-foreground-muted/50 focus:border-primary focus:outline-none focus:ring-4 focus:ring-primary/[0.08] transition-all duration-200"
                 required
               />
             </div>
             <div>
-              <label className="block text-[13px] font-medium text-foreground-secondary mb-1">
+              <label className="block text-[13px] font-medium text-foreground-secondary mb-1.5">
                 Mensaje
               </label>
               <textarea
                 value={mensaje}
                 onChange={(e) => setMensaje(e.target.value)}
-                placeholder="Explica tu situacion con detalle..."
-                className="w-full rounded-lg border border-border bg-white px-3 py-2.5 text-sm text-foreground placeholder:text-foreground-muted focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/10 resize-none h-24"
+                placeholder="Explicá tu situación con detalle..."
+                className="w-full rounded-xl border border-border/60 bg-white px-3.5 py-2.5 text-sm text-foreground placeholder:text-foreground-muted/50 focus:border-primary focus:outline-none focus:ring-4 focus:ring-primary/[0.08] resize-none h-24 transition-all duration-200"
                 required
               />
             </div>
@@ -93,9 +93,10 @@ export default function SoportePage() {
           </form>
 
           {enviado && (
-            <p className="mt-3 text-sm text-success font-medium">
+            <div className="mt-3 flex items-center gap-2 text-sm text-success font-medium animate-in">
+              <CheckCircle2 className="h-4 w-4" />
               Ticket enviado. Te contactaremos por email.
-            </p>
+            </div>
           )}
         </CardContent>
       </Card>
@@ -106,9 +107,9 @@ export default function SoportePage() {
 
       <div className="space-y-2">
         {ticketsExistentes.map((ticket) => (
-          <Card key={ticket.id} className="border-border">
-            <CardContent className="p-3 flex items-center gap-3">
-              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gray-100">
+          <Card key={ticket.id} className="border-border/50 shadow-sm hover:shadow-md transition-shadow duration-200">
+            <CardContent className="p-3.5 flex items-center gap-3">
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-background-gray">
                 <MessageSquare className="h-4 w-4 text-foreground-secondary" />
               </div>
               <div className="flex-1 min-w-0">

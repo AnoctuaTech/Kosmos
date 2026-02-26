@@ -195,7 +195,7 @@ export default function ParticipantesPage() {
   return (
     <div>
       <div className="mb-6">
-        <h1 className="text-2xl font-semibold text-foreground">
+        <h1 className="text-2xl font-semibold text-foreground tracking-tight">
           Gestión de Participantes
         </h1>
         <p className="mt-1 text-sm text-foreground-secondary">
@@ -228,7 +228,7 @@ export default function ParticipantesPage() {
       </div>
 
       {bannerContrasena && seleccionado && (
-        <div className="mb-4 flex items-center justify-between rounded-lg border border-success/30 bg-success/5 px-4 py-3">
+        <div className="mb-4 flex items-center justify-between rounded-lg border border-success/30 bg-success/5 px-4 py-3 animate-slide-in-up">
           <div className="flex items-center gap-3">
             <CheckCircle2 className="h-5 w-5 text-success" />
             <span className="text-sm font-medium text-foreground">
@@ -247,8 +247,8 @@ export default function ParticipantesPage() {
       )}
 
       {showModalContrasena && seleccionado && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <div className="w-full max-w-md rounded-lg bg-white p-6 shadow-xl">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-[2px]">
+          <div className="w-full max-w-md rounded-xl bg-white p-6 shadow-2xl shadow-black/10 animate-scale-in">
             <h3 className="text-lg font-semibold text-foreground mb-2">
               Forzar Cambio de Contraseña
             </h3>
@@ -761,7 +761,9 @@ export default function ParticipantesPage() {
       ) : (
         <Card>
           <CardContent className="flex flex-col items-center justify-center py-16">
-            <Search className="h-12 w-12 text-foreground-muted mb-4" />
+            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-background-gray mb-4">
+              <Search className="h-7 w-7 text-foreground-muted" />
+            </div>
             <h3 className="text-lg font-medium text-foreground mb-1">
               No se encontró el participante
             </h3>

@@ -193,7 +193,7 @@ function PreviewPregunta({ pregunta, allPreguntas }: { pregunta: Pregunta; allPr
             {Array.from({ length: (pregunta.escalaMax || 10) - (pregunta.escalaMin || 1) + 1 }, (_, i) => (
               <div
                 key={i}
-                className="flex-1 h-8 rounded border border-border flex items-center justify-center text-xs text-foreground-muted hover:bg-primary/5 hover:border-primary/30 cursor-pointer transition-colors"
+                className="flex-1 h-8 rounded border border-border flex items-center justify-center text-xs text-foreground-muted hover:bg-primary/5 hover:border-primary/30 cursor-pointer transition-colors duration-200"
               >
                 {(pregunta.escalaMin || 1) + i}
               </div>
@@ -204,10 +204,10 @@ function PreviewPregunta({ pregunta, allPreguntas }: { pregunta: Pregunta; allPr
 
       {pregunta.tipo === "si_no" && (
         <div className="flex gap-3">
-          <div className="flex-1 rounded border border-border p-3 text-center text-sm font-medium text-foreground hover:bg-success/5 hover:border-success/30 cursor-pointer transition-colors">
+          <div className="flex-1 rounded border border-border p-3 text-center text-sm font-medium text-foreground hover:bg-success/5 hover:border-success/30 cursor-pointer transition-colors duration-200">
             Sí
           </div>
-          <div className="flex-1 rounded border border-border p-3 text-center text-sm font-medium text-foreground hover:bg-error/5 hover:border-error/30 cursor-pointer transition-colors">
+          <div className="flex-1 rounded border border-border p-3 text-center text-sm font-medium text-foreground hover:bg-error/5 hover:border-error/30 cursor-pointer transition-colors duration-200">
             No
           </div>
         </div>
@@ -295,7 +295,7 @@ function PreviewPregunta({ pregunta, allPreguntas }: { pregunta: Pregunta; allPr
       {pregunta.tipo === "seleccion_imagen" && (
         <div className="grid grid-cols-3 gap-3">
           {[1, 2, 3].map((i) => (
-            <div key={i} className="rounded-lg border-2 border-border p-4 text-center bg-background-gray/30 hover:border-primary/30 cursor-pointer transition-colors">
+            <div key={i} className="rounded-lg border-2 border-border p-4 text-center bg-background-gray/30 hover:border-primary/30 cursor-pointer transition-colors duration-200">
               <LayoutGrid className="h-6 w-6 text-foreground-muted mx-auto mb-1" />
               <span className="text-xs text-foreground-muted">Imagen {i}</span>
             </div>
@@ -442,7 +442,7 @@ export default function PreguntasPage() {
                 <button
                   key={p.id}
                   onClick={() => setSelectedId(p.id)}
-                  className={`flex items-start gap-2 rounded px-3 py-2.5 text-left transition-colors ${
+                  className={`flex items-start gap-2 rounded px-3 py-2.5 text-left transition-all duration-200 ${
                     selectedId === p.id
                       ? "bg-white border border-primary/20 shadow-sm"
                       : "hover:bg-white border border-transparent"
@@ -492,7 +492,7 @@ export default function PreguntasPage() {
                         <button
                           key={tipo}
                           onClick={() => addPregunta(tipo)}
-                          className="flex items-center gap-1.5 rounded px-2 py-1.5 text-left hover:bg-primary/5 transition-colors"
+                          className="flex items-center gap-1.5 rounded px-2 py-1.5 text-left hover:bg-primary/5 transition-colors duration-200"
                         >
                           <Icon className="h-3.5 w-3.5 text-primary shrink-0" />
                           <span className="text-[11px] text-foreground">{tipoLabels[tipo]}</span>
@@ -581,7 +581,7 @@ export default function PreguntasPage() {
                                   escalaMax: tipo === "escala" ? selected.escalaMax || 10 : undefined,
                                 })
                               }
-                              className={`flex items-center gap-1 w-full rounded px-1.5 py-1 text-left transition-colors ${
+                              className={`flex items-center gap-1 w-full rounded px-1.5 py-1 text-left transition-all duration-200 ${
                                 isActive
                                   ? "bg-primary/10 text-primary"
                                   : "text-foreground-secondary hover:bg-white"
@@ -632,7 +632,7 @@ export default function PreguntasPage() {
                                 })
                               }
                             }}
-                            className="rounded bg-primary/5 px-2 py-1 text-[11px] text-primary hover:bg-primary/10 transition-colors"
+                            className="rounded bg-primary/5 px-2 py-1 text-[11px] text-primary hover:bg-primary/10 transition-colors duration-200"
                           >
                             P{p.orden}
                           </button>

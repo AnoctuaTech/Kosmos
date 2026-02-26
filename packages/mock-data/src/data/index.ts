@@ -2,7 +2,7 @@ export { paises } from "./paises";
 export { empresas } from "./empresas";
 export { clientes } from "./clientes";
 export { estudios } from "./estudios";
-export { plantillas } from "./plantillas";
+export { plantillas, categoriaCuestionarios, muestraRecomendada, creditosEstimados } from "./plantillas";
 export { participantes } from "./participantes";
 export { premios } from "./premios";
 export { redenciones } from "./redenciones";

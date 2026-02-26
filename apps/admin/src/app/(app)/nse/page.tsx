@@ -54,13 +54,13 @@ interface NivelConfig {
 }
 
 const variablesIniciales: VariableNSE[] = [
-  { id: "var-01", nombre: "Nivel educativo del jefe de hogar", descripcion: "Primaria, secundaria, tecnica, universitaria, posgrado", peso: 20, opciones: 5, activa: true },
+  { id: "var-01", nombre: "Nivel educativo del jefe de hogar", descripcion: "Primaria, secundaria, técnica, universitaria, posgrado", peso: 20, opciones: 5, activa: true },
   { id: "var-02", nombre: "Tipo de vivienda", descripcion: "Propia, alquilada, prestada, en precario", peso: 15, opciones: 4, activa: true },
-  { id: "var-03", nombre: "Material predominante de la vivienda", descripcion: "Block, madera, mixto, lamina, otro", peso: 10, opciones: 5, activa: true },
-  { id: "var-04", nombre: "Numero de habitaciones", descripcion: "1-2, 3-4, 5+", peso: 8, opciones: 3, activa: true },
-  { id: "var-05", nombre: "Acceso a internet", descripcion: "Sin acceso, datos moviles, fibra optica", peso: 12, opciones: 3, activa: true },
-  { id: "var-06", nombre: "Vehiculo en el hogar", descripcion: "Ninguno, moto, auto <5 anos, auto >5 anos, 2+ autos", peso: 15, opciones: 5, activa: true },
-  { id: "var-07", nombre: "Ingreso mensual del hogar", descripcion: "Rangos en moneda local segun pais", peso: 20, opciones: 6, activa: true },
+  { id: "var-03", nombre: "Material predominante de la vivienda", descripcion: "Block, madera, mixto, lámina, otro", peso: 10, opciones: 5, activa: true },
+  { id: "var-04", nombre: "Número de habitaciones", descripcion: "1-2, 3-4, 5+", peso: 8, opciones: 3, activa: true },
+  { id: "var-05", nombre: "Acceso a internet", descripcion: "Sin acceso, datos móviles, fibra óptica", peso: 12, opciones: 3, activa: true },
+  { id: "var-06", nombre: "Vehículo en el hogar", descripcion: "Ninguno, moto, auto <5 años, auto >5 años, 2+ autos", peso: 15, opciones: 5, activa: true },
+  { id: "var-07", nombre: "Ingreso mensual del hogar", descripcion: "Rangos en moneda local según país", peso: 20, opciones: 6, activa: true },
 ]
 
 const nivelesIniciales: NivelConfig[] = [
@@ -138,20 +138,20 @@ export default function NsePage() {
     <div>
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-semibold text-foreground">
-            Calibracion NSE
+          <h1 className="text-2xl font-semibold text-foreground tracking-tight">
+            Calibración NSE
           </h1>
           <p className="mt-1 text-sm text-foreground-secondary">
-            Variables de encuesta con pesos configurables y definicion de niveles
+            Variables de encuesta con pesos configurables y definición de niveles
           </p>
         </div>
         <div className="flex items-center gap-3">
           <Select value={paisFiltro} onValueChange={setPaisFiltro}>
             <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Filtrar por pais" />
+              <SelectValue placeholder="Filtrar por país" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="todos">Todos los paises</SelectItem>
+              <SelectItem value="todos">Todos los países</SelectItem>
               {paises.map((p) => (
                 <SelectItem key={p.id} value={p.id}>
                   {p.nombre}
@@ -166,7 +166,7 @@ export default function NsePage() {
             onClick={() => setGuardado(true)}
           >
             <Save className="h-4 w-4 mr-2" />
-            {guardado ? "Sin cambios" : "Guardar Configuracion"}
+            {guardado ? "Sin cambios" : "Guardar Configuración"}
           </Button>
         </div>
       </div>
@@ -199,29 +199,29 @@ export default function NsePage() {
       </div>
 
       <div className="grid grid-cols-3 gap-4 mb-6">
-        <Card>
+        <Card className="border-border/50 shadow-sm hover:shadow-md transition-shadow duration-200">
           <CardContent className="p-4 flex items-center justify-between">
             <div>
               <p className="text-sm text-foreground-secondary">Vigentes</p>
-              <p className="text-2xl font-semibold text-foreground">{distribucion.vigentes}</p>
+              <p className="text-2xl font-semibold text-foreground tracking-tight">{distribucion.vigentes}</p>
             </div>
             <Badge variant="success">Activos</Badge>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="border-border/50 shadow-sm hover:shadow-md transition-shadow duration-200">
           <CardContent className="p-4 flex items-center justify-between">
             <div>
               <p className="text-sm text-foreground-secondary">Vencidos</p>
-              <p className="text-2xl font-semibold text-foreground">{distribucion.vencidos}</p>
+              <p className="text-2xl font-semibold text-foreground tracking-tight">{distribucion.vencidos}</p>
             </div>
-            <Badge variant="warning">Requieren actualizacion</Badge>
+            <Badge variant="warning">Requieren actualización</Badge>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="border-border/50 shadow-sm hover:shadow-md transition-shadow duration-200">
           <CardContent className="p-4 flex items-center justify-between">
             <div>
               <p className="text-sm text-foreground-secondary">Pendientes</p>
-              <p className="text-2xl font-semibold text-foreground">{distribucion.pendientesNSE}</p>
+              <p className="text-2xl font-semibold text-foreground tracking-tight">{distribucion.pendientesNSE}</p>
             </div>
             <Badge variant="error">Sin completar</Badge>
           </CardContent>
@@ -234,7 +234,7 @@ export default function NsePage() {
             <div>
               <CardTitle className="text-base">Variables del Cuestionario NSE</CardTitle>
               <p className="text-sm text-foreground-secondary mt-1">
-                Cada variable contribuye al score final segun su peso asignado
+                Cada variable contribuye al score final según su peso asignado
               </p>
             </div>
             <div className="flex items-center gap-2">
@@ -330,9 +330,9 @@ export default function NsePage() {
 
       <Card className="mb-6">
         <CardHeader>
-          <CardTitle className="text-base">Definicion de Niveles</CardTitle>
+          <CardTitle className="text-base">Definición de Niveles</CardTitle>
           <p className="text-sm text-foreground-secondary mt-1">
-            Rangos de score para clasificar participantes en cada nivel socioeconomico
+            Rangos de score para clasificar participantes en cada nivel socioeconómico
           </p>
         </CardHeader>
         <CardContent>
@@ -361,7 +361,7 @@ export default function NsePage() {
                 <div className="flex items-center gap-3">
                   <div className="flex-1">
                     <label className="text-xs text-foreground-muted block mb-1">
-                      Score minimo
+                      Score mínimo
                     </label>
                     <Input
                       type="number"
@@ -377,7 +377,7 @@ export default function NsePage() {
                   <span className="text-foreground-muted mt-5">—</span>
                   <div className="flex-1">
                     <label className="text-xs text-foreground-muted block mb-1">
-                      Score maximo
+                      Score máximo
                     </label>
                     <Input
                       type="number"
@@ -413,14 +413,14 @@ export default function NsePage() {
           <div className="flex items-center justify-between p-4 rounded-lg border border-error/20 bg-error/5">
             <div>
               <p className="font-medium text-foreground">
-                Forzar Actualizacion Masiva NSE
+                Forzar Actualización Masiva NSE
               </p>
               <p className="text-sm text-foreground-secondary mt-1">
                 Recalcula el score NSE de todos los participantes usando los pesos actuales.
-                Esto invalidara todos los niveles existentes y puede cambiar el acceso a estudios.
+                Esto invalidará todos los niveles existentes y puede cambiar el acceso a estudios.
               </p>
               <p className="text-xs text-foreground-muted mt-2">
-                Participantes afectados: {distribucion.total} · Ultima actualizacion: Nunca
+                Participantes afectados: {distribucion.total} · Última actualización: Nunca
               </p>
             </div>
             <div className="flex-shrink-0 ml-6">
@@ -449,7 +449,7 @@ export default function NsePage() {
                       setConfirmDanger(false)
                     }}
                   >
-                    Confirmar Recalculo
+                    Confirmar Recálculo
                   </Button>
                 </div>
               )}

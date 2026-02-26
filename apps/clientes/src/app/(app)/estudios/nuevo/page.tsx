@@ -1,8 +1,16 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useMemo } from "react"
 import { useRouter } from "next/navigation"
-import { plantillas, suscripciones, tiers } from "@kosmos/mock-data"
+import {
+  plantillas,
+  categorias,
+  categoriaCuestionarios,
+  muestraRecomendada,
+  creditosEstimados,
+  suscripciones,
+  tiers,
+} from "@kosmos/mock-data"
 import { Button, Stepper, OptionCard } from "@kosmos/ui"
 import {
   BarChart3,
@@ -12,81 +20,76 @@ import {
   Globe,
   TrendingUp,
   X,
+  FileText,
+  DollarSign,
 } from "lucide-react"
 
 const pasos = [
-  { label: "Plantilla" },
+  { label: "Categoría" },
+  { label: "Cuestionario" },
   { label: "Segmento" },
-  { label: "Volumen" },
+  { label: "Costos" },
 ]
 
-const plantillasPublicadas = plantillas.filter((p) => p.estado === "activo")
-
-const iconosPorPlantilla: Record<string, React.ReactNode> = {
-  "plt-001": <BarChart3 className="h-5 w-5" />,
-  "plt-002": <Lightbulb className="h-5 w-5" />,
-  "plt-003": <TrendingUp className="h-5 w-5" />,
-}
+const categoriasWizard = [
+  {
+    id: "cat-001",
+    nombre: "Salud de Marca",
+    descripcion: "Medir reconocimiento, lealtad y percepción de marca",
+    icono: <BarChart3 className="h-5 w-5" />,
+  },
+  {
+    id: "cat-002",
+    nombre: "Prueba de Concepto",
+    descripcion: "Evaluar aceptación de nuevos productos o ideas",
+    icono: <Lightbulb className="h-5 w-5" />,
+  },
+  {
+    id: "cat-003",
+    nombre: "Satisfacción del Cliente",
+    descripcion: "Medir niveles de satisfacción y experiencia",
+    icono: <Users className="h-5 w-5" />,
+  },
+  {
+    id: "cat-004",
+    nombre: "Hábitos de Consumo",
+    descripcion: "Entender patrones de compra y consumo",
+    icono: <TrendingUp className="h-5 w-5" />,
+  },
+]
 
 const segmentos = [
   {
     id: "seg-adultos",
     nombre: "Adultos general",
     descripcion:
-      "Adultos 18-55 años, todos los niveles socioeconomicos. Ideal para estudios de amplio alcance.",
+      "Adultos 18-55 años, todos los niveles socioeconómicos. Ideal para estudios de amplio alcance.",
     icono: <Users className="h-5 w-5" />,
+    maxRespuestas: 12500,
   },
   {
     id: "seg-jovenes",
-    nombre: "Jovenes 18-30",
+    nombre: "Jóvenes 18-30",
     descripcion:
-      "Segmento joven 18-30 años, NSE medio-alto. Perfil digital, consumo rapido.",
+      "Segmento joven 18-30 años, NSE medio-alto. Perfil digital, consumo rápido.",
     icono: <Target className="h-5 w-5" />,
+    maxRespuestas: 4800,
   },
   {
     id: "seg-premium",
     nombre: "NSE Alto",
     descripcion:
-      "Adultos 25-55 años, NSE alto. Poder adquisitivo elevado, decision de compra.",
+      "Adultos 25-55 años, NSE alto. Poder adquisitivo elevado, decisión de compra.",
     icono: <TrendingUp className="h-5 w-5" />,
+    maxRespuestas: 2100,
   },
   {
     id: "seg-regional",
-    nombre: "Centroamerica completa",
+    nombre: "Centroamérica completa",
     descripcion:
-      "Todos los paises de la plataforma: Costa Rica, Panama y Guatemala. Representatividad regional.",
+      "Todos los países de la plataforma: Costa Rica, Panamá y Guatemala. Representatividad regional.",
     icono: <Globe className="h-5 w-5" />,
-  },
-]
-
-const volumenes = [
-  {
-    id: "vol-500",
-    cantidad: 500,
-    nombre: "500 respuestas",
-    descripcion:
-      "Ideal para estudios exploratorios y validacion inicial de hipotesis.",
-  },
-  {
-    id: "vol-1500",
-    cantidad: 1500,
-    nombre: "1,500 respuestas",
-    descripcion:
-      "Optimo para estudios con analisis por segmentos y mayor representatividad.",
-  },
-  {
-    id: "vol-3000",
-    cantidad: 3000,
-    nombre: "3,000 respuestas",
-    descripcion:
-      "Estudios robustos con alta confianza estadistica y multiples cortes.",
-  },
-  {
-    id: "vol-5000",
-    cantidad: 5000,
-    nombre: "5,000 respuestas",
-    descripcion:
-      "Maxima representatividad. Para proyectos estrategicos con multiples paises.",
+    maxRespuestas: 18000,
   },
 ]
 
@@ -101,17 +104,17 @@ const saldoDisponible = suscripcionActual
 export default function NuevoEstudioPage() {
   const router = useRouter()
   const [paso, setPaso] = useState(0)
+  const [categoriaId, setCategoriaId] = useState<string | null>(null)
   const [plantillaId, setPlantillaId] = useState<string | null>(null)
   const [segmentoId, setSegmentoId] = useState<string | null>(null)
-  const [volumenId, setVolumenId] = useState<string | null>(null)
   const [mostrarUpgrade, setMostrarUpgrade] = useState(false)
 
   function handleSiguiente() {
-    if (paso < 2) {
+    if (paso < 3) {
       setPaso(paso + 1)
     } else {
-      const volumen = volumenes.find((v) => v.id === volumenId)
-      if (volumen && volumen.cantidad > saldoDisponible) {
+      const costos = plantillaId ? creditosEstimados[plantillaId] : null
+      if (costos && costos.max > saldoDisponible) {
         setMostrarUpgrade(true)
       } else {
         router.push("/estudios")
@@ -120,13 +123,19 @@ export default function NuevoEstudioPage() {
   }
 
   function handleAnterior() {
-    if (paso > 0) setPaso(paso - 1)
+    if (paso > 0) {
+      if (paso === 1) {
+        setPlantillaId(null)
+      }
+      setPaso(paso - 1)
+    }
   }
 
   const puedeAvanzar =
-    (paso === 0 && plantillaId) ||
-    (paso === 1 && segmentoId) ||
-    (paso === 2 && volumenId)
+    (paso === 0 && categoriaId) ||
+    (paso === 1 && plantillaId) ||
+    (paso === 2 && segmentoId) ||
+    paso === 3
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
@@ -146,25 +155,37 @@ export default function NuevoEstudioPage() {
         <Stepper steps={pasos} currentStep={paso} className="mb-8" />
 
         {paso === 0 && (
-          <PasoPlantilla
-            seleccionada={plantillaId}
-            onSeleccionar={setPlantillaId}
-          />
+          <div className="animate-in" key="paso-0"><PasoCategoria
+            seleccionada={categoriaId}
+            onSeleccionar={(id) => {
+              setCategoriaId(id)
+              if (id !== categoriaId) setPlantillaId(null)
+            }}
+          /></div>
         )}
 
         {paso === 1 && (
-          <PasoSegmento
-            seleccionado={segmentoId}
-            onSeleccionar={setSegmentoId}
-          />
+          <div className="animate-in" key="paso-1"><PasoCuestionario
+            categoriaId={categoriaId!}
+            seleccionado={plantillaId}
+            onSeleccionar={setPlantillaId}
+          /></div>
         )}
 
         {paso === 2 && (
-          <PasoVolumen
-            seleccionado={volumenId}
-            onSeleccionar={setVolumenId}
+          <div className="animate-in" key="paso-2"><PasoSegmento
+            seleccionado={segmentoId}
+            onSeleccionar={setSegmentoId}
+          /></div>
+        )}
+
+        {paso === 3 && (
+          <div className="animate-in" key="paso-3"><PasoCostos
+            categoriaId={categoriaId!}
+            plantillaId={plantillaId!}
+            segmentoId={segmentoId!}
             saldo={saldoDisponible}
-          />
+          /></div>
         )}
 
         <div className="mt-8 flex items-center justify-between border-t border-border pt-6">
@@ -182,7 +203,7 @@ export default function NuevoEstudioPage() {
             onClick={handleSiguiente}
             disabled={!puedeAvanzar}
           >
-            {paso === 2 ? "Crear estudio" : "Siguiente"}
+            {paso === 3 ? "Crear estudio" : "Siguiente"}
           </Button>
         </div>
       </div>
@@ -199,7 +220,7 @@ export default function NuevoEstudioPage() {
   )
 }
 
-function PasoPlantilla({
+function PasoCategoria({
   seleccionada,
   onSeleccionar,
 }: {
@@ -209,23 +230,92 @@ function PasoPlantilla({
   return (
     <div>
       <h1 className="text-[22px] font-bold text-foreground mb-1">
-        Selecciona una plantilla
+        Selecciona el tipo de estudio
       </h1>
       <p className="text-sm text-foreground-secondary mb-7">
-        Elige la plantilla base para tu estudio
+        Elige la categoría de investigación
       </p>
 
       <div className="grid grid-cols-2 gap-4">
-        {plantillasPublicadas.map((plt) => (
+        {categoriasWizard.map((cat) => (
           <OptionCard
-            key={plt.id}
-            selected={seleccionada === plt.id}
-            onSelect={() => onSeleccionar(plt.id)}
-            icon={iconosPorPlantilla[plt.id] || <BarChart3 className="h-5 w-5" />}
-            title={plt.nombre}
-            description={plt.descripcion}
+            key={cat.id}
+            selected={seleccionada === cat.id}
+            onSelect={() => onSeleccionar(cat.id)}
+            icon={cat.icono}
+            title={cat.nombre}
+            description={cat.descripcion}
           />
         ))}
+      </div>
+    </div>
+  )
+}
+
+function PasoCuestionario({
+  categoriaId,
+  seleccionado,
+  onSeleccionar,
+}: {
+  categoriaId: string
+  seleccionado: string | null
+  onSeleccionar: (id: string | null) => void
+}) {
+  const categoriaNombre =
+    categorias.find((c) => c.id === categoriaId)?.nombre || ""
+
+  const cuestionariosDisponibles = useMemo(() => {
+    const ids = categoriaCuestionarios[categoriaId] || []
+    return plantillas.filter((p) => ids.includes(p.id))
+  }, [categoriaId])
+
+  const iconosPorPlantilla: Record<string, React.ReactNode> = {
+    "plt-001": <BarChart3 className="h-5 w-5" />,
+    "plt-002": <Lightbulb className="h-5 w-5" />,
+    "plt-003": <Users className="h-5 w-5" />,
+    "plt-004": <TrendingUp className="h-5 w-5" />,
+    "plt-005": <FileText className="h-5 w-5" />,
+    "plt-006": <DollarSign className="h-5 w-5" />,
+  }
+
+  return (
+    <div>
+      <h1 className="text-[22px] font-bold text-foreground mb-1">
+        Selecciona el cuestionario
+      </h1>
+      <p className="text-sm text-foreground-secondary mb-7">
+        Cuestionarios disponibles en {categoriaNombre}
+      </p>
+
+      <div className="grid grid-cols-1 gap-4">
+        {cuestionariosDisponibles.map((plt) => {
+          const muestra = muestraRecomendada[plt.id] || 500
+          const creditos = creditosEstimados[plt.id] || { min: 300, max: 600 }
+          return (
+            <OptionCard
+              key={plt.id}
+              selected={seleccionado === plt.id}
+              onSelect={() => onSeleccionar(plt.id)}
+              icon={iconosPorPlantilla[plt.id] || <FileText className="h-5 w-5" />}
+              title={plt.nombre}
+              description={
+                <>
+                  {plt.descripcion}
+                  <span className="block mt-1.5 text-xs text-foreground-muted">
+                    Muestra recomendada: {muestra.toLocaleString()} respuestas
+                    &nbsp;·&nbsp; {creditos.min.toLocaleString()}-
+                    {creditos.max.toLocaleString()} créditos estimados
+                  </span>
+                </>
+              }
+            />
+          )
+        })}
+        {cuestionariosDisponibles.length === 0 && (
+          <p className="text-sm text-foreground-muted text-center py-8">
+            No hay cuestionarios disponibles para esta categoría.
+          </p>
+        )}
       </div>
     </div>
   )
@@ -244,7 +334,7 @@ function PasoSegmento({
         Define el segmento
       </h1>
       <p className="text-sm text-foreground-secondary mb-7">
-        Selecciona el segmento objetivo del estudio
+        Grupos recomendados por UNIMER para este estudio
       </p>
 
       <div className="grid grid-cols-2 gap-4">
@@ -256,7 +346,14 @@ function PasoSegmento({
             onDeselect={() => onSeleccionar(null)}
             icon={seg.icono}
             title={seg.nombre}
-            description={seg.descripcion}
+            description={
+              <>
+                {seg.descripcion}
+                <span className="block mt-1.5 text-xs text-foreground-muted">
+                  Max. respuestas posibles: {seg.maxRespuestas.toLocaleString()}
+                </span>
+              </>
+            }
           />
         ))}
       </div>
@@ -264,45 +361,100 @@ function PasoSegmento({
   )
 }
 
-function PasoVolumen({
-  seleccionado,
-  onSeleccionar,
+function PasoCostos({
+  categoriaId,
+  plantillaId,
+  segmentoId,
   saldo,
 }: {
-  seleccionado: string | null
-  onSeleccionar: (id: string | null) => void
+  categoriaId: string
+  plantillaId: string
+  segmentoId: string
   saldo: number
 }) {
+  const categoria = categoriasWizard.find((c) => c.id === categoriaId)
+  const plantilla = plantillas.find((p) => p.id === plantillaId)
+  const segmento = segmentos.find((s) => s.id === segmentoId)
+  const creditos = creditosEstimados[plantillaId] || { min: 300, max: 600 }
+  const promedio = Math.round((creditos.min + creditos.max) / 2)
+
   return (
     <div>
       <h1 className="text-[22px] font-bold text-foreground mb-1">
-        Selecciona el volumen
+        Costos estimados
       </h1>
       <p className="text-sm text-foreground-secondary mb-7">
-        Respuestas disponibles:{" "}
-        <span className="font-semibold text-foreground">
-          {saldo.toLocaleString()}
-        </span>
+        Estimación de créditos para este estudio
       </p>
 
-      <div className="grid grid-cols-2 gap-4">
-        {volumenes.map((vol) => (
-          <OptionCard
-            key={vol.id}
-            selected={seleccionado === vol.id}
-            onSelect={() => onSeleccionar(vol.id)}
-            onDeselect={() => onSeleccionar(null)}
-            icon={
-              <span className="text-xs font-bold">
-                {vol.cantidad >= 1000
-                  ? `${(vol.cantidad / 1000).toFixed(vol.cantidad % 1000 === 0 ? 0 : 1)}k`
-                  : vol.cantidad}
+      <div className="space-y-3 mb-6">
+        <div className="flex items-center gap-3 rounded-lg bg-background-gray px-4 py-3">
+          <span className="text-xs font-medium text-foreground-muted w-24 shrink-0">
+            Categoría
+          </span>
+          <span className="text-sm font-medium text-foreground">
+            {categoria?.nombre}
+          </span>
+        </div>
+        <div className="flex items-center gap-3 rounded-lg bg-background-gray px-4 py-3">
+          <span className="text-xs font-medium text-foreground-muted w-24 shrink-0">
+            Cuestionario
+          </span>
+          <span className="text-sm font-medium text-foreground">
+            {plantilla?.nombre}
+          </span>
+        </div>
+        <div className="flex items-center gap-3 rounded-lg bg-background-gray px-4 py-3">
+          <span className="text-xs font-medium text-foreground-muted w-24 shrink-0">
+            Segmento
+          </span>
+          <span className="text-sm font-medium text-foreground">
+            {segmento?.nombre}
+          </span>
+        </div>
+      </div>
+
+      <div className="rounded-xl border border-border p-6">
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <span className="text-sm text-foreground-secondary">
+              Costo estimado
+            </span>
+            <span className="text-sm font-semibold text-foreground">
+              {creditos.min.toLocaleString()} - {creditos.max.toLocaleString()}{" "}
+              créditos
+            </span>
+          </div>
+          <div className="flex items-center justify-between">
+            <span className="text-sm text-foreground-secondary">
+              Promedio esperado
+            </span>
+            <span className="text-sm font-semibold text-foreground">
+              ~{promedio.toLocaleString()} créditos
+            </span>
+          </div>
+          <div className="border-t border-border pt-4">
+            <div className="flex items-center justify-between">
+              <span className="text-sm text-foreground-secondary">
+                Créditos disponibles
               </span>
-            }
-            title={vol.nombre}
-            description={vol.descripcion}
-          />
-        ))}
+              <span
+                className={`text-sm font-semibold ${
+                  saldo >= creditos.max
+                    ? "text-success"
+                    : saldo >= creditos.min
+                      ? "text-warning"
+                      : "text-error"
+                }`}
+              >
+                {saldo.toLocaleString()}
+              </span>
+            </div>
+          </div>
+        </div>
+        <p className="mt-4 text-xs text-foreground-muted">
+          El costo final depende de la tasa de respuesta del estudio.
+        </p>
       </div>
     </div>
   )
@@ -335,7 +487,7 @@ function ModalUpgrade({
           respuestas disponibles.
         </p>
         <p className="text-sm text-foreground-secondary mb-6">
-          El volumen seleccionado requiere mas respuestas de las que tienes
+          El volumen seleccionado requiere más respuestas de las que tienes
           disponibles. Actualiza tu plan para continuar.
         </p>
 

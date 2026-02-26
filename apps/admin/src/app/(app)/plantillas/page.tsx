@@ -87,7 +87,7 @@ export default function PlantillasPage() {
   return (
     <div>
       <div className="mb-6">
-        <h1 className="text-2xl font-semibold text-foreground">Plantillas</h1>
+        <h1 className="text-2xl font-semibold text-foreground tracking-tight">Plantillas</h1>
         <p className="mt-1 text-sm text-foreground-secondary">
           Gestión de plantillas de evaluación
         </p>

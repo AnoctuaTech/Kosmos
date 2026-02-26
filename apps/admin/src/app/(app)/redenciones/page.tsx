@@ -124,7 +124,7 @@ export default function RedencionesPage() {
     <div>
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-semibold text-foreground">
+          <h1 className="text-2xl font-semibold text-foreground tracking-tight">
             Cola de Redenciones
           </h1>
           <p className="mt-1 text-sm text-foreground-secondary">
@@ -138,7 +138,7 @@ export default function RedencionesPage() {
       </div>
 
       {bannerExito && (
-        <div className="mb-4 flex items-center justify-between rounded-lg border border-success/30 bg-success/5 px-4 py-3">
+        <div className="mb-4 flex items-center justify-between rounded-lg border border-success/30 bg-success/5 px-4 py-3 animate-slide-in-up">
           <div className="flex items-center gap-3">
             <CheckCircle2 className="h-5 w-5 text-success" />
             <span className="text-sm font-medium text-foreground">
@@ -188,8 +188,8 @@ export default function RedencionesPage() {
       </div>
 
       {modalRedencion && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <div className="w-full max-w-lg rounded-lg bg-white p-6 shadow-xl">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-[2px]">
+          <div className="w-full max-w-lg rounded-xl bg-white p-6 shadow-2xl shadow-black/10 animate-scale-in">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-semibold text-foreground">
                 Revisión de Redención

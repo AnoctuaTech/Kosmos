@@ -151,6 +151,24 @@ const paisStats = paises.map((p) => {
   }
 })
 
+function CustomTooltip({ active, payload, label, formatter }: { active?: boolean; payload?: Array<{ value: number; name: string; color: string }>; label?: string; formatter?: (value: number) => [string, string] }) {
+  if (!active || !payload) return null
+  return (
+    <div className="rounded-lg border border-border/60 bg-white px-3 py-2.5 shadow-lg shadow-black/[0.06]">
+      <p className="text-xs font-medium text-foreground-muted mb-1.5">{label}</p>
+      {payload.map((entry, i) => (
+        <div key={i} className="flex items-center gap-2 text-sm">
+          <div className="h-2 w-2 rounded-full" style={{ backgroundColor: entry.color }} />
+          <span className="text-foreground-secondary">{entry.name}:</span>
+          <span className="font-semibold text-foreground">
+            {formatter ? formatter(entry.value)[0] : entry.value.toLocaleString()}
+          </span>
+        </div>
+      ))}
+    </div>
+  )
+}
+
 export default function DashboardPage() {
   const [filtroPais, setFiltroPais] = useState("todos")
   const [fechaDesde, setFechaDesde] = useState("")
@@ -166,7 +184,7 @@ export default function DashboardPage() {
   return (
     <div>
       <div className="mb-6">
-        <h1 className="text-2xl font-semibold text-foreground">
+        <h1 className="text-2xl font-semibold text-foreground tracking-tight">
           Dashboard de Monitoreo
         </h1>
         <p className="mt-1 text-sm text-foreground-secondary">
@@ -175,9 +193,11 @@ export default function DashboardPage() {
       </div>
 
       {showBannerFraude && alertasAltoRiesgo > 0 && (
-        <div className="mb-4 flex items-center justify-between rounded-lg border border-warning/30 bg-warning/5 px-4 py-3">
+        <div className="mb-4 flex items-center justify-between rounded-lg border border-warning/30 bg-warning/5 px-4 py-3 animate-slide-in-up">
           <div className="flex items-center gap-3">
-            <AlertTriangle className="h-5 w-5 text-warning" />
+            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-warning/10">
+              <AlertTriangle className="h-4 w-4 text-warning" />
+            </div>
             <span className="text-sm font-medium text-foreground">
               {alertasAltoRiesgo} alerta{alertasAltoRiesgo > 1 ? "s" : ""} de fraude de alto riesgo pendiente{alertasAltoRiesgo > 1 ? "s" : ""}
             </span>
@@ -185,7 +205,7 @@ export default function DashboardPage() {
           <Button
             variant="ghost"
             size="icon"
-            className="h-7 w-7"
+            className="h-7 w-7 hover:bg-warning/10"
             onClick={() => setShowBannerFraude(false)}
           >
             <X className="h-4 w-4" />
@@ -194,9 +214,11 @@ export default function DashboardPage() {
       )}
 
       {showBannerRedenciones && redencionesPendientes > 0 && (
-        <div className="mb-4 flex items-center justify-between rounded-lg border border-primary/30 bg-primary/5 px-4 py-3">
+        <div className="mb-4 flex items-center justify-between rounded-lg border border-primary/30 bg-primary/5 px-4 py-3 animate-slide-in-up">
           <div className="flex items-center gap-3">
-            <Clock className="h-5 w-5 text-primary" />
+            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10">
+              <Clock className="h-4 w-4 text-primary" />
+            </div>
             <span className="text-sm font-medium text-foreground">
               {redencionesPendientes} redenci{redencionesPendientes > 1 ? "ones" : "ón"} pendiente{redencionesPendientes > 1 ? "s" : ""} de revisión
             </span>
@@ -204,7 +226,7 @@ export default function DashboardPage() {
           <Button
             variant="ghost"
             size="icon"
-            className="h-7 w-7"
+            className="h-7 w-7 hover:bg-primary/10"
             onClick={() => setShowBannerRedenciones(false)}
           >
             <X className="h-4 w-4" />
@@ -286,41 +308,37 @@ export default function DashboardPage() {
       </div>
 
       <div className="grid grid-cols-2 gap-4 mb-6">
-        <Card>
+        <Card className="overflow-hidden">
           <CardHeader className="pb-2">
             <CardTitle className="text-base">MRR Mensual</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="h-[260px]">
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={mrrData}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                <BarChart data={mrrData} barCategoryGap="20%">
+                  <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" vertical={false} />
                   <XAxis
                     dataKey="mes"
-                    tick={{ fontSize: 12, fill: "#6c757d" }}
-                    axisLine={{ stroke: "#e5e7eb" }}
+                    tick={{ fontSize: 12, fill: "#9ca3af" }}
+                    axisLine={false}
+                    tickLine={false}
                   />
                   <YAxis
-                    tick={{ fontSize: 12, fill: "#6c757d" }}
-                    axisLine={{ stroke: "#e5e7eb" }}
+                    tick={{ fontSize: 12, fill: "#9ca3af" }}
+                    axisLine={false}
+                    tickLine={false}
                     tickFormatter={(v) => `$${(v / 1000).toFixed(0)}k`}
                   />
                   <Tooltip
-                    formatter={(value: number) => [
-                      `$${value.toLocaleString()}`,
-                      "MRR",
-                    ]}
-                    contentStyle={{
-                      borderRadius: 8,
-                      border: "1px solid #e5e7eb",
-                      fontSize: 13,
-                    }}
+                    content={<CustomTooltip formatter={(v: number) => [`$${v.toLocaleString()}`, "MRR"]} />}
+                    cursor={{ fill: "rgba(255, 65, 54, 0.04)", radius: 4 }}
                   />
                   <Bar
                     dataKey="mrr"
                     fill="#FF4136"
-                    radius={[4, 4, 0, 0]}
-                    maxBarSize={40}
+                    radius={[6, 6, 0, 0]}
+                    maxBarSize={36}
+                    name="MRR"
                   />
                 </BarChart>
               </ResponsiveContainer>
@@ -328,7 +346,7 @@ export default function DashboardPage() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="overflow-hidden">
           <CardHeader className="pb-2">
             <CardTitle className="text-base">Actividad del Panel</CardTitle>
           </CardHeader>
@@ -336,38 +354,35 @@ export default function DashboardPage() {
             <div className="h-[260px]">
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={actividadData}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                  <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" vertical={false} />
                   <XAxis
                     dataKey="mes"
-                    tick={{ fontSize: 12, fill: "#6c757d" }}
-                    axisLine={{ stroke: "#e5e7eb" }}
+                    tick={{ fontSize: 12, fill: "#9ca3af" }}
+                    axisLine={false}
+                    tickLine={false}
                   />
                   <YAxis
-                    tick={{ fontSize: 12, fill: "#6c757d" }}
-                    axisLine={{ stroke: "#e5e7eb" }}
+                    tick={{ fontSize: 12, fill: "#9ca3af" }}
+                    axisLine={false}
+                    tickLine={false}
                   />
-                  <Tooltip
-                    contentStyle={{
-                      borderRadius: 8,
-                      border: "1px solid #e5e7eb",
-                      fontSize: 13,
-                    }}
-                  />
+                  <Tooltip content={<CustomTooltip />} />
                   <Line
                     type="monotone"
                     dataKey="respuestas"
                     stroke="#FF4136"
-                    strokeWidth={2}
-                    dot={{ fill: "#FF4136", r: 4 }}
+                    strokeWidth={2.5}
+                    dot={{ fill: "#FF4136", r: 4, strokeWidth: 2, stroke: "#fff" }}
+                    activeDot={{ r: 6, stroke: "#FF4136", strokeWidth: 2, fill: "#fff" }}
                     name="Respuestas"
                   />
                   <Line
                     type="monotone"
                     dataKey="estudios"
-                    stroke="#6c757d"
+                    stroke="#9ca3af"
                     strokeWidth={2}
                     strokeDasharray="5 5"
-                    dot={{ fill: "#6c757d", r: 3 }}
+                    dot={{ fill: "#9ca3af", r: 3, strokeWidth: 2, stroke: "#fff" }}
                     name="Estudios"
                   />
                 </LineChart>
@@ -404,7 +419,7 @@ export default function DashboardPage() {
                       {p.pais}
                     </TableCell>
                     <TableCell className="text-right">{p.empresas}</TableCell>
-                    <TableCell className="text-right">
+                    <TableCell className="text-right font-medium">
                       ${p.mrr.toLocaleString()}
                     </TableCell>
                     <TableCell className="text-right">{p.estudios}</TableCell>
@@ -427,7 +442,9 @@ export default function DashboardPage() {
           <CardContent className="p-0">
             {renovacionesProximas.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-12 text-center">
-                <RefreshCw className="h-8 w-8 text-foreground-muted mb-2" />
+                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-background-gray mb-3">
+                  <RefreshCw className="h-5 w-5 text-foreground-muted" />
+                </div>
                 <p className="text-sm text-foreground-muted">
                   No hay renovaciones pendientes en los próximos 90 días
                 </p>
@@ -463,7 +480,7 @@ export default function DashboardPage() {
                         <span
                           className={
                             s.respuestasUsadas / s.respuestasLimite > 0.8
-                              ? "text-error font-medium"
+                              ? "text-error font-semibold"
                               : "text-foreground-secondary"
                           }
                         >

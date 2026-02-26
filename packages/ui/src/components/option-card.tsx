@@ -10,7 +10,7 @@ interface OptionCardProps {
   onDeselect?: () => void
   icon?: React.ReactNode
   title: string
-  description: string
+  description: React.ReactNode
   className?: string
 }
 

@@ -7,7 +7,7 @@ import { User, Shield, LogOut } from "lucide-react"
 
 const participante = {
   nombre: "Carlos",
-  apellidos: "Ramirez Solis",
+  apellidos: "Ramírez Solís",
   cedula: "1-0456-0789",
   email: "carlos@ejemplo.com",
   pais: "Costa Rica",
@@ -35,102 +35,106 @@ export default function PerfilPage() {
   const [apellidos, setApellidos] = useState(participante.apellidos)
 
   const inputClasses =
-    "w-full rounded-lg border border-border bg-white px-3 py-2.5 text-sm text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/10"
+    "w-full rounded-xl border border-border/60 bg-white px-3.5 py-2.5 text-sm text-foreground focus:border-primary focus:outline-none focus:ring-4 focus:ring-primary/[0.08] transition-all duration-200"
 
   return (
-    <div className="px-4 py-6 md:px-8">
+    <div className="px-4 py-6 md:px-8 animate-in">
       <h1 className="text-xl font-semibold text-foreground mb-6">Mi perfil</h1>
 
-      <Card className="border-border mb-4">
-        <CardContent className="p-5">
-          <div className="flex items-center gap-3 mb-5">
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
-              <User className="h-6 w-6 text-primary" />
-            </div>
-            <div>
-              <p className="text-base font-semibold text-foreground">
-                {participante.nombre} {participante.apellidos}
-              </p>
-              <p className="text-sm text-foreground-secondary">
-                {participante.email}
-              </p>
+      <Card className="border-border/50 mb-4 shadow-sm overflow-hidden">
+        <CardContent className="p-0">
+          <div className="bg-gradient-to-r from-primary/[0.06] to-primary/[0.02] p-5">
+            <div className="flex items-center gap-3 mb-5">
+              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-primary/20 to-primary/10 ring-2 ring-primary/10">
+                <User className="h-7 w-7 text-primary" />
+              </div>
+              <div>
+                <p className="text-base font-semibold text-foreground">
+                  {participante.nombre} {participante.apellidos}
+                </p>
+                <p className="text-sm text-foreground-secondary">
+                  {participante.email}
+                </p>
+              </div>
             </div>
           </div>
 
-          {editando ? (
-            <div className="space-y-3 mb-4">
-              <div>
-                <label className="block text-[13px] font-medium text-foreground-secondary mb-1">
-                  Nombre
-                </label>
-                <input
-                  type="text"
-                  value={nombre}
-                  onChange={(e) => setNombre(e.target.value)}
-                  className={inputClasses}
-                />
+          <div className="p-5 pt-4">
+            {editando ? (
+              <div className="space-y-3 mb-4 animate-in">
+                <div>
+                  <label className="block text-[13px] font-medium text-foreground-secondary mb-1.5">
+                    Nombre
+                  </label>
+                  <input
+                    type="text"
+                    value={nombre}
+                    onChange={(e) => setNombre(e.target.value)}
+                    className={inputClasses}
+                  />
+                </div>
+                <div>
+                  <label className="block text-[13px] font-medium text-foreground-secondary mb-1.5">
+                    Apellidos
+                  </label>
+                  <input
+                    type="text"
+                    value={apellidos}
+                    onChange={(e) => setApellidos(e.target.value)}
+                    className={inputClasses}
+                  />
+                </div>
+                <div className="flex gap-2">
+                  <Button size="sm" onClick={() => setEditando(false)}>
+                    Guardar
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => {
+                      setNombre(participante.nombre)
+                      setApellidos(participante.apellidos)
+                      setEditando(false)
+                    }}
+                  >
+                    Cancelar
+                  </Button>
+                </div>
               </div>
-              <div>
-                <label className="block text-[13px] font-medium text-foreground-secondary mb-1">
-                  Apellidos
-                </label>
-                <input
-                  type="text"
-                  value={apellidos}
-                  onChange={(e) => setApellidos(e.target.value)}
-                  className={inputClasses}
-                />
-              </div>
-              <div className="flex gap-2">
-                <Button size="sm" onClick={() => setEditando(false)}>
-                  Guardar
-                </Button>
-                <Button
-                  size="sm"
-                  variant="outline"
-                  onClick={() => {
-                    setNombre(participante.nombre)
-                    setApellidos(participante.apellidos)
-                    setEditando(false)
-                  }}
+            ) : (
+              <div className="space-y-3">
+                <div className="flex justify-between text-sm">
+                  <span className="text-foreground-secondary">Cédula</span>
+                  <span className="font-medium text-foreground">
+                    {participante.cedula}
+                  </span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-foreground-secondary">País</span>
+                  <span className="font-medium text-foreground">
+                    {participante.pais}
+                  </span>
+                </div>
+                <button
+                  onClick={() => setEditando(true)}
+                  className="text-sm font-medium text-primary hover:text-primary-dark transition-colors duration-200"
                 >
-                  Cancelar
-                </Button>
+                  Editar datos
+                </button>
               </div>
-            </div>
-          ) : (
-            <div className="space-y-3">
-              <div className="flex justify-between text-sm">
-                <span className="text-foreground-secondary">Cedula</span>
-                <span className="font-medium text-foreground">
-                  {participante.cedula}
-                </span>
-              </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-foreground-secondary">Pais</span>
-                <span className="font-medium text-foreground">
-                  {participante.pais}
-                </span>
-              </div>
-              <button
-                onClick={() => setEditando(true)}
-                className="text-sm font-medium text-primary hover:text-primary-dark transition-colors"
-              >
-                Editar datos
-              </button>
-            </div>
-          )}
+            )}
+          </div>
         </CardContent>
       </Card>
 
-      <Card className="border-border mb-4">
+      <Card className="border-border/50 mb-4 shadow-sm">
         <CardContent className="p-5">
           <div className="flex items-center gap-3 mb-4">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gray-100">
-              <Shield className="h-5 w-5 text-foreground-secondary" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-primary/[0.08] to-primary/[0.04]">
+              <Shield className="h-5 w-5 text-primary" />
             </div>
             <h2 className="text-base font-semibold text-foreground">
-              Perfil socioeconomico
+              Perfil socioeconómico
             </h2>
           </div>
 
@@ -167,10 +171,10 @@ export default function PerfilPage() {
 
       <button
         onClick={() => router.push("/login")}
-        className="flex items-center gap-2 w-full rounded-lg border border-border bg-white px-5 py-3 text-sm font-medium text-foreground-secondary hover:bg-gray-50 transition-colors"
+        className="flex items-center gap-2 w-full rounded-xl border border-border/60 bg-white px-5 py-3.5 text-sm font-medium text-foreground-secondary hover:bg-background-gray hover:text-foreground transition-all duration-200"
       >
         <LogOut className="h-4 w-4" />
-        Cerrar sesion
+        Cerrar sesión
       </button>
     </div>
   )

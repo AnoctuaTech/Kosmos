@@ -11,14 +11,14 @@ const puntosCanje = 2000
 const estudiosDisponibles = [
   {
     id: "est-001",
-    titulo: "Evaluacion de producto",
+    titulo: "Evaluación de producto",
     tipo: "Salud de Marca",
     duracion: "8 min",
     puntos: 500,
   },
   {
     id: "est-002",
-    titulo: "Habitos de consumo digital",
+    titulo: "Hábitos de consumo digital",
     tipo: "Prueba de Concepto",
     duracion: "12 min",
     puntos: 750,
@@ -38,7 +38,7 @@ export default function InicioPage() {
   const faltantes = puntosCanje - puntosActuales
 
   return (
-    <div className="px-4 py-6 md:px-8">
+    <div className="px-4 py-6 md:px-8 animate-in">
       <h1 className="text-xl font-semibold text-foreground mb-1">
         Hola, Carlos
       </h1>
@@ -47,53 +47,57 @@ export default function InicioPage() {
       </p>
 
       {avisoVisible && (
-        <div className="mb-4 flex items-start gap-3 rounded-lg border border-warning/30 bg-warning/5 p-3">
+        <div className="mb-4 flex items-start gap-3 rounded-xl border border-warning/30 bg-warning/5 p-3.5 animate-in">
           <ShieldAlert className="h-5 w-5 text-warning shrink-0 mt-0.5" />
           <div className="flex-1">
             <p className="text-sm font-medium text-foreground">
               Aviso legal antifraude
             </p>
-            <p className="text-xs text-foreground-secondary mt-0.5">
+            <p className="text-xs text-foreground-secondary mt-0.5 leading-relaxed">
               Kosmos monitorea tiempos de respuesta y direcciones IP. Respuestas
-              fraudulentas o inconsistentes resultaran en la suspension de tu
-              cuenta y la perdida de puntos acumulados.
+              fraudulentas o inconsistentes resultarán en la suspensión de tu
+              cuenta y la pérdida de puntos acumulados.
             </p>
           </div>
           <button
             onClick={() => setAvisoVisible(false)}
-            className="shrink-0 text-foreground-muted hover:text-foreground transition-colors"
+            className="shrink-0 text-foreground-muted hover:text-foreground transition-colors duration-200"
           >
             <X className="h-4 w-4" />
           </button>
         </div>
       )}
 
-      <Card className="border-border mb-6">
-        <CardContent className="p-5">
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center gap-2">
-              <Star className="h-5 w-5 text-primary fill-primary" />
-              <span className="text-2xl font-bold text-foreground">
-                {puntosActuales.toLocaleString()}
-              </span>
-              <span className="text-sm text-foreground-secondary">puntos</span>
+      <Card className="border-border/50 mb-6 shadow-sm overflow-hidden">
+        <CardContent className="p-0">
+          <div className="bg-gradient-to-r from-primary/[0.06] to-primary/[0.02] p-5">
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-2">
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/[0.1]">
+                  <Star className="h-4 w-4 text-primary fill-primary" />
+                </div>
+                <span className="text-2xl font-bold text-foreground">
+                  {puntosActuales.toLocaleString()}
+                </span>
+                <span className="text-sm text-foreground-secondary">puntos</span>
+              </div>
+              <Link
+                href="/billetera"
+                className="text-xs font-medium text-primary hover:text-primary-dark transition-colors duration-200"
+              >
+                Ver billetera
+              </Link>
             </div>
-            <Link
-              href="/billetera"
-              className="text-xs font-medium text-primary hover:text-primary-dark transition-colors"
-            >
-              Ver billetera
-            </Link>
+            <div className="mb-2 h-2.5 rounded-full bg-white/80 overflow-hidden shadow-inner">
+              <div
+                className="h-full rounded-full bg-gradient-to-r from-primary to-primary-light transition-all duration-500"
+                style={{ width: `${Math.min(progreso, 100)}%` }}
+              />
+            </div>
+            <p className="text-xs text-foreground-muted">
+              Faltan <span className="font-medium text-foreground-secondary">{faltantes.toLocaleString()} pts</span> para tu próximo canje
+            </p>
           </div>
-          <div className="mb-2 h-2 rounded-full bg-gray-100 overflow-hidden">
-            <div
-              className="h-full rounded-full bg-primary transition-all"
-              style={{ width: `${Math.min(progreso, 100)}%` }}
-            />
-          </div>
-          <p className="text-xs text-foreground-muted">
-            Faltan {faltantes.toLocaleString()} pts para tu proximo canje
-          </p>
         </CardContent>
       </Card>
 
@@ -103,11 +107,11 @@ export default function InicioPage() {
 
       <div className="space-y-3">
         {estudiosDisponibles.map((estudio) => (
-          <Card key={estudio.id} className="border-border">
+          <Card key={estudio.id} className="border-border/50 shadow-sm hover:shadow-md transition-shadow duration-200">
             <CardContent className="p-4">
               <div className="flex items-start justify-between gap-3">
                 <div className="flex items-start gap-3">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/5">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-primary/[0.08] to-primary/[0.04]">
                     <ClipboardList className="h-5 w-5 text-primary" />
                   </div>
                   <div>
@@ -125,9 +129,9 @@ export default function InicioPage() {
                     +{estudio.puntos}
                   </span>
                   <Link href={`/encuesta?id=${estudio.id}`}>
-                    <Button size="sm">
+                    <Button size="sm" className="group">
                       Iniciar
-                      <ArrowRight className="ml-1 h-3.5 w-3.5" />
+                      <ArrowRight className="ml-1 h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />
                     </Button>
                   </Link>
                 </div>

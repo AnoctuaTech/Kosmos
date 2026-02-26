@@ -164,7 +164,7 @@ export default function CategoriasPage() {
   return (
     <div>
       <div className="mb-6">
-        <h1 className="text-2xl font-semibold text-foreground">
+        <h1 className="text-2xl font-semibold text-foreground tracking-tight">
           Gestión de Categorías
         </h1>
         <p className="mt-1 text-sm text-foreground-secondary">

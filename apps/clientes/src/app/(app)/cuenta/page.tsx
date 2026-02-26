@@ -27,7 +27,7 @@ const tier = tiers.find((t) => t.nombre === suscripcion.tier)!
 
 const nombreTier: Record<string, string> = {
   trial: "Plan Freemium",
-  basico: "Plan Basico",
+  basico: "Plan Básico",
   pro: "Plan Profesional",
   enterprise: "Plan Enterprise",
 }
@@ -67,15 +67,15 @@ export default function CuentaPage() {
   return (
     <div className="px-8 py-8 lg:px-12">
       <h1 className="text-2xl font-semibold text-foreground mb-8">
-        Configuracion de la cuenta
+        Configuración de la cuenta
       </h1>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3 mb-8">
-        <Card className="border-border">
+        <Card className="border-border/50 shadow-sm hover:shadow-md transition-shadow duration-200">
           <CardContent className="p-6">
             <div className="flex items-center gap-3 mb-5">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gray-100">
-                <User className="h-5 w-5 text-foreground-secondary" />
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-primary/[0.08] to-primary/[0.04]">
+                <User className="h-5 w-5 text-primary" />
               </div>
               <h2 className="text-base font-semibold text-foreground">
                 Perfil
@@ -107,14 +107,14 @@ export default function CuentaPage() {
           </CardContent>
         </Card>
 
-        <Card className="border-border">
+        <Card className="border-border/50 shadow-sm hover:shadow-md transition-shadow duration-200">
           <CardContent className="p-6">
             <div className="flex items-center gap-3 mb-5">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gray-100">
-                <DollarSign className="h-5 w-5 text-foreground-secondary" />
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-primary/[0.08] to-primary/[0.04]">
+                <DollarSign className="h-5 w-5 text-primary" />
               </div>
               <h2 className="text-base font-semibold text-foreground">
-                Informacion de pago
+                Información de pago
               </h2>
             </div>
 
@@ -122,7 +122,7 @@ export default function CuentaPage() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-medium text-foreground">
-                    Proximo pago
+                    Próximo pago
                   </p>
                   <p className="text-[13px] text-foreground-secondary">
                     {formatFecha(suscripcion.fechaRenovacion)}
@@ -135,7 +135,7 @@ export default function CuentaPage() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-medium text-foreground">
-                    Metodo de pago
+                    Método de pago
                   </p>
                   <p className="text-[13px] text-foreground-secondary">
                     Enlace que termina en 1234
@@ -149,14 +149,14 @@ export default function CuentaPage() {
           </CardContent>
         </Card>
 
-        <Card className="border-border">
+        <Card className="border-border/50 shadow-sm hover:shadow-md transition-shadow duration-200">
           <CardContent className="p-6">
             <div className="flex items-center gap-3 mb-5">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gray-100">
-                <Sparkles className="h-5 w-5 text-foreground-secondary" />
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-primary/[0.08] to-primary/[0.04]">
+                <Sparkles className="h-5 w-5 text-primary" />
               </div>
               <h2 className="text-base font-semibold text-foreground">
-                Suscripcion
+                Suscripción
               </h2>
             </div>
 
@@ -171,15 +171,15 @@ export default function CuentaPage() {
                   </p>
                 </div>
                 <button className="text-sm font-medium text-primary underline hover:text-primary-dark transition-colors">
-                  Administrar suscripcion
+                  Administrar suscripción
                 </button>
               </div>
               <div>
                 <p className="text-sm font-medium text-foreground">
-                  Renovacion
+                  Renovación
                 </p>
                 <p className="text-[13px] text-foreground-secondary">
-                  Automatica
+                  Automática
                 </p>
               </div>
             </div>
@@ -187,14 +187,14 @@ export default function CuentaPage() {
         </Card>
       </div>
 
-      <Card className="border-border">
+      <Card className="border-border/50 shadow-sm">
         <CardContent className="p-0">
           <div className="flex items-center gap-3 p-6 pb-4">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gray-100">
-              <FileText className="h-5 w-5 text-foreground-secondary" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-primary/[0.08] to-primary/[0.04]">
+              <FileText className="h-5 w-5 text-primary" />
             </div>
             <h2 className="text-base font-semibold text-foreground">
-              Historial de credito
+              Historial de crédito
             </h2>
           </div>
 
@@ -217,14 +217,14 @@ export default function CuentaPage() {
                   <TableCell>
                     <p className="text-sm font-semibold text-foreground">
                       {tx.tipo === "suscripcion"
-                        ? `Suscripcion ${nombreTier[suscripcion.tier]} Mensual`
+                        ? `Suscripción ${nombreTier[suscripcion.tier]} Mensual`
                         : tx.tipo === "pack_extra"
                           ? "Pack de respuestas adicionales"
                           : "Reembolso"}
                     </p>
                     <p className="text-[13px] text-foreground-secondary">
                       {tx.tipo === "suscripcion"
-                        ? `Valida: ${formatFechaCorta(tx.fecha)} - ${formatFechaCorta(
+                        ? `Válida: ${formatFechaCorta(tx.fecha)} - ${formatFechaCorta(
                             new Date(
                               new Date(tx.fecha).getTime() + 30 * 24 * 60 * 60 * 1000
                             ).toISOString()

@@ -1,5 +1,32 @@
 import type { Plantilla } from "@kosmos/types";
 
+export const categoriaCuestionarios: Record<string, string[]> = {
+  "cat-001": ["plt-001"],
+  "cat-002": ["plt-002"],
+  "cat-003": ["plt-003"],
+  "cat-004": ["plt-004"],
+  "cat-005": ["plt-005"],
+  "cat-006": ["plt-006"],
+};
+
+export const muestraRecomendada: Record<string, number> = {
+  "plt-001": 1500,
+  "plt-002": 800,
+  "plt-003": 1000,
+  "plt-004": 1200,
+  "plt-005": 600,
+  "plt-006": 500,
+};
+
+export const creditosEstimados: Record<string, { min: number; max: number }> = {
+  "plt-001": { min: 900, max: 1500 },
+  "plt-002": { min: 500, max: 900 },
+  "plt-003": { min: 600, max: 1100 },
+  "plt-004": { min: 700, max: 1300 },
+  "plt-005": { min: 400, max: 700 },
+  "plt-006": { min: 300, max: 600 },
+};
+
 export const plantillas: Plantilla[] = [
   {
     id: "plt-001",

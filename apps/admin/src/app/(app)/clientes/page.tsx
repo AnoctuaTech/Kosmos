@@ -144,7 +144,7 @@ export default function ClientesPage() {
     <div>
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-semibold text-foreground">
+          <h1 className="text-2xl font-semibold text-foreground tracking-tight">
             Clientes / Empresas
           </h1>
           <p className="mt-1 text-sm text-foreground-secondary">
@@ -396,13 +396,18 @@ export default function ClientesPage() {
       </Card>
 
       {empresaSeleccionada && (
-        <div className="fixed inset-y-0 right-0 z-40 w-[420px] bg-white border-l border-border shadow-xl overflow-y-auto">
-          <div className="sticky top-0 z-10 flex items-center justify-between border-b border-border bg-white px-6 py-4">
-            <h2 className="text-lg font-semibold text-foreground">Detalle de Empresa</h2>
-            <button
-              onClick={() => setEmpresaSeleccionada(null)}
-              className="flex h-8 w-8 items-center justify-center rounded-md text-foreground-muted hover:text-foreground hover:bg-background-gray transition-colors"
-            >
+        <>
+          <div
+            className="fixed inset-0 z-30 bg-black/20 transition-opacity"
+            onClick={() => setEmpresaSeleccionada(null)}
+          />
+          <div className="fixed inset-y-0 right-0 z-40 w-[420px] bg-white border-l border-border shadow-2xl shadow-black/10 overflow-y-auto animate-slide-in-right">
+            <div className="sticky top-0 z-10 flex items-center justify-between border-b border-border bg-white/95 backdrop-blur-sm px-6 py-4">
+              <h2 className="text-lg font-semibold text-foreground">Detalle de Empresa</h2>
+              <button
+                onClick={() => setEmpresaSeleccionada(null)}
+                className="flex h-8 w-8 items-center justify-center rounded-lg text-foreground-muted hover:text-foreground hover:bg-background-gray transition-all duration-150"
+              >
               <X className="h-4 w-4" />
             </button>
           </div>
@@ -545,6 +550,7 @@ export default function ClientesPage() {
             </div>
           </div>
         </div>
+        </>
       )}
     </div>
   )

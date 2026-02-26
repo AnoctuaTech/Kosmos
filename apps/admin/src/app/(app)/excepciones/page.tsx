@@ -41,7 +41,7 @@ const columnas: ColumnaKanban[] = [
   },
   {
     estado: "en_analisis",
-    titulo: "En Analisis Externo",
+    titulo: "En Análisis Externo",
     color: "text-primary",
     borderColor: "border-t-primary",
     bgColor: "bg-primary/5",
@@ -60,7 +60,7 @@ function getTipoConfig(tipo: TipoExcepcion) {
     eye_tracking: { label: "Eye Tracking", icon: Eye },
     neuromarketing: { label: "Neuromarketing", icon: Brain },
     facial_coding: { label: "Facial Coding", icon: Smile },
-    biometria: { label: "Biometria", icon: Activity },
+    biometria: { label: "Biometría", icon: Activity },
     focus_group_virtual: { label: "Focus Group Virtual", icon: UsersRound },
   }
   return configs[tipo]
@@ -69,7 +69,7 @@ function getTipoConfig(tipo: TipoExcepcion) {
 function getEstadoBadge(estado: EstadoExcepcion) {
   const configs: Record<EstadoExcepcion, { label: string; variant: "warning" | "primary" | "success" }> = {
     recibido: { label: "Recibido", variant: "warning" },
-    en_analisis: { label: "En Analisis", variant: "primary" },
+    en_analisis: { label: "En Análisis", variant: "primary" },
     resultados_entregados: { label: "Entregado", variant: "success" },
   }
   return configs[estado]
@@ -101,11 +101,11 @@ export default function ExcepcionesPage() {
     <div>
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-semibold text-foreground">
+          <h1 className="text-2xl font-semibold text-foreground tracking-tight">
             Excepciones Neuro/VAS
           </h1>
           <p className="mt-1 text-sm text-foreground-secondary">
-            Gestion de estudios especializados con proveedores externos
+            Gestión de estudios especializados con proveedores externos
           </p>
         </div>
         <div className="flex items-center gap-3 text-sm text-foreground-secondary">
@@ -121,7 +121,7 @@ export default function ExcepcionesPage() {
           return (
             <div key={col.estado}>
               <div
-                className={`rounded-lg border-t-4 ${col.borderColor} bg-white border border-border`}
+                className={`rounded-lg border-t-4 ${col.borderColor} bg-white border border-border shadow-sm`}
               >
                 <div className="flex items-center justify-between p-4 border-b border-border">
                   <div className="flex items-center gap-2">
@@ -147,7 +147,7 @@ export default function ExcepcionesPage() {
                       return (
                         <Card
                           key={exc.id}
-                          className="cursor-pointer hover:shadow-md transition-shadow"
+                          className="cursor-pointer hover:shadow-md transition-all duration-200 hover:-translate-y-0.5"
                         >
                           <CardContent className="p-4">
                             <div className="flex items-start justify-between mb-3">
@@ -212,7 +212,7 @@ export default function ExcepcionesPage() {
                                 >
                                   {exc.estado === "recibido" ? (
                                     <>
-                                      Iniciar Analisis
+                                      Iniciar Análisis
                                       <ArrowRight className="h-3 w-3 ml-1" />
                                     </>
                                   ) : (

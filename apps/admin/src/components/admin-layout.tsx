@@ -3,7 +3,7 @@
 import { usePathname } from "next/navigation"
 import Link from "next/link"
 import { AdminSidebar } from "./admin-sidebar"
-import { ChevronRight } from "lucide-react"
+import { ChevronRight, Home } from "lucide-react"
 
 const breadcrumbMap: Record<string, string> = {
   dashboard: "Dashboard",
@@ -28,19 +28,25 @@ function Breadcrumb() {
   if (segments.length <= 1) return null
 
   return (
-    <nav className="flex items-center gap-1 text-sm text-foreground-muted mb-6">
+    <nav className="flex items-center gap-1.5 text-sm mb-6">
+      <Link
+        href="/dashboard"
+        className="flex items-center justify-center h-6 w-6 rounded text-foreground-muted hover:text-foreground hover:bg-background-gray transition-all duration-150"
+      >
+        <Home className="h-3.5 w-3.5" />
+      </Link>
       {segments.map((segment, index) => {
         const href = "/" + segments.slice(0, index + 1).join("/")
         const label = breadcrumbMap[segment] || segment
         const isLast = index === segments.length - 1
 
         return (
-          <span key={href} className="flex items-center gap-1">
-            {index > 0 && <ChevronRight className="h-3.5 w-3.5" />}
+          <span key={href} className="flex items-center gap-1.5">
+            <ChevronRight className="h-3 w-3 text-foreground-muted/60" />
             {isLast ? (
               <span className="text-foreground font-medium">{label}</span>
             ) : (
-              <Link href={href} className="hover:text-foreground transition-colors">
+              <Link href={href} className="text-foreground-muted hover:text-foreground transition-colors duration-150">
                 {label}
               </Link>
             )}
@@ -56,7 +62,7 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
     <div className="flex h-screen bg-background-gray">
       <AdminSidebar />
       <main className="flex-1 overflow-y-auto">
-        <div className="p-8">
+        <div className="p-8 animate-in">
           <Breadcrumb />
           {children}
         </div>

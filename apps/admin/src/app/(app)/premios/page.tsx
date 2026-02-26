@@ -114,7 +114,7 @@ export default function PremiosPage() {
     <div>
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-semibold text-foreground">
+          <h1 className="text-2xl font-semibold text-foreground tracking-tight">
             Catálogo de Premios
           </h1>
           <p className="mt-1 text-sm text-foreground-secondary">
@@ -141,13 +141,13 @@ export default function PremiosPage() {
         <KPICard
           title="Canjes este Mes"
           value={47}
-          subtitle="Simulado"
+          subtitle="Febrero 2026"
           icon={<TrendingUp className="h-5 w-5 text-success" />}
         />
         <KPICard
           title="Valor Canjeado"
           value="$850"
-          subtitle="Simulado"
+          subtitle="Acumulado del mes"
           icon={<DollarSign className="h-5 w-5 text-warning" />}
         />
       </div>
@@ -205,7 +205,7 @@ export default function PremiosPage() {
                 filtrados.map((premio) => (
                   <div
                     key={premio.id}
-                    className="rounded-lg border border-border overflow-hidden hover:shadow-md transition-shadow cursor-pointer group"
+                    className="rounded-lg border border-border overflow-hidden hover:shadow-md transition-all duration-200 hover:-translate-y-0.5 cursor-pointer group"
                     onClick={() => handleEditar(premio)}
                   >
                     <div

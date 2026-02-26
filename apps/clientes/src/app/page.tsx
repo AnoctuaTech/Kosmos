@@ -1,12 +1,12 @@
 import Link from "next/link"
 import { ClientesHeader } from "../components/clientes-header"
+import { HeroSlider } from "../components/hero-slider"
 import {
   Button,
   Card,
   CardContent,
 } from "@kosmos/ui"
 import {
-  ArrowRight,
   BarChart3,
   Target,
   Zap,
@@ -19,21 +19,21 @@ import {
 const features = [
   {
     icon: Zap,
-    titulo: "Estudios Agiles",
+    titulo: "Estudios Ágiles",
     descripcion:
-      "Usa plantillas preconfiguradas por expertos en investigacion. Valida conceptos, mide satisfaccion y obtene insights en minutos, no semanas.",
+      "Usa plantillas preconfiguradas por expertos en investigación. Valida conceptos, mide satisfacción y obtené insights en minutos, no semanas.",
   },
   {
     icon: Target,
-    titulo: "Segmentacion Precisa",
+    titulo: "Segmentación Precisa",
     descripcion:
-      "Filtra por pais, nivel socioeconomico, edad, genero y mas. Accede a panelistas reales verificados en toda Centroamerica.",
+      "Filtra por país, nivel socioeconómico, edad, género y más. Accede a panelistas reales verificados en toda Centroamérica.",
   },
   {
     icon: BarChart3,
     titulo: "Resultados en Tiempo Real",
     descripcion:
-      "Visualiza datos y exporta desde el 50% de completitud. Graficos interactivos, KPIs automaticos y descarga en Excel.",
+      "Visualiza datos y exporta desde el 50% de completitud. Gráficos interactivos, KPIs automáticos y descarga en Excel.",
   },
 ]
 
@@ -48,8 +48,8 @@ const planes = [
     items: [
       "Hasta 5 respuestas de prueba",
       "1 usuario colaborador",
-      "Validacion por email",
-      "Plantillas basicas",
+      "Validación por email",
+      "Plantillas básicas",
       "Soporte por email",
     ],
   },
@@ -61,11 +61,11 @@ const planes = [
     destacado: true,
     cta: "Contratar plan",
     items: [
-      "Catalogo completo de plantillas",
+      "Catálogo completo de plantillas",
       "Respuestas ilimitadas",
       "Usuarios ilimitados",
-      "Exportacion Excel avanzada",
-      "Integracion API",
+      "Exportación Excel avanzada",
+      "Integración API",
       "Soporte prioritario",
     ],
   },
@@ -73,16 +73,16 @@ const planes = [
     nombre: "Empresarial",
     precio: "Personalizado",
     periodo: "",
-    descripcion: "Soluciones a la medida de tu organizacion",
+    descripcion: "Soluciones a la medida de tu organización",
     destacado: false,
     cta: "Habla con un experto",
     items: [
       "Account manager dedicado",
-      "Personalizacion de plataforma",
+      "Personalización de plataforma",
       "Integraciones custom",
       "SLA garantizado",
-      "Capacitacion presencial",
-      "Facturacion local",
+      "Capacitación presencial",
+      "Facturación local",
     ],
   },
 ]
@@ -90,13 +90,13 @@ const planes = [
 const seguridad = [
   {
     icon: KeyRound,
-    titulo: "Autenticacion 2FA",
-    descripcion: "Doble factor de verificacion via OTP por email",
+    titulo: "Autenticación 2FA",
+    descripcion: "Doble factor de verificación vía OTP por email",
   },
   {
     icon: Lock,
     titulo: "Cifrado de datos",
-    descripcion: "Encriptacion en transito y en reposo",
+    descripcion: "Encriptación en tránsito y en reposo",
   },
   {
     icon: Shield,
@@ -110,108 +110,7 @@ export default function LandingPage() {
     <div className="min-h-screen bg-white">
       <ClientesHeader />
 
-      <section className="mx-auto max-w-6xl px-6 py-20">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-          <div>
-            <h1 className="text-4xl lg:text-5xl font-bold text-foreground leading-tight">
-              Decisiones inteligentes basadas en{" "}
-              <span className="text-primary">datos reales</span>, no en
-              suposiciones
-            </h1>
-            <p className="mt-6 text-lg text-foreground-secondary leading-relaxed">
-              Accede al panel de consumidores mas grande de Centroamerica.
-              Configura tu estudio en minutos y obtene resultados en tiempo
-              real.
-            </p>
-            <div className="mt-8 flex items-center gap-4">
-              <Link href="/registro">
-                <Button size="lg">
-                  Prueba gratuita
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
-              </Link>
-              <span className="text-sm text-foreground-muted">
-                5 respuestas gratis incluidas
-              </span>
-            </div>
-          </div>
-
-          <div className="relative">
-            <Card className="shadow-lg border-border">
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between mb-6">
-                  <h3 className="font-semibold text-foreground">
-                    Estudio de Satisfaccion
-                  </h3>
-                  <span className="inline-flex items-center gap-1.5 rounded-full bg-success/10 px-3 py-1 text-xs font-medium text-success">
-                    <span className="h-1.5 w-1.5 rounded-full bg-success" />
-                    En vivo
-                  </span>
-                </div>
-
-                <div className="grid grid-cols-3 gap-4 mb-6">
-                  <div className="rounded-lg bg-background-gray p-3 text-center">
-                    <p className="text-2xl font-bold text-foreground">1,480</p>
-                    <p className="text-xs text-foreground-muted mt-1">
-                      Respuestas
-                    </p>
-                  </div>
-                  <div className="rounded-lg bg-background-gray p-3 text-center">
-                    <p className="text-2xl font-bold text-foreground">94%</p>
-                    <p className="text-xs text-foreground-muted mt-1">
-                      Incidencia
-                    </p>
-                  </div>
-                  <div className="rounded-lg bg-background-gray p-3 text-center">
-                    <p className="text-2xl font-bold text-foreground">2.4m</p>
-                    <p className="text-xs text-foreground-muted mt-1">
-                      Panelistas
-                    </p>
-                  </div>
-                </div>
-
-                <div className="rounded-lg bg-background-gray p-4">
-                  <p className="text-xs font-medium text-foreground-secondary mb-3">
-                    Distribucion por edad
-                  </p>
-                  <div className="flex items-end gap-2 h-24">
-                    {[35, 55, 80, 95, 70, 45, 25].map((h, i) => (
-                      <div
-                        key={i}
-                        className="flex-1 rounded-t bg-gradient-to-t from-primary to-primary-light transition-all hover:opacity-80"
-                        style={{ height: `${h}%` }}
-                      />
-                    ))}
-                  </div>
-                  <div className="flex justify-between mt-2">
-                    <span className="text-[10px] text-foreground-muted">
-                      18-24
-                    </span>
-                    <span className="text-[10px] text-foreground-muted">
-                      25-34
-                    </span>
-                    <span className="text-[10px] text-foreground-muted">
-                      35-44
-                    </span>
-                    <span className="text-[10px] text-foreground-muted">
-                      45-54
-                    </span>
-                    <span className="text-[10px] text-foreground-muted">
-                      55-64
-                    </span>
-                    <span className="text-[10px] text-foreground-muted">
-                      65+
-                    </span>
-                    <span className="text-[10px] text-foreground-muted">
-                      75+
-                    </span>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </section>
+      <HeroSlider />
 
       <section className="bg-background-gray py-20">
         <div className="mx-auto max-w-6xl px-6">
@@ -220,7 +119,7 @@ export default function LandingPage() {
               Todo lo que necesitas para investigar
             </h2>
             <p className="mt-3 text-foreground-secondary max-w-2xl mx-auto">
-              Desde la configuracion del estudio hasta el analisis de
+              Desde la configuración del estudio hasta el análisis de
               resultados, en una sola plataforma
             </p>
           </div>
@@ -252,7 +151,7 @@ export default function LandingPage() {
               Planes que se adaptan a tu negocio
             </h2>
             <p className="mt-3 text-foreground-secondary max-w-2xl mx-auto">
-              Comenza gratis y escala cuando lo necesites. Sin compromisos.
+              Comenzá gratis y escalá cuando lo necesites. Sin compromisos.
             </p>
           </div>
 
@@ -260,16 +159,16 @@ export default function LandingPage() {
             {planes.map((plan) => (
               <Card
                 key={plan.nombre}
-                className={`relative ${
+                className={`relative transition-all duration-200 hover:shadow-lg ${
                   plan.destacado
-                    ? "border-2 border-primary shadow-lg"
-                    : "border-border"
+                    ? "border-2 border-primary shadow-xl shadow-primary/10"
+                    : "border-border hover:border-border-dark"
                 }`}
               >
                 {plan.destacado && (
                   <div className="absolute -top-3 left-1/2 -translate-x-1/2">
                     <span className="inline-block rounded-full bg-primary px-4 py-1 text-xs font-semibold text-white">
-                      Mas popular
+                      Más popular
                     </span>
                   </div>
                 )}
@@ -326,18 +225,18 @@ export default function LandingPage() {
               Seguridad de grado empresarial
             </h2>
             <p className="mt-3 text-foreground-secondary max-w-2xl mx-auto">
-              Tus datos y los de tus panelistas estan protegidos con los mas
-              altos estandares
+              Tus datos y los de tus panelistas están protegidos con los más
+              altos estándares
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
             {seguridad.map((s) => (
               <div
                 key={s.titulo}
                 className="flex flex-col items-center text-center"
               >
-                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white border border-border shadow-sm mb-4">
+                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white border border-border shadow-sm mb-5">
                   <s.icon className="h-6 w-6 text-primary" />
                 </div>
                 <h3 className="font-semibold text-foreground">{s.titulo}</h3>
@@ -357,24 +256,15 @@ export default function LandingPage() {
               kosmos<span className="text-primary">.</span>
             </span>
             <div className="flex items-center gap-6 text-sm text-foreground-secondary">
-              <Link
-                href="#"
-                className="hover:text-foreground transition-colors"
-              >
+              <span className="hover:text-foreground transition-colors duration-200 cursor-default">
                 Privacidad
-              </Link>
-              <Link
-                href="#"
-                className="hover:text-foreground transition-colors"
-              >
-                Terminos
-              </Link>
-              <Link
-                href="#"
-                className="hover:text-foreground transition-colors"
-              >
+              </span>
+              <span className="hover:text-foreground transition-colors duration-200 cursor-default">
+                Términos
+              </span>
+              <span className="hover:text-foreground transition-colors duration-200 cursor-default">
                 Contacto
-              </Link>
+              </span>
             </div>
             <p className="text-sm text-foreground-muted">
               &copy; 2026 Kosmos. Todos los derechos reservados.

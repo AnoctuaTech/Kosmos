@@ -1,0 +1,70 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Build admin
+        run: pnpm --filter @kosmos/admin build
+        env:
+          GITHUB_PAGES: "true"
+
+      - name: Build clientes
+        run: pnpm --filter @kosmos/clientes build
+        env:
+          GITHUB_PAGES: "true"
+
+      - name: Build participantes
+        run: pnpm --filter @kosmos/participantes build
+        env:
+          GITHUB_PAGES: "true"
+
+      - name: Combine outputs
+        run: |
+          mkdir -p _site/admin _site/clientes _site/participantes
+          cp -r apps/admin/out/* _site/admin/
+          cp -r apps/clientes/out/* _site/clientes/
+          cp -r apps/participantes/out/* _site/participantes/
+          cp .github/pages-index.html _site/index.html
+          touch _site/.nojekyll
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

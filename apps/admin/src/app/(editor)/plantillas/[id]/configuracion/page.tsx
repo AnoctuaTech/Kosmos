@@ -83,7 +83,7 @@ export default function ConfiguracionPage() {
             <button
               key={seccion.id}
               onClick={() => setActiveSection(seccion.id)}
-              className={`flex items-center gap-2 rounded px-3 py-2 text-sm transition-colors text-left ${
+              className={`flex items-center gap-2 rounded px-3 py-2 text-sm transition-all duration-200 text-left ${
                 activeSection === seccion.id
                   ? "bg-white border border-border text-foreground font-medium shadow-sm"
                   : "text-foreground-secondary hover:bg-white border border-transparent"
@@ -174,7 +174,7 @@ export default function ConfiguracionPage() {
                     Se mostrará en el catálogo de estudios disponibles para los
                     participantes
                   </p>
-                  <div className="mt-2 flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-border p-12 bg-background-gray/30 hover:border-foreground-muted transition-colors cursor-pointer">
+                  <div className="mt-2 flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-border p-12 bg-background-gray/30 hover:border-foreground-muted transition-colors duration-200 cursor-pointer">
                     <Upload className="h-8 w-8 text-foreground-muted mb-3" />
                     <p className="text-sm font-medium text-foreground">
                       Arrastrá o hacé clic para subir
